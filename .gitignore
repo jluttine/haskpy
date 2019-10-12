@@ -1,0 +1,5 @@
+.envrc
+*~
+*.pyc
+__pycache__
+*.egg-info
