@@ -1,8 +1,7 @@
 import attr
 
 from haskpy.typeclasses.applicative import Applicative
-from haskpy.utils import singleton
-from haskpy.function import Function
+from haskpy.utils import singleton, function
 
 
 __all__ = ["Just", "Nothing"]
@@ -15,23 +14,12 @@ class Just(Applicative):
     value = attr.ib()
 
 
-    @Function
+    @function
     def map(self, f):
-        # I suppose currying is capturing these type errors and messes up
-        # everything. For instance, this doesn't raise an error:
-        #
-        # >>> import haskpy
-        # >>> haskpy.Just(pyhask.List(1,2,3)).map(lambda x: x+1)
-        #
-        # Even raising explicit TypeError here doesn't break:
-        #
-        # raise TypeError()
-        #
-        # This seems.. just.. wrong.. from toolz.curry.
         return Just(f(self.value))
 
 
-    @Function
+    @function
     def apply_to(self, x):
         return x.map(self.value)
 
@@ -45,12 +33,12 @@ class Just(Applicative):
 class Nothing(Applicative):
 
 
-    @Function
+    @function
     def map(self, f):
         return self
 
 
-    @Function
+    @function
     def apply_to(self, x):
         return self
 
@@ -59,6 +47,6 @@ class Nothing(Applicative):
         return "Nothing"
 
 
-@Function
+@function
 def pure(x):
     return Just(x)

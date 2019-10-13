@@ -17,7 +17,6 @@ if __name__ == "__main__":
     setup(
         install_requires = [
             "attrs",
-            "toolz",
         ],
         extras_require = {
             "dev": [

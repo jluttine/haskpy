@@ -23,6 +23,5 @@ pythonPackages.buildPythonPackage rec {
   ];
   buildInputs = with pythonPackages; [
     attrs
-    toolz
   ];
 }

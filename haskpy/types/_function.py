@@ -1,7 +1,6 @@
 import attr
-import toolz
 
-from haskpy.function import Function as F
+from haskpy.utils import curry, function
 from haskpy.typeclasses.applicative import Applicative
 
 
@@ -9,40 +8,25 @@ from haskpy.typeclasses.applicative import Applicative
 class Function(Applicative):
 
 
-    # For some reason, using toolz.curry wrapping for the function breaks the
-    # following exmple:
-    #
-    # >>> haskpy.compose(pyhask.map, pyhask.map)(
-    # ...     lambda x: 100*x,
-    # ...     haskpy.Just(pyhask.List(1,2,3)),
-    # ...     "these extra arguments",
-    # ...     "should cause an error"
-    # ... )
-    #
-    # Not sure if it's a problem not to have currying here..
-    #
-    # function = attr.ib(converter=toolz.curry)
-    #
-    # Anyway, we have to drop the currying here now:
-    function = attr.ib(
+    f = attr.ib(
+        converter=curry,
         validator=lambda _, __, value: callable(value),
     )
 
 
-
     def __call__(self, *args, **kwargs):
-        y = self.function(*args, **kwargs)
+        y = self.f(*args, **kwargs)
         return Function(y) if callable(y) else y
 
 
-    @F
+    @function
     def map(f, g):
         return Function(
             lambda *args, **kwargs: g(f(*args, **kwargs))
         )
 
 
-    @F
+    @function
     def apply(f, g):
         return Function(
             lambda *args, **kwargs: g(*args, **kwargs)(f(*args, **kwargs))
@@ -59,9 +43,8 @@ class Function(Applicative):
         # Not sure if this is a good idea though. Now, these Function objects
         # may have all kind of weird attributes we don't have any control
         # over..
-        return getattr(self.function, name)
+        return getattr(self.f, name)
 
 
     def __repr__(self):
-        return "Function {}".format(repr(self.function))
-        return repr(self.function)
+        return repr(self.f)
