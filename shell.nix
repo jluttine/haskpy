@@ -20,6 +20,7 @@ pythonPackages.buildPythonPackage rec {
     pytest
     pip
     versioneer
+    twine
   ];
   buildInputs = with pythonPackages; [
     attrs

@@ -15,6 +15,14 @@ if __name__ == "__main__":
 
 
     setup(
+        name         = "haskpy",
+        version      = versioneer.get_version(),
+        author       = meta["__author__"],
+        author_email = meta["__contact__"],
+        description  = "Functions and classes inspired by Haskell and Hask category",
+        url          = "https://github.com/jluttine/HaskPy",
+        cmdclass     = versioneer.get_cmdclass(),
+        packages     = find_packages(),
         install_requires = [
             "attrs",
         ],
@@ -23,16 +31,7 @@ if __name__ == "__main__":
                 "versioneer",
             ],
         },
-        packages         = find_packages(),
-        name             = "haskpy",
-        version          = versioneer.get_version(),
-        author           = meta["__author__"],
-        author_email     = meta["__contact__"],
-        description      = "Functions and classes inspired by Haskell and Hask category",
-        url              = "https://github.com/jluttine/HaskPy",
-        long_description = read('README.md'),
-        cmdclass         = versioneer.get_cmdclass(),
-        keywords         = [
+        keywords     = [
             "functional programming",
             "category theory",
             "Hask category",
@@ -50,4 +49,6 @@ if __name__ == "__main__":
             "Topic :: Scientific/Engineering",
             "Topic :: Software Development :: Libraries",
         ],
+        long_description = read('README.md'),
+        long_description_content_type = "text/markdown",
     )
