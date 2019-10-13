@@ -10,6 +10,8 @@ def test_curry():
         def run(check):
             check(utils.curry(f))
             check(utils.curry(utils.curry(f)))
+            # toolz.curry doesn't handle nesting properly and fails some of
+            # these tests:
             g = lambda *args, **kwargs: utils.curry(f)(*args, **kwargs)
             check(utils.curry(g))
             check(utils.curry(utils.curry(g)))
@@ -59,6 +61,9 @@ def test_curry():
             f(foo=2)
         with pytest.raises(TypeError):
             f(5)(foo=2)
+        # Incorrect types for subtraction
+        with pytest.raises(TypeError):
+            f("foo", 5)
         return
 
 
@@ -111,6 +116,9 @@ def test_curry():
             f(4, 5, x=3)
         with pytest.raises(TypeError):
             f(foo=3)
+        # toolz.curry fails TypeErrors when there are *args
+        with pytest.raises(TypeError):
+            f("foo", 42)
         return
 
 
@@ -120,6 +128,9 @@ def test_curry():
         assert f(3, 4, 5) == 12
         with pytest.raises(TypeError):
             f(3, 4, foo=5)
+        # toolz.curry fails TypeErrors when there are *args
+        with pytest.raises(TypeError):
+            f("foo", 42)
         return
 
 
@@ -142,5 +153,30 @@ def test_curry():
         with pytest.raises(TypeError):
             f(3, 4, foo=5)
         return
+
+
+    @run_check(lambda x, y, z: x + y + z)
+    def check_three_args(f):
+        # All positional
+        assert f("a", "b", "c") == "abc"
+        assert f("a", "b")("c") == "abc"
+        assert f("a")("b", "c") == "abc"
+        assert f("a")("b")("c") == "abc"
+        # Use some keywords
+        assert f(x="a")(y="b")(z="c") == "abc"
+        assert f(x="a")(y="b", z="c") == "abc"
+        assert f(y="b")("a", z="c") == "abc"
+        assert f(z="c")("a", "b") == "abc"
+        assert f(z="c")("a", y="b") == "abc"
+        assert f(z="c")(y="b")("a") == "abc"
+        # One can override keyword arguments later
+        assert f(x="X")(x="a", y="b", z="c") == "abc"
+        # Can't use positional arguments after keyword arguments
+        with pytest.raises(TypeError):
+            f(x="a")("b", "c")
+        with pytest.raises(TypeError):
+            f(y="b")("a", "c")
+        return
+
 
     return
