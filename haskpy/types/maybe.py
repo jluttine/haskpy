@@ -25,7 +25,7 @@ class Just(Applicative):
 
 
     def __repr__(self):
-        return "Just({0})".format(self.value)
+        return "Just({0})".format(repr(self.value))
 
 
 @singleton
