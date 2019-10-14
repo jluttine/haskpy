@@ -13,6 +13,7 @@ def test_curry():
             # toolz.curry doesn't handle nesting properly and fails some of
             # these tests:
             g = lambda *args, **kwargs: utils.curry(f)(*args, **kwargs)
+            check(g)
             check(utils.curry(g))
             check(utils.curry(utils.curry(g)))
             return
@@ -177,6 +178,25 @@ def test_curry():
         with pytest.raises(TypeError):
             f(y="b")("a", "c")
         return
+
+
+    @run_check(lambda *args: (lambda x, y, z: x + y + z)(*args))
+    def check_curried_decorator(f):
+        assert f("a", "b", "c") == "abc"
+        with pytest.raises(TypeError):
+            f("a", "b")
+        with pytest.raises(TypeError):
+            f("a")
+        pass
+
+
+    # Invalid arguments to curry. (Note that curry itself isn't curried.)
+    with pytest.raises(TypeError):
+        utils.curry(42)
+    with pytest.raises(TypeError):
+        utils.curry("foo")
+    with pytest.raises(TypeError):
+        utils.curry()
 
 
     return

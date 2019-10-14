@@ -55,6 +55,9 @@ def curry(f):
     #
     # So, let's implement our own simple curry function correctly.
 
+    if not callable(f):
+        raise TypeError("'{}' object is not callable".format(type(f).__name__))
+
     @functools.wraps(f)
     def wrapped(*args, **kwargs):
         fp = functools.partial(f, *args, **kwargs)
