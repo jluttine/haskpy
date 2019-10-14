@@ -111,6 +111,7 @@ Almost all functions in HaskPy have been decorated with `function`.
   - Monad transformers
   - ...
 - Profunctor optics
+- Property based testing with `hypothesis`
 
 
 ## Copyright
