@@ -111,3 +111,11 @@ Almost all functions in HaskPy have been decorated with `function`.
   - Monad transformers
   - ...
 - Profunctor optics
+
+
+## Copyright
+
+Copyright (C) 2019 Jaakko Luttinen
+
+HaskPy is licensed under the MIT License. See LICENSE file for a text of the
+license or visit http://opensource.org/licenses/MIT.
