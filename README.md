@@ -29,14 +29,25 @@ List(Just(1), Nothing, Just(9), Just(16), Nothing)
 Note that `haskpy.map` works for all Functor instances. That is, you don't need
 to use a different function to lift over different functors. You can even create
 function that performs some operation to values contained in any two-layer
-functorial structure:
+functorial structure. In the following example, `square` squares the values
+inside a two-layer functor:
 
 ```python
->>> square_lifted2 = map(map(lambda x: x**2))
->>> square_lifted2(List(Just(1), Nothing, Just(3)))
+>>> square = map(map(lambda x: x**2))
+>>> square(List(Just(1), Nothing, Just(3)))
 List(Just(1), Nothing, Just(9))
->>> square_lifted2(List(List(1, 2, 3), List(4, 5)))
+>>> square(List(List(1, 2, 3), List(4, 5)))
 List(List(1, 4, 9), List(16, 25))
+```
+
+Even functions are functors if they have been decorated with `function`:
+
+```python
+>>> @function
+... def f(x):
+...     return List(x, 2*x, 3*x)
+>>> square(f)(3)
+List(9, 36, 81)
 ```
 
 ### Currying
