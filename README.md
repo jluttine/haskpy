@@ -41,7 +41,7 @@ List(List(1, 4, 9), List(16, 25))
 
 ### Currying
 
-HaskPy provides `curry** decorator which curries a function in such a way that
+HaskPy provides `curry` decorator which curries a function in such a way that
 **the function remains partially evaluated until all required arguments have
 been provided**:
 
@@ -64,7 +64,7 @@ normal function calls.
 
 It is very similar to the curry function in Toolz, but that implementation has
 some critical design flaws (see
-[toolz/#471](https://github.com/pytoolz/toolz/issues/471). In addition to
+[toolz/#471](https://github.com/pytoolz/toolz/issues/471)). In addition to
 correct behavior, the implementation of `haskpy.curry` is much simpler because
 it doesn't need to support old Python versions. Here's a bit more complex usage
 with keyword arguments:
