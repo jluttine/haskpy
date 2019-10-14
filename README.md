@@ -33,9 +33,9 @@ functorial structure:
 
 ```python
 >>> square_lifted2 = map(map(lambda x: x**2))
->>> square_lifted(List(Just(1), Nothing, Just(3)))
+>>> square_lifted2(List(Just(1), Nothing, Just(3)))
 List(Just(1), Nothing, Just(9))
->>> square_lifted(List(List(1, 2, 3), List(4, 5)))
+>>> square_lifted2(List(List(1, 2, 3), List(4, 5)))
 List(List(1, 4, 9), List(16, 25))
 ```
 
