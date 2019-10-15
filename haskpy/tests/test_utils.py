@@ -187,6 +187,8 @@ def test_curry():
             f("a", "b")
         with pytest.raises(TypeError):
             f("a")
+        with pytest.raises(TypeError):
+            f("a", "b", "c", "d")
         pass
 
 

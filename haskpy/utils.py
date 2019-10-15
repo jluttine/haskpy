@@ -60,46 +60,59 @@ def curry(f):
 
     @functools.wraps(f)
     def wrapped(*args, **kwargs):
-        fp = functools.partial(f, *args, **kwargs)
+
         try:
-            spec = inspect.getfullargspec(fp)
+            # Handle a normal fully evaluated function fast
+            return f(*args, **kwargs)
         except TypeError:
-            # This exception is raised when an invalid arguments (positional or
-            # keyword) are passed. To make the exception traceback simpler,
-            # call the original function directly and don't use the partial.
-            # Also, call the function outside this try-except so these
-            # exceptions won't show up in the traceback.
-            use_partial = False
-        else:
-            use_partial = True
-            n_args = len(spec.args) - (
-                0 if spec.defaults is None else
-                len(spec.defaults)
+            fp = functools.partial(f, *args, **kwargs)
+            try:
+                # This is quite slow.. It's about 1000x slower than just
+                # normally calling a function. See:
+                # https://bugs.python.org/issue37010. Any way to speed it up,
+                # do something else or avoid it?
+                spec = inspect.getfullargspec(fp)
+            except TypeError:
+                # This exception is raised when an invalid arguments (positional or
+                # keyword) are passed. To make the exception traceback simpler,
+                # call the original function directly and don't use the partial.
+                # Also, call the function outside this try-except so these
+                # exceptions won't show up in the traceback.
+                raise_error = True
+            else:
+                raise_error = False
+                n_args = len(spec.args) - (
+                    0 if spec.defaults is None else
+                    len(spec.defaults)
+                )
+                # Positional required arguments may get into required keyword
+                # argument position if some positional arguments before them are
+                # given as keyword arguments. For instance:
+                #
+                # curry(lambda x, y: x - y)(x=5)
+                #
+                # Now, y becomes a keyword argument but it's still required as it
+                # doesn't have any default value. Handle this by looking at
+                # kwonlyargs that don't have a value in kwonlydefaults.
+                defaults = (
+                    set() if spec.kwonlydefaults is None else
+                    set(spec.kwonlydefaults.keys())
+                )
+                kws = set(spec.kwonlyargs)
+                n_kw = len(kws.difference(defaults))
+
+            # Invalid arguments, raise the original exception
+            if raise_error:
+                raise
+
+            # If no arguments missing, evaluate the function
+            return (
+                # 1) No arguments missing, evaluate the function
+                fp()               if n_args + n_kw == 0 else
+                # 2) Function is still waiting for some required arguments, use the
+                # partial function (curried)
+                curry(fp)
             )
-            # Positional required arguments may get into required keyword
-            # argument position if some positional arguments before them are
-            # given as keyword arguments. For instance:
-            #
-            # curry(lambda x, y: x - y)(x=5)
-            #
-            # Now, y becomes a keyword argument but it's still required as it
-            # doesn't have any default value. Handle this by looking at
-            # kwonlyargs that don't have a value in kwonlydefaults.
-            defaults = (
-                set() if spec.kwonlydefaults is None else
-                set(spec.kwonlydefaults.keys())
-            )
-            kws = set(spec.kwonlyargs)
-            n_kw = len(kws.difference(defaults))
-        return (
-            # 1) Invalid arguments, use the original function
-            f(*args, **kwargs) if not use_partial else
-            # 2) No arguments missing, evaluate the function
-            fp()               if n_args + n_kw == 0 else
-            # 3) Function is still waiting for some required arguments, use the
-            # partial function (curried)
-            curry(fp)
-        )
 
     return wrapped
 
