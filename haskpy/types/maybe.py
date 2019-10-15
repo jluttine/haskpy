@@ -7,11 +7,29 @@ from haskpy.utils import singleton, function
 __all__ = ["Just", "Nothing"]
 
 
+@attr.s(frozen=True)
+class Maybe(Applicative):
+
+
+    @classmethod
+    def pure(cls, x):
+        return Just(x)
+
+
+    def match(self, Just, Nothing):
+        raise NotImplementedError()
+
+
 @attr.s(frozen=True, repr=False)
-class Just(Applicative):
+class Just(Maybe):
 
 
     value = attr.ib()
+
+
+    @classmethod
+    def pure(cls, x):
+        return
 
 
     @function
@@ -24,13 +42,17 @@ class Just(Applicative):
         return x.map(self.value)
 
 
+    def match(self, Just, Nothing):
+        return Just(self.value)
+
+
     def __repr__(self):
         return "Just({0})".format(repr(self.value))
 
 
 @singleton
 @attr.s(frozen=True, repr=False)
-class Nothing(Applicative):
+class Nothing(Maybe):
 
 
     @function
@@ -43,10 +65,9 @@ class Nothing(Applicative):
         return self
 
 
+    def match(self, Just, Nothing):
+        return Nothing()
+
+
     def __repr__(self):
         return "Nothing"
-
-
-@function
-def pure(x):
-    return Just(x)
