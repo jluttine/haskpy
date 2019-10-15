@@ -7,19 +7,27 @@ from haskpy.typeclasses import Applicative
 __all__ = ["List"]
 
 
-@constructor(lambda init, *xs: init(xs))
-@attr.s(frozen=True, repr=False)
+@attr.s(frozen=True, repr=False, init=False)
 class List(Applicative):
 
 
-    __xs = attr.ib(converter=tuple)
+    xs = attr.ib(converter=tuple)
+
+
+    def __init__(self, *xs):
+        object.__setattr__(self, "xs", tuple(xs))
+        return
+
+
+    @classmethod
+    def pure(cls, x):
+        return cls(x)
 
 
     @function
     def map(self, f):
-        return List(*(f(x) for x in self.__xs))
+        return List(*(f(x) for x in self.xs))
 
 
-    @function
     def __repr__(self):
-        return "List{0}".format(repr(self.__xs))
+        return "List{0}".format(repr(self.xs))

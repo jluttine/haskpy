@@ -7,19 +7,6 @@ def singleton(C):
     return C()
 
 
-def constructor(f):
-
-    def wrapper(Cls):
-
-        @functools.wraps(f)
-        def _constructor(*args, **kwargs):
-            return f(Cls, *args, **kwargs)
-
-        return _constructor
-
-    return wrapper
-
-
 def curry(f):
     # toolz Python package has curry function but it's unusable. The main
     # problem being you don't get errors when doing something wrong but instead
