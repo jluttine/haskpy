@@ -108,7 +108,6 @@ Almost all functions in HaskPy have been decorated with `function`.
 ## TODO
 
 - Typeclasses:
-  - Monad
   - Monoid
   - Foldable
   - Contravariant

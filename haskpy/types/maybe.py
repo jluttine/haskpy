@@ -1,6 +1,6 @@
 import attr
 
-from haskpy.typeclasses.applicative import Applicative
+from haskpy.typeclasses import Monad
 from haskpy.utils import singleton, function
 
 
@@ -8,7 +8,7 @@ __all__ = ["Just", "Nothing"]
 
 
 @attr.s(frozen=True)
-class Maybe(Applicative):
+class Maybe(Monad):
 
 
     @classmethod
@@ -27,9 +27,9 @@ class Just(Maybe):
     value = attr.ib()
 
 
-    @classmethod
-    def pure(cls, x):
-        return
+    @function
+    def bind(self, f):
+        return f(self.value)
 
 
     @function
@@ -56,13 +56,18 @@ class Nothing(Maybe):
 
 
     @function
+    def bind(self, f):
+        return Nothing
+
+
+    @function
     def map(self, f):
-        return self
+        return Nothing
 
 
     @function
     def apply_to(self, x):
-        return self
+        return Nothing
 
 
     def match(self, Just, Nothing):

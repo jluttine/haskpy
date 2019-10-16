@@ -1,14 +1,14 @@
 import attr
 
 from haskpy.utils import function
-from haskpy.typeclasses import Applicative
+from haskpy.typeclasses import Monad
 
 
 __all__ = ["List"]
 
 
 @attr.s(frozen=True, repr=False, init=False)
-class List(Applicative):
+class List(Monad):
 
 
     xs = attr.ib(converter=tuple)

@@ -221,3 +221,8 @@ class function():
 @function
 def compose(g, f):
     return function(f).map(g)
+
+
+def identity(x):
+    """a -> a"""
+    return x
