@@ -1,6 +1,6 @@
 import attr
 
-from haskpy.utils import constructor, function
+from haskpy.utils import function
 from haskpy.typeclasses import Applicative
 
 
