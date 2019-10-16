@@ -8,7 +8,8 @@ from haskpy.utils import function
 class Applicative(Functor):
     """Must define at least pure and either apply or apply_to
 
-    Functor methods are given defaults based on Applicative methods.
+    The required Functor methods are given defaults based on the required
+    Applicative methods.
 
     """
 
@@ -25,13 +26,29 @@ class Applicative(Functor):
 
     @function
     def apply_to(self, x):
+        """f (a -> b) -> f a -> f b"""
         return x.apply(self)
 
 
     @function
     def map(self, f):
+        """m a -> (a -> b) -> m b
+
+        Default implementation is based on ``apply``:
+
+        self :: m a
+
+        f :: a -> b
+
+        pure f :: m (a -> b)
+
+        apply :: m a -> m (a -> b) -> m b
+
+        """
         # Default implementation for Functor based on Applicative
-        return self.pure(f).apply_to(self)
+        cls = type(self)
+        mf = cls.pure(f)
+        return self.apply(mf)
 
 
 @function
