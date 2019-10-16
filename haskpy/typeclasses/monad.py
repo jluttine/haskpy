@@ -57,7 +57,7 @@ class Monad(Applicative):
 
     @function
     def apply(self, f):
-        """m a -> m (a -> b) -> m b
+        r"""m a -> m (a -> b) -> m b
 
         Default implementation is based on ``bind``:
 
