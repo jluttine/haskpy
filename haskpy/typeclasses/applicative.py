@@ -16,17 +16,27 @@ class Applicative(Functor):
 
     @classmethod
     def pure(cls, x):
+        """a -> m a"""
         raise NotImplementedError()
 
 
     @function
     def apply(self, f):
+        """m a -> m (a -> b) -> m b
+
+        Default implementation is based on ``apply_to``.
+
+        """
         return f.apply_to(self)
 
 
     @function
     def apply_to(self, x):
-        """f (a -> b) -> f a -> f b"""
+        """f (a -> b) -> f a -> f b
+
+        Default implementation is based on ``apply``.
+
+        """
         return x.apply(self)
 
 
