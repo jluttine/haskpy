@@ -1,14 +1,15 @@
 import attr
 
-from haskpy.typeclasses import Monad
-from haskpy.utils import singleton, function
+from haskpy.typeclasses import Monad, PatternMatchable
+from haskpy.utils import singleton
+from haskpy.function import function
 
 
 __all__ = ["Just", "Nothing"]
 
 
 @attr.s(frozen=True)
-class Maybe(Monad):
+class Maybe(Monad, PatternMatchable):
 
 
     @classmethod
@@ -27,17 +28,14 @@ class Just(Maybe):
     value = attr.ib()
 
 
-    @function
     def bind(self, f):
         return f(self.value)
 
 
-    @function
     def map(self, f):
         return Just(f(self.value))
 
 
-    @function
     def apply_to(self, x):
         return x.map(self.value)
 
@@ -55,17 +53,14 @@ class Just(Maybe):
 class Nothing(Maybe):
 
 
-    @function
     def bind(self, f):
         return Nothing
 
 
-    @function
     def map(self, f):
         return Nothing
 
 
-    @function
     def apply_to(self, x):
         return Nothing
 

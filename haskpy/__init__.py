@@ -1,3 +1,4 @@
+from .function import *
 from .utils import *
 from .typeclasses import *
 from .types import *

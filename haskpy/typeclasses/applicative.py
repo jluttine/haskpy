@@ -1,7 +1,6 @@
 import attr
 
 from .functor import Functor
-from haskpy.utils import function
 
 
 @attr.s(frozen=True)
@@ -20,7 +19,6 @@ class Applicative(Functor):
         raise NotImplementedError()
 
 
-    @function
     def apply(self, f):
         """m a -> m (a -> b) -> m b
 
@@ -30,7 +28,6 @@ class Applicative(Functor):
         return f.apply_to(self)
 
 
-    @function
     def apply_to(self, x):
         """f (a -> b) -> f a -> f b
 
@@ -40,7 +37,6 @@ class Applicative(Functor):
         return x.apply(self)
 
 
-    @function
     def map(self, f):
         """m a -> (a -> b) -> m b
 
@@ -61,11 +57,5 @@ class Applicative(Functor):
         return self.apply(mf)
 
 
-@function
-def liftA2(f, x, y):
-    return x.map(f).apply(y)
-
-
-@function
-def apply(f, x):
-    return x.apply(f)
+# Applicative-related functions are defined in function module because of
+# circular dependency.

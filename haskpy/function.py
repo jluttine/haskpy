@@ -1,0 +1,138 @@
+import attr
+import functools
+import inspect
+
+from haskpy.typeclasses import Monad
+from haskpy.utils import curry
+
+
+@attr.s(frozen=True, repr=False)
+class Function(Monad):
+    """Monad instance for functions
+
+    Use similar wrapping as functools.wraps does for some attributes. See
+    CPython: https://github.com/python/cpython/blob/master/Lib/functools.py#L30
+
+    """
+
+
+    # NOTE: Currying functions is a bit slow (mainly because of
+    # functools.wraps). So don't use converter=curry here. Instead provide a
+    # decorator ``function`` which combines Function and curry.
+    __f = attr.ib()
+
+
+    # TODO: Add __annotations__
+
+
+    def map(f, g):
+        """(a -> b) -> (b -> c) -> (a -> c)"""
+        return compose(g, f)
+
+
+    def __call__(self, *args, **kwargs):
+        # Don't add docstring here because it shows up a bit stupidly in help
+        # texts.
+        y = self.__f(*args, **kwargs)
+        return Function(y) if callable(y) else y
+
+
+    def __repr__(self):
+        return repr(self.__f)
+
+
+    @property
+    def __module__(self):
+        return self.__f.__module__
+
+
+    # @property
+    # def __annotations__(self):
+    #     return self.__f.__annotations__
+
+
+    @property
+    def __signature__(self):
+        return inspect.signature(self.__f)
+
+
+    @property
+    def __doc__(self):
+        return self.__f.__doc__
+
+
+    def __get__(self, obj, objtype):
+        """Support instance methods.
+
+        See: https://stackoverflow.com/a/3296318
+
+        """
+        if obj is not None:
+            # Instance method, bind the first argument
+            fp = functools.partial(self, obj)
+            # Keep the docstring untouched
+            fp.__doc__ = self.__doc__
+            return Function(fp)
+        else:
+            # Class method
+            return self
+
+
+def function(f):
+    """Decorator for currying and transforming functions into monads"""
+    return Function(curry(f))
+
+
+@function
+def compose(g, f):
+    return Function(lambda *args, **kwargs: g(f(*args, **kwargs)))
+
+
+# NOTE: Functor/Applicative/Monad-related functions couldn't be defined in the
+# modules that defined those typeclasses because of circular dependency:
+# Function class inherits Monad&Applicative&Functor but the functions in those
+# typeclass modules are decorated with Function. Because these dependencies are
+# needed already at import-time, there's no way to delay the cross-imports.
+# Thus, we now just moved those functions into this module.
+
+
+#
+# Functor-related functions
+#
+
+@function
+def map(f, x):
+    return x.map(f)
+
+
+@function
+def replace(a, x):
+    return x.replace(a)
+
+
+#
+# Applicative-related functions
+#
+
+@function
+def liftA2(f, x, y):
+    return x.map(f).apply(y)
+
+
+@function
+def apply(f, x):
+    return x.apply(f)
+
+
+#
+# Monad-related functions
+#
+
+@function
+def bind(x, f):
+    return x.bind(f)
+
+
+@function
+def join(x):
+    return x.join()

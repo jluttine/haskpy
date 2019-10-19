@@ -227,57 +227,6 @@ def curry(f):
     return wrapped
 
 
-@attr.s(frozen=True, repr=False)
-class function():
-
-
-    f = attr.ib(
-        converter=curry,
-        validator=lambda _, __, value: callable(value),
-    )
-
-
-    @classmethod
-    def pure(cls, x):
-        return cls(lambda _: x)
-
-
-    def __call__(self, *args, **kwargs):
-        # Forward the call to the underlying real Function class.
-        #
-        # In order to avoid circular imports, import Function here inside this
-        # function.
-        from haskpy.types._function import Function as F
-        return F.__call__(self, *args, **kwargs)
-
-
-    def __getattr__(self, name):
-        # Forward the attribute query to the underlying real Function class.
-        #
-        # In order to avoid circular imports, import Function here inside this
-        # function.
-        from haskpy.types._function import Function as F
-        return getattr(F(self.f), name)
-
-
-    def __get__(self, obj, objtype):
-        """Support instance methods.
-
-        See: https://stackoverflow.com/a/3296318
-
-        """
-        return function(functools.partial(self.__call__, obj))
-
-
-    def __repr__(self):
-        return repr(self.f)
-
-
-@function
-def compose(g, f):
-    return function(f).map(g)
-
-
 def identity(x):
     """a -> a"""
     return x

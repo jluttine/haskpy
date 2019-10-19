@@ -1,7 +1,7 @@
 import attr
 
 from .applicative import Applicative
-from haskpy.utils import function, identity
+from haskpy.utils import identity
 
 
 @attr.s(frozen=True)
@@ -22,7 +22,6 @@ class Monad(Applicative):
     """
 
 
-    @function
     def bind(self, f):
         """m a -> (a -> m b) -> m b
 
@@ -39,7 +38,6 @@ class Monad(Applicative):
         return self.map(f).join()
 
 
-    @function
     def join(self):
         """m (m a) -> m a
 
@@ -55,28 +53,39 @@ class Monad(Applicative):
         return self.bind(identity)
 
 
-    @function
     def apply(self, f):
         r"""m a -> m (a -> b) -> m b
 
-        Default implementation is based on ``bind``:
+          self :: m a
 
-        self :: m a
+          f :: m (a -> b)
 
-        f :: m (a -> b)
+        Default implementation is based on ``bind`` and ``map``. In order to
+        use ``bind``, we need to have a function of type:
 
-        g :: a -> m b
-        g = \x -> map (\fh -> fh x) f
+          g :: a -> m b
+
+        We can get this as follows:
+
+          g = \x -> map (\fh -> fh x) f
 
         """
-        self.bind(lambda x: f.map(lambda fh: fh(x)))
+        return self.bind(lambda x: f.map(lambda fh: fh(x)))
 
 
-@function
-def bind(x, f):
-    return x.bind(f)
+    def map(self, f):
+        """m a -> (a -> b) -> m b
+
+        Default implementation is based on ``bind`` and ``pure``. This
+        implementation needs to be provided because the default implementation
+        of ``apply`` uses ``map``.
+
+        """
+        # Because of circular depdencies, need to import here inside
+        from haskpy.function import compose
+        cls = type(self)
+        return self.bind(compose(cls.pure, f))
 
 
-@function
-def join(x):
-    return x.join()
+# Monad-related functions are defined in function module because of circular
+# dependency.
