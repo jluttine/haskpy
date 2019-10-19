@@ -145,29 +145,29 @@ def curry(f):
                 # curry function would take argspec as an optional argument.
                 spec = inspect.getfullargspec(fp)
             except TypeError:
-                # This exception is raised when an invalid arguments (positional or
-                # keyword) are passed. To make the exception traceback simpler,
-                # call the original function directly and don't use the partial.
-                # Also, call the function outside this try-except so these
-                # exceptions won't show up in the traceback.
-                raise_error = True
+                # This exception is raised when an invalid arguments
+                # (positional or keyword) are passed. To make the exception
+                # traceback simpler, raise the original TypeError. Also,
+                # raise it outside this try-except so these exceptions
+                # won't show up in the traceback.
+                pass
             else:
-                raise_error = False
+                # The original function raised TypeError but there's
+                # nothing wrong in how the call signature was used. There
+                # are now two possibilities:
+                #
+                # 1. The function is still waiting for some required inputs.
+                #    In that case, don't raise the error, just partially
+                #    evaluate the function (and curry it).
+                if count_required_arguments(spec) > 0:
+                    return curry(fp)
+                # 2. The function received all required arguments, thus the
+                #    error must have happened somewhere inside the
+                #    function. In that case, just raise the original error.
 
-            # Invalid arguments, raise the original exception
-            if raise_error:
-                raise
-
-            n_required = count_required_arguments(spec)
-
-            # If no arguments missing, evaluate the function
-            return (
-                # 1) No arguments missing, evaluate the function
-                fp() if n_required == 0 else
-                # 2) Function is still waiting for some required arguments, use the
-                # partial function (curried)
-                curry(fp)
-            )
+            # The function either got invalid arguments or raised TypeError
+            # somewhere inside its computations. Just raise that error.
+            raise
 
     return wrapped
 

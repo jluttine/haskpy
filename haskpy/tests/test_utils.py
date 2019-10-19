@@ -201,4 +201,35 @@ def test_curry():
         utils.curry()
 
 
+    class some_function():
+
+
+        def __init__(self, fail):
+            self.counter = 0
+            self.fail = fail
+            return
+
+
+        def __call__(self, *args, **kwargs):
+            print(args, kwargs)
+            self.counter += 1
+            if self.fail:
+                raise TypeError()
+
+
+    curry4 = lambda f: utils.curry(utils.curry(utils.curry(utils.curry(f))))
+
+    # The function is called only once on success
+    f = some_function(fail=False)
+    curry4(f)("foo", 1)
+    assert f.counter == 1
+
+    # The function is called only once on TypeError
+    f = some_function(fail=True)
+    fc = curry4(f)
+    with pytest.raises(TypeError):
+        fc(1, 2, 3, 4)
+    assert f.counter == 1
+
+    return
     return
