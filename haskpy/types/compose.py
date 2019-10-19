@@ -68,6 +68,10 @@ def Compose(X, Y):
         decomposed = attr.ib()
 
 
+        inner_class = Y
+        outer_class = X
+
+
         @classmethod
         def pure(cls, x):
             """a -> f a

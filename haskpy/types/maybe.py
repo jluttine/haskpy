@@ -1,6 +1,7 @@
 import attr
 
 from haskpy.typeclasses import Monad, PatternMatchable
+from .monadtransformer import MonadTransformer
 from haskpy.utils import singleton
 
 
@@ -67,3 +68,37 @@ class Nothing(Maybe):
 
     def __repr__(self):
         return "Nothing"
+
+
+@MonadTransformer(Maybe)
+def MaybeT(BaseClass):
+
+
+    @attr.s(frozen=True, repr=False)
+    class Transformed(BaseClass):
+
+
+        def join(self):
+            """MaybeT m (MaybeT m a) -> MaybeT m a
+
+            As decompressed:
+
+              m (Maybe (m (Maybe a))) -> m (Maybe a)
+
+            For instance,
+
+            List(Just(List(Just(1), Nothing)), Nothing, Just(List(Nothing, Just(4))))
+
+            -> List(Just(1), Nothing, Nothing, Nothing, Just(4))
+            """
+            return Transformed(
+                self.decomposed.map(
+                    lambda x: x.match(
+                        Nothing=lambda: self.outer_class.pure(Nothing),
+                        Just=lambda x: x.decomposed,
+                    )
+                ).join()
+            )
+
+
+    return Transformed
