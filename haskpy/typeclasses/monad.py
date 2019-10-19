@@ -82,7 +82,7 @@ class Monad(Applicative):
 
         """
         # Because of circular depdencies, need to import here inside
-        from haskpy.function import compose
+        from haskpy.functions import compose
         cls = type(self)
         return self.bind(compose(cls.pure, f))
 

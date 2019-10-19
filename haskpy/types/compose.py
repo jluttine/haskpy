@@ -1,4 +1,5 @@
 import attr
+import functools
 
 from haskpy.typeclasses import Applicative
 from haskpy.functions import map, apply
@@ -162,25 +163,5 @@ def Compose(X, Y):
     return Composed
 
 
-# Simple composer can be used to just easily compose nested structure without
-# composing the classes. That way, one won't get class methods such as pure.
-# But one gets an easy way to just compose structure.
-#ComposeSimple = Compose(None, None)
-
-
 def decompose(x):
     return x.decomposed
-
-
-def MonadTransformer(X):
-
-    def wrap(Constructor):
-
-        def compose_with_monad(Y):
-
-            YX = Compose(Y, X)
-            return Constructor(YX)
-
-        return compose_with_monad
-
-    return wrap

@@ -1,7 +1,7 @@
 import attr
 
 from haskpy.typeclasses import Monad
-from .compose import Compose
+from .monadtransformer import MonadTransformer
 
 
 @attr.s(frozen=True, repr=False)
@@ -25,12 +25,11 @@ class Identity(Monad):
         return "Identity({})".format(repr(self.x))
 
 
-def IdentityT(X):
-
-    IdentityX = Compose(X, Identity)
+@MonadTransformer(Identity)
+def IdentityT(BaseClass):
 
     @attr.s(frozen=True, repr=False)
-    class Transformed(IdentityX, Monad):
+    class Transformed(BaseClass):
 
 
         def bind(self, f):
@@ -68,10 +67,6 @@ def IdentityT(X):
             y = self.decomposed.bind(g)
 
             return Transformed(y) # :: IdentityT m b
-
-
-        def __repr__(self):
-            return "IdentityT({0})({1})".format(X.__name__, repr(self.decomposed))
 
 
     return Transformed
