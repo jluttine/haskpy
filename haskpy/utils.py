@@ -83,6 +83,55 @@ def count_required_arguments(argspec):
     return n_args + n_kw
 
 
+@attr.s(frozen=True, repr=False)
+class Wrapped():
+
+
+    """Original function that provides metainformation"""
+    __unwrapped = attr.ib()
+
+
+    """Wrapped function that is actually called"""
+    __wrapped = attr.ib()
+
+
+    def __call__(self, *args, **kwargs):
+        return self.__wrapped(*args, **kwargs)
+
+
+    def __repr__(self):
+        return repr(self.__wrapped)
+
+
+    @property
+    def __module__(self):
+        return self.__unwrapped.__module__
+
+
+    @property
+    def __signature__(self):
+        return inspect.signature(self.__unwrapped)
+
+
+    @property
+    def __doc__(self):
+        return self.__unwrapped.__doc__
+
+
+def wraps(f):
+    """Simple wrapping function similar to functools.wraps
+
+    Aims to be a bit simpler and faster, but not sure about it. Experimenting
+    at the moment.
+
+    """
+    def wrap(g):
+        return Wrapped(f, g)
+    return wrap
+
+
+
+
 def curry(f):
     # toolz Python package has curry function but it's unusable. The main
     # problem being you don't get errors when doing something wrong but instead
@@ -121,7 +170,13 @@ def curry(f):
     if not callable(f):
         raise TypeError("'{}' object is not callable".format(type(f).__name__))
 
-    @functools.wraps(f)
+    # NOTE: functools.wraps is a bit slow. Thus, currying functions all the
+    # time might be a bit slow. Without wrapping, curry takes about 0.3
+    # microseconds. With functools.wraps, 3 microseconds. With my own simple
+    # wraps method, it takes 1 microsecond. Let's use that for now. Not sure if
+    # it misses something. If so, use functools.wraps.
+
+    @wraps(f)
     def wrapped(*args, **kwargs):
 
         try:
@@ -145,11 +200,11 @@ def curry(f):
                 # curry function would take argspec as an optional argument.
                 spec = inspect.getfullargspec(fp)
             except TypeError:
-                # This exception is raised when an invalid arguments
-                # (positional or keyword) are passed. To make the exception
-                # traceback simpler, raise the original TypeError. Also,
-                # raise it outside this try-except so these exceptions
-                # won't show up in the traceback.
+                # This exception is raised when invalid arguments (positional
+                # or keyword) are passed. To make the exception traceback
+                # simpler, raise the original TypeError. Also, raise it outside
+                # this try-except so these exceptions won't show up in the
+                # traceback.
                 pass
             else:
                 # The original function raised TypeError but there's
