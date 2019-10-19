@@ -7,9 +7,7 @@ def singleton(C):
     return C()
 
 
-def update_argspec(name, spec, args, kwargs):
-
-    raise NotImplementedError()
+def update_argspec(spec, args, kwargs):
 
     # TODO: Instead of running getfullargspec after every partial evaluation,
     # it might be faster to use the existing argspec and update that based on
@@ -25,9 +23,10 @@ def update_argspec(name, spec, args, kwargs):
 
     nargs_takes = len(spec.args)
     nargs_given = len(args)
-    if no_varargs and nargs_given > nargs_takes:
+    nargs_remain = nargs_takes - nargs_given
+    if no_varargs and nargs_remain < 0:
         raise TypeError(
-            "{name} takes {takes} positional argument but {given} were given"
+            "function takes {takes} positional argument but {given} were given"
             .format(
                 name=name,
                 takes=nargs_takes,
@@ -35,11 +34,10 @@ def update_argspec(name, spec, args, kwargs):
             )
         )
 
-    # FIXME: Handle kw too
     new_args = spec.args[nargs_given:]
+    new_defaults = spec.defaults[-nargs_remain:] if nargs_remain > 0 else None
 
     # FIXME:
-    new_defaults = spec.defaults
     new_kwonlyargs = spec.kwonlyargs
     new_kwonlydefaults = spec.kwonlydefaults
 
@@ -219,6 +217,64 @@ def curry(f):
                 # 2. The function received all required arguments, thus the
                 #    error must have happened somewhere inside the
                 #    function. In that case, just raise the original error.
+
+            # The function either got invalid arguments or raised TypeError
+            # somewhere inside its computations. Just raise that error.
+            raise
+
+    return wrapped
+
+
+def curry_new(f, argspec=None):
+    """Experimental fast curry that updates argspec"""
+
+    if not callable(f):
+        raise TypeError("'{}' object is not callable".format(type(f).__name__))
+
+    # NOTE: functools.wraps is a bit slow. Thus, currying functions all the
+    # time might be a bit slow. Without wrapping, curry takes about 0.3
+    # microseconds. With functools.wraps, 3 microseconds. With my own simple
+    # wraps method, it takes 1 microsecond. Let's use that for now. Not sure if
+    # it misses something. If so, use functools.wraps.
+
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        nonlocal argspec
+
+        try:
+            # Handle a normal fully evaluated function fast. We want to get
+            # full argspec only if necessary as that takes quite a bit of time
+            # compared to just evaluating a function.
+            return f(*args, **kwargs)
+        except TypeError:
+            if argspec is None:
+                argspec = inspect.getfullargspec(f)
+            try:
+                new_argspec = update_argspec("foo", argspec, args, kwargs)
+            except TypeError:
+                # This exception is raised when invalid arguments (positional
+                # or keyword) are passed. To make the exception traceback
+                # simpler, raise the original TypeError. Also, raise it outside
+                # this try-except so these exceptions won't show up in the
+                # traceback.
+                pass
+            else:
+                # The original function raised TypeError but there's
+                # nothing wrong in how the call signature was used. There
+                # are now two possibilities:
+                #
+                # 1. The function is still waiting for some required inputs.
+                #    In that case, don't raise the error, just partially
+                #    evaluate the function (and curry it).
+                if count_required_arguments(new_argspec) > 0:
+                    return curry_new(
+                        functools.partial(f, *args, **kwargs),
+                        argspec=new_argspec
+                    )
+                # 2. The function received all required arguments, thus the
+                #    error must have happened somewhere inside the
+                #    function. In that case, just raise the original error.
+                pass
 
             # The function either got invalid arguments or raised TypeError
             # somewhere inside its computations. Just raise that error.
