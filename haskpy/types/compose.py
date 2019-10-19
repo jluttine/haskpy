@@ -152,14 +152,6 @@ def Compose(X, Y):
             )
 
 
-        def __getattr__(self, name):
-            # Hmm.. Does this make sense? Probably not.
-            return attr.evolve(
-                self,
-                decomposed=(map(lambda x: getattr(x, name), self.decomposed))
-            )
-
-
     return Composed
 
 
