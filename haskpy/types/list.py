@@ -1,10 +1,6 @@
 import attr
 
-from haskpy.function import function
 from haskpy.typeclasses import Monad
-
-
-__all__ = ["List"]
 
 
 @attr.s(frozen=True, repr=False, init=False)

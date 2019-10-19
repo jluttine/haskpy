@@ -1,7 +1,7 @@
 import attr
 
 from haskpy.typeclasses import Applicative
-from haskpy.function import map, apply
+from haskpy.functions import map, apply
 
 
 def Compose(X, Y):

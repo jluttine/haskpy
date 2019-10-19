@@ -2,10 +2,6 @@ import attr
 
 from haskpy.typeclasses import Monad, PatternMatchable
 from haskpy.utils import singleton
-from haskpy.function import function
-
-
-__all__ = ["Just", "Nothing"]
 
 
 @attr.s(frozen=True)
