@@ -3,8 +3,21 @@ import attr
 from haskpy.typeclasses import Monad
 
 
+class ListMeta(type(Monad)):
+
+
+    def pure(cls, x):
+        """a -> List a"""
+        return cls(x)
+
+
+    def from_iter(cls, xs):
+        """Iterable f => f a -> List a"""
+        return cls(*xs)
+
+
 @attr.s(frozen=True, repr=False, init=False)
-class List(Monad):
+class List(Monad, metaclass=ListMeta):
 
 
     __xs = attr.ib(converter=tuple)
@@ -13,12 +26,6 @@ class List(Monad):
     def __init__(self, *xs):
         object.__setattr__(self, "_List__xs", tuple(xs))
         return
-
-
-    @classmethod
-    def pure(cls, x):
-        """a -> List a"""
-        return cls(x)
 
 
     def map(self, f):
@@ -38,9 +45,3 @@ class List(Monad):
 
     def __repr__(self):
         return "List{}".format(repr(self.__xs))
-
-
-    @classmethod
-    def from_iter(cls, xs):
-        """Iterable f => f a -> List a"""
-        return cls(*xs)

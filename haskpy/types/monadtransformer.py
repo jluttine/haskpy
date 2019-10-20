@@ -13,7 +13,7 @@ def MonadTransformer(InnerMonad):
             X = Compose(OuterMonad, InnerMonad)
 
 
-            class MetaClass(type):
+            class BaseClassMeta(type(X)):
 
 
                 def __repr__(cls):
@@ -24,7 +24,7 @@ def MonadTransformer(InnerMonad):
 
 
             @attr.s(frozen=True, repr=False)
-            class BaseClass(X, Monad, metaclass=MetaClass):
+            class BaseClass(X, Monad, metaclass=BaseClassMeta):
 
 
                 def __repr__(self):
@@ -35,6 +35,7 @@ def MonadTransformer(InnerMonad):
 
 
             return Constructor(BaseClass)
+
 
         return compose_with_monad
 

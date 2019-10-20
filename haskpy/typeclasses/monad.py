@@ -5,7 +5,7 @@ from haskpy.utils import identity
 
 
 @attr.s(frozen=True)
-class Monad(Applicative):
+class Monad(Applicative, metaclass=type(Applicative)):
     """Monad typeclass
 
     Minimum required implementations:

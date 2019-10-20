@@ -4,16 +4,18 @@ from haskpy.typeclasses import Monad
 from .monadtransformer import MonadTransformer
 
 
+class IdentityMeta(type(Monad)):
+
+
+    def pure(cls, x):
+        return cls(x)
+
+
 @attr.s(frozen=True, repr=False)
-class Identity(Monad):
+class Identity(Monad, metaclass=IdentityMeta):
 
 
     x = attr.ib()
-
-
-    @classmethod
-    def pure(cls, x):
-        return cls(x)
 
 
     def bind(self, f):

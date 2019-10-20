@@ -1,8 +1,10 @@
 import attr
 
+from .typeclass import TypeclassMeta
+
 
 @attr.s(frozen=True)
-class Functor():
+class Functor(metaclass=TypeclassMeta):
     """Covariant functor"""
 
 

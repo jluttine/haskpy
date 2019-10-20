@@ -5,13 +5,15 @@ from .monadtransformer import MonadTransformer
 from haskpy.utils import singleton
 
 
-@attr.s(frozen=True)
-class Maybe(Monad, PatternMatchable):
+class _MaybeMeta(type(Monad)):
 
 
-    @classmethod
     def pure(cls, x):
         return Just(x)
+
+
+@attr.s(frozen=True)
+class Maybe(Monad, PatternMatchable, metaclass=_MaybeMeta):
 
 
     def match(self, Just, Nothing):
@@ -91,10 +93,11 @@ def MaybeT(BaseClass):
 
             -> List(Just(1), Nothing, Nothing, Nothing, Just(4))
             """
+            cls = self.__class__
             return Transformed(
                 self.decomposed.map(
                     lambda x: x.match(
-                        Nothing=lambda: self.outer_class.pure(Nothing),
+                        Nothing=lambda: cls.OuterClass.pure(Nothing),
                         Just=lambda x: x.decomposed,
                     )
                 ).join()

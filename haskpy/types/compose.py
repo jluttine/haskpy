@@ -54,25 +54,13 @@ def Compose(X, Y):
     """
 
 
-    # It's also Foldable and Traversable if both X and Y are.
-
-    @attr.s(frozen=True)
-    class Composed(Applicative):
+    class ComposedMeta(type(Applicative)):
 
 
-        # The attribute name may sound weird but it makes sense once you
-        # understand that this indeed is the not-yet-composed variable and if
-        # you want to decompose a composed variable you get it by x.decomposed.
-        # Thus, there's no need to write a simple function to just return this
-        # attribute, just use this directly.
-        decomposed = attr.ib()
+        InnerClass = Y
+        OuterClass = X
 
 
-        inner_class = Y
-        outer_class = X
-
-
-        @classmethod
         def pure(cls, x):
             """a -> f a
 
@@ -82,6 +70,53 @@ def Compose(X, Y):
 
             """
             return cls(X.pure(Y.pure(x)))
+
+
+        def compress_init(cls):
+            """Create a bit simplified constructor
+
+            XY = Compose(X, Y)
+
+            Instead of something like:
+
+              xy = XY(X(Y(1), Y(2)))
+
+            You can write use compressed constructor:
+
+              XYc = XY.compress_init()
+
+            And then create objects as:
+
+              xy = XYc(Y(1), Y(2))
+
+            Note that the constructor of X is now missing.
+
+            """
+            return functools.wraps(X)(
+                lambda *args, **kwargs: cls(X(*args, **kwargs))
+            )
+
+
+        def __repr__(cls):
+            return "Compose({0}, {1})".format(
+                repr(cls.OuterClass),
+                repr(cls.InnerClass),
+            )
+
+
+    # It's also Foldable and Traversable if both X and Y are.
+
+
+    @attr.s(frozen=True, repr=False)
+    class Composed(Applicative, metaclass=ComposedMeta):
+
+
+        # The attribute name may sound weird but it makes sense once you
+        # understand that this indeed is the not-yet-composed variable and if
+        # you want to decompose a composed variable you get it by x.decomposed.
+        # Thus, there's no need to write a simple function to just return this
+        # attribute, just use this directly.
+        decomposed = attr.ib()
 
 
         def apply(self, f):
@@ -130,29 +165,10 @@ def Compose(X, Y):
             return self.decomposed
 
 
-        @classmethod
-        def compress(cls):
-            """Create a bit simplified constructor
-
-            XY = Compose(X, Y)
-
-            Instead of something like:
-
-              xy = XY(X(Y(1), Y(2)))
-
-            You can write use compressed constructor:
-
-              XYc = XY.compress()
-
-            And then create objects as:
-
-              xy = XYc(Y(1), Y(2))
-
-            Note that the constructor of X is now missing.
-
-            """
-            return functools.wraps(X)(
-                lambda *args, **kwargs: cls(X(*args, **kwargs))
+        def __repr__(self):
+            return "{0}({1})".format(
+                repr(self.__class__),
+                repr(self.decomposed),
             )
 
 
