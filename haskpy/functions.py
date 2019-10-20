@@ -139,6 +139,16 @@ def join(x):
 
 
 #
+# Monoid-related functions
+#
+
+@function
+def append(x, y):
+    """m -> m -> m"""
+    return x.append(y)
+
+
+#
 # PatternMatchable-related functions
 #
 # NOTE: Currying doesn't work as expected for this function, because this is a

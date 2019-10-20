@@ -27,3 +27,7 @@ class Monoid(metaclass=_MonoidMeta):
     def append(self, x):
         """m -> m -> m"""
         raise NotImplementedError()
+
+
+# Monoid-related functions are defined in function module because of circular
+# dependency.
