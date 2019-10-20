@@ -4,7 +4,7 @@ from haskpy.typeclasses import Monad
 from .monadtransformer import MonadTransformer
 
 
-class IdentityMeta(type(Monad)):
+class _IdentityMeta(type(Monad)):
 
 
     def pure(cls, x):
@@ -12,7 +12,7 @@ class IdentityMeta(type(Monad)):
 
 
 @attr.s(frozen=True, repr=False)
-class Identity(Monad, metaclass=IdentityMeta):
+class Identity(Monad, metaclass=_IdentityMeta):
 
 
     x = attr.ib()

@@ -1,9 +1,15 @@
 import attr
 
 from haskpy.typeclasses import Monad
+from haskpy.typeclasses import Monoid
 
 
-class ListMeta(type(Monad)):
+class _ListMeta(type(Monad), type(Monoid)):
+
+
+    @property
+    def empty(cls):
+        return cls()
 
 
     def pure(cls, x):
@@ -17,7 +23,7 @@ class ListMeta(type(Monad)):
 
 
 @attr.s(frozen=True, repr=False, init=False)
-class List(Monad, metaclass=ListMeta):
+class List(Monad, Monoid, metaclass=_ListMeta):
 
 
     __xs = attr.ib(converter=tuple)
@@ -41,6 +47,11 @@ class List(Monad, metaclass=ListMeta):
     def bind(self, f):
         """List a -> (a -> List b) -> List b"""
         return List(*(y for ys in self.map(f).__xs for y in ys.__xs))
+
+
+    def append(self, xs):
+        """List a -> List a -> List a"""
+        return List(*self.__xs, *xs.__xs)
 
 
     def __repr__(self):
