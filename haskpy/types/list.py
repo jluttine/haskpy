@@ -1,10 +1,10 @@
 import attr
+import functools
 
-from haskpy.typeclasses import Monad
-from haskpy.typeclasses import Monoid
+from haskpy.typeclasses import Monad, Monoid, Foldable
 
 
-class _ListMeta(type(Monad), type(Monoid)):
+class _ListMeta(type(Monad), type(Monoid), type(Foldable)):
 
 
     @property
@@ -23,7 +23,7 @@ class _ListMeta(type(Monad), type(Monoid)):
 
 
 @attr.s(frozen=True, repr=False, init=False)
-class List(Monad, Monoid, metaclass=_ListMeta):
+class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
 
 
     __xs = attr.ib(converter=tuple)
@@ -52,6 +52,30 @@ class List(Monad, Monoid, metaclass=_ListMeta):
     def append(self, xs):
         """List a -> List a -> List a"""
         return List(*self.__xs, *xs.__xs)
+
+
+    def foldl(self, combine, initial):
+        """List a -> (b -> a -> b) -> b -> b"""
+        # TODO: We could implement also fold_map to make fold_map and fold to
+        # use parallelized implementation because they use monoids. Now, the
+        # default implementations use foldl/foldr which both are sequential.
+        return functools.reduce(
+            combine,
+            self.__xs,
+            initial,
+        )
+
+
+    def foldr(self, combine, initial):
+        """List a -> (a -> b -> b) -> b -> b"""
+        # TODO: We could implement also fold_map to make fold_map and fold to
+        # use parallelized implementation because they use monoids. Now, the
+        # default implementations use foldl/foldr which both are sequential.
+        return functools.reduce(
+            lambda b, a: combine(a, b),
+            self.__xs[::-1],
+            initial,
+        )
 
 
     def __repr__(self):

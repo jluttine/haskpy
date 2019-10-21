@@ -11,6 +11,14 @@ class _MonoidMeta(TypeclassMeta):
         raise NotImplementedError()
 
 
+    def fold(cls, xs):
+        return xs.fold(cls)
+
+
+    def fold_map(cls, xs, f):
+        return xs.fold_map(cls, f)
+
+
 @attr.s(frozen=True)
 class Monoid(metaclass=_MonoidMeta):
     """Monoid typeclass
