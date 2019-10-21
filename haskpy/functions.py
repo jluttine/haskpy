@@ -2,12 +2,24 @@ import attr
 import functools
 import inspect
 
-from haskpy.typeclasses import Monad
-from haskpy.utils import curry
+from haskpy.typeclasses import Monad, Monoid
+from haskpy.utils import curry, identity
+
+
+class _FunctionMeta(type(Monad), type(Monoid)):
+
+
+    @property
+    def empty(cls):
+        return Function(identity)
+
+
+    def pure(cls, x):
+        return Function(lambda *args, **kwargs: x)
 
 
 @attr.s(frozen=True, repr=False)
-class Function(Monad):
+class Function(Monad, Monoid, metaclass=_FunctionMeta):
     """Monad instance for functions
 
     Use similar wrapping as functools.wraps does for some attributes. See
@@ -28,6 +40,12 @@ class Function(Monad):
     def map(f, g):
         """(a -> b) -> (b -> c) -> (a -> c)"""
         return compose(g, f)
+
+
+    def append(f, g):
+        """(a -> a) -> (a -> a) -> (a -> a)"""
+        # FIXME: compose(f, g) or compose(g, f) ????
+        return compose(f, g)
 
 
     def __call__(self, *args, **kwargs):
