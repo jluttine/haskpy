@@ -1,9 +1,12 @@
 import attr
 import functools
 import inspect
+from hypothesis import given
+from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid
 from haskpy.utils import curry, identity
+from haskpy import conftest
 
 
 class _FunctionMeta(type(Monad), type(Monoid)):
@@ -16,6 +19,34 @@ class _FunctionMeta(type(Monad), type(Monoid)):
 
     def pure(cls, x):
         return Function(lambda *args, **kwargs: x)
+
+
+    def test_functor_identity(cls):
+        f = Function(lambda x: x ** 3.8)
+        x = 42.666
+        cls.assert_functor_identity(f, eqmap=lambda f: f(x))
+        return
+
+
+    def test_functor_composition(cls):
+        f = Function(lambda x: x + "ff")
+        g = lambda x: x + "ggg"
+        h = lambda x: x + "hhhh"
+        cls.assert_functor_composition(f, g, h, eqmap=lambda f: f("a"))
+        return
+
+
+    def test_functor_map(cls):
+        f = Function(lambda x: x + "ff")
+        g = lambda x: x + "ggg"
+        cls.assert_functor_map(f, g, eqmap=lambda f: f("a"))
+        return
+
+
+    def test_functor_replace(cls):
+        f = Function(lambda x: x + "ff")
+        cls.assert_functor_replace(f, "aa", eqmap=lambda f: f("x"))
+        return
 
 
 @attr.s(frozen=True, repr=False)

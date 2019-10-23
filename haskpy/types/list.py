@@ -1,5 +1,6 @@
 import attr
 import functools
+from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Foldable
 
@@ -20,6 +21,12 @@ class _ListMeta(type(Monad), type(Monoid), type(Foldable)):
     def from_iter(cls, xs):
         """Iterable f => f a -> List a"""
         return cls(*xs)
+
+
+    @st.composite
+    def sample(draw, cls, elements):
+        xs = draw(st.lists(elements))
+        return List(*xs)
 
 
 @attr.s(frozen=True, repr=False, init=False)

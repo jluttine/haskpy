@@ -24,5 +24,7 @@ pythonPackages.buildPythonPackage rec {
   ];
   buildInputs = with pythonPackages; [
     attrs
+    # For testing
+    hypothesis
   ];
 }
