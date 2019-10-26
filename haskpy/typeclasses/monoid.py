@@ -1,4 +1,6 @@
 import attr
+from hypothesis import given
+import hypothesis.strategies as st
 
 from .semigroup import Semigroup
 from .typeclass import TypeclassMeta
@@ -18,6 +20,22 @@ class _MonoidMeta(type(Semigroup)):
 
     def fold_map(cls, xs, f):
         return xs.fold_map(cls, f)
+
+
+    @given(st.data())
+    def test_monoid_identity(cls, data):
+        cls.assert_monoid_identity(
+            data.draw(cls.sample(st.integers()))
+        )
+        cls.assert_monoid_identity(
+            data.draw(cls.sample(cls.sample(st.integers())))
+        )
+        return
+
+
+    def assert_monoid_identity(cls, x):
+        assert x.append(cls.empty) == x == cls.empty.append(x)
+        return
 
 
 @attr.s(frozen=True)
