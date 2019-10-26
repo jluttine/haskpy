@@ -123,6 +123,67 @@ class Foldable(metaclass=TypeclassMeta):
         return self.fold_map(monoid, identity)
 
 
+    def length(self):
+        """Override __len__ if you want to change the default implementation"""
+        return len(self)
+
+
+    def __len__(self):
+        """t a -> int
+
+        The default implementation isn't very efficient.
+
+        """
+        from haskpy.types.monoids import Sum
+        return self.fold_map(Sum, lambda x: Sum(1)).number
+
+
+    def sum(self):
+        """t a -> number
+
+        The default implementation isn't very efficient.
+
+        """
+        from haskpy.types.monoids import Sum
+        return self.fold_map(Sum, Sum).number
+
+
+    def null(self):
+        """t a -> bool
+
+        The default implementation is bad because Python isn't lazy. Thus, it
+        traverses the whole structure even though the first element would
+        already tell that the structure is non-empty..
+
+        """
+        from haskpy.types.monoids import And
+        return self.fold_map(And, lambda x: And(False)).boolean
+
+
+    def elem(self, x):
+        """Override __contains__ if you want to change the default implementation"""
+        return x in self
+
+
+    def __contains__(self, x):
+        """t a -> a -> bool
+
+        The default implementation is bad because Python isn't lazy. Thus, it
+        traverses the whole structure even after it has found a match..
+
+        """
+        from haskpy.types.monoids import Or
+        return self.fold_map(Or, lambda y: Or(x == y)).boolean
+
+
+    # TODO:
+    #
+    # - maximum
+    # - minimum
+    # - product
+    # - to_list
+
+
 # @function
 # def fold(monoid, xs):
 #     pass
