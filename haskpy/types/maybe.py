@@ -1,22 +1,36 @@
 import attr
 
-from haskpy.typeclasses import Monad, PatternMatchable
+from haskpy.typeclasses import Monad, Monoid, PatternMatchable
 from .monadtransformer import MonadTransformer
 from haskpy.utils import singleton
 
 
-class _MaybeMeta(type(Monad)):
+class _MaybeMeta(type(Monad), type(Monoid)):
+
+
+    @property
+    def empty(cls):
+        return Nothing
 
 
     def pure(cls, x):
         return Just(x)
 
 
-@attr.s(frozen=True)
-class Maybe(Monad, PatternMatchable, metaclass=_MaybeMeta):
+# Some thoughts on design: One could implement all the methods (except match)
+# in Maybe class by using the match method to choose the implementation. But
+# this would be just clumsy and add overhead. Class inheritance is a Pythonic
+# way of choosing the correct method implementation. Also, Just needs to
+# support equality testing, so that's also easy to achieve by making it a
+# class.
 
 
-    def match(self, Just, Nothing):
+@attr.s(frozen=True, repr=False)
+class Maybe(Monad, Monoid, PatternMatchable, metaclass=_MaybeMeta):
+    """Maybe type for optional values"""
+
+
+    def match(self, *, Just, Nothing):
         raise NotImplementedError()
 
 
@@ -24,27 +38,34 @@ class Maybe(Monad, PatternMatchable, metaclass=_MaybeMeta):
 class Just(Maybe):
 
 
-    value = attr.ib()
+    __x = attr.ib()
 
 
-    def bind(self, f):
-        return f(self.value)
+    def match(self, *, Just, Nothing):
+        return Just(self.__x)
 
 
     def map(self, f):
-        return Just(f(self.value))
+        return Just(f(self.__x))
 
 
     def apply_to(self, x):
-        return x.map(self.value)
+        return x.map(self.__x)
 
 
-    def match(self, Just, Nothing):
-        return Just(self.value)
+    def bind(self, f):
+        return f(self.__x)
+
+
+    def append(self, m):
+        return m.match(
+            Nothing=lambda: self,
+            Just=lambda x: Just(self.__x.append(x))
+        )
 
 
     def __repr__(self):
-        return "Just({0})".format(repr(self.value))
+        return "Just({0})".format(repr(self.__x))
 
 
 @singleton
@@ -52,8 +73,8 @@ class Just(Maybe):
 class Nothing(Maybe):
 
 
-    def bind(self, f):
-        return Nothing
+    def match(self, *, Just, Nothing):
+        return Nothing()
 
 
     def map(self, f):
@@ -64,8 +85,12 @@ class Nothing(Maybe):
         return Nothing
 
 
-    def match(self, Just, Nothing):
-        return Nothing()
+    def bind(self, f):
+        return Nothing
+
+
+    def append(self, m):
+        return m
 
 
     def __repr__(self):
