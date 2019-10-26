@@ -1,4 +1,6 @@
 import attr
+import hypothesis.strategies as st
+from hypothesis import given
 
 from haskpy.typeclasses import Monad, Monoid, PatternMatchable
 from .monadtransformer import MonadTransformer
@@ -15,6 +17,30 @@ class _MaybeMeta(type(Monad), type(Monoid)):
 
     def pure(cls, x):
         return Just(x)
+
+
+    @given(st.data())
+    def test_semigroup_associativity(cls, data):
+        """Test semigroup associativity law"""
+        # Need to override the default implementation because we need to have
+        # semigroup instance as the encapsulated type, not just some plain
+        # values.
+        from haskpy.types import List
+        cls.assert_semigroup_associativity(
+            data.draw(cls.sample(List.sample(st.integers()))),
+            data.draw(cls.sample(List.sample(st.integers()))),
+            data.draw(cls.sample(List.sample(st.integers()))),
+        )
+        return
+
+
+    @st.composite
+    def sample(draw, cls, elements):
+        b = draw(st.booleans())
+        return (
+            Just(draw(elements)) if b else
+            Nothing
+        )
 
 
 # Some thoughts on design: One could implement all the methods (except match)
