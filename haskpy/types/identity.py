@@ -1,4 +1,5 @@
 import attr
+import hypothesis.strategies as st
 
 from haskpy.typeclasses import Monad
 from .monadtransformer import MonadTransformer
@@ -9,6 +10,11 @@ class _IdentityMeta(type(Monad)):
 
     def pure(cls, x):
         return cls(x)
+
+
+    @st.composite
+    def sample(draw, cls, elements):
+        return Identity(draw(elements))
 
 
 @attr.s(frozen=True, repr=False)
