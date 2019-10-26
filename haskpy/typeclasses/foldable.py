@@ -35,6 +35,9 @@ class Foldable(metaclass=TypeclassMeta):
         implemented, recursively on ``foldr``). Thus, all possibilities for
         parallelism is lost.
 
+        ``monoid`` is the monoidic class of the values inside the foldable. It
+        is only used to determine the identity value.
+
         """
         # In principle, we could just deduce the monoid class from the values
         # inside the container. But that doesn't work when the container is
@@ -48,7 +51,7 @@ class Foldable(metaclass=TypeclassMeta):
         # initial is empty. But fold_map can be parallelized. Thus, we cannot
         # use foldl nor foldr here.
         return self.foldl(
-            lambda m, x: monoid.append(m, f(x)),
+            lambda m, x: m.append(f(x)),
             monoid.empty,
         )
 
