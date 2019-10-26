@@ -1,9 +1,10 @@
 import attr
 
+from .semigroup import Semigroup
 from .typeclass import TypeclassMeta
 
 
-class _MonoidMeta(TypeclassMeta):
+class _MonoidMeta(type(Semigroup)):
 
 
     @property
@@ -20,7 +21,7 @@ class _MonoidMeta(TypeclassMeta):
 
 
 @attr.s(frozen=True)
-class Monoid(metaclass=_MonoidMeta):
+class Monoid(Semigroup, metaclass=_MonoidMeta):
     """Monoid typeclass
 
     Minimal complete definition:
@@ -30,11 +31,7 @@ class Monoid(metaclass=_MonoidMeta):
     - ``append``
 
     """
-
-
-    def append(self, x):
-        """m -> m -> m"""
-        raise NotImplementedError()
+    pass
 
 
 # Monoid-related functions are defined in function module because of circular
