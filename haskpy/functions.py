@@ -198,6 +198,70 @@ def append(x, y):
 
 
 #
+# Foldable-related functions
+#
+
+@function
+def fold_map(monoid, f, xs):
+    """(Foldable t, Monoid m) => Monoid -> (a -> m) -> t a -> m
+
+    The first argument is a class of the values inside the foldable structure.
+    It must be given explicitly so empty structures can be handled without
+    errors.
+
+    """
+    return xs.fold_map(monoid, f)
+
+
+@function
+def foldl(combine, initial, xs):
+    """Foldable t => (b -> a -> b) -> b -> t a -> b"""
+    return xs.foldl(combine, initial)
+
+
+@function
+def foldr(combine, initial, xs):
+    """Foldable t => (a -> b -> b) -> b -> t a -> b"""
+    return xs.foldr(combine, initial)
+
+
+@function
+def fold(monoid, xs):
+    """(Foldable t, Monoid m) => Monoid -> t a -> m
+
+    The first argument is a class of the values inside the foldable structure.
+    It must be given explicitly so empty structures can be handled without
+    errors.
+
+    """
+    return xs.fold(monoid)
+
+
+@function
+def length(xs):
+    """Foldable t => t a -> int"""
+    return xs.length()
+
+
+@function
+def sum(xs):
+    """(Foldable t, Num a) => t a -> a"""
+    return xs.sum()
+
+
+@function
+def null(xs):
+    """Foldable t => t a -> Bool"""
+    return xs.null()
+
+
+@function
+def elem(e, xs):
+    """(Foldable t, Eq a) => a -> t a -> Bool"""
+    return xs.elem(e)
+
+
+#
 # PatternMatchable-related functions
 #
 # NOTE: Currying doesn't work as expected for this function, because this is a
