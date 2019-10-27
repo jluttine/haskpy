@@ -1,11 +1,186 @@
 import attr
+from warnings import warn, filterwarnings, catch_warnings
+import hypothesis.strategies as st
+from hypothesis import given
 
-from haskpy.utils import identity
+from haskpy.utils import identity, PerformanceWarning
 from .typeclass import TypeclassMeta
 
 
+class _FoldableMeta(TypeclassMeta):
+
+
+    def assert_foldable_fold_map(cls, xs, monoid, f):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import fold_map
+        assert Foldable.fold_map(xs, monoid, f) == xs.fold_map(monoid, f)
+        assert Foldable.fold_map(xs, monoid, f) == fold_map(monoid, f, xs)
+        return
+
+
+    @given(st.data())
+    def test_foldable_fold_map(cls, data):
+        from haskpy.types.monoids import Sum, String
+        cls.assert_foldable_fold_map(
+            data.draw(cls.sample(st.integers())),
+            Sum,
+            lambda x: Sum(x ** 2)
+        )
+        cls.assert_foldable_fold_map(
+            data.draw(cls.sample(st.integers())),
+            String,
+            lambda x: String(str(x))
+        )
+        return
+
+
+    def assert_foldable_foldr(cls, xs, combine, initial):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import foldr
+        a = Foldable.foldr(xs, combine, initial)
+        assert a == xs.foldr(combine, initial)
+        assert a == foldr(combine, initial, xs)
+        return
+
+
+    @given(st.data())
+    def test_foldable_foldr(cls, data):
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_foldr(
+                data.draw(cls.sample(st.integers())),
+                lambda x, acc: str(x) + acc,
+                "foo"
+            )
+        return
+
+
+    def assert_foldable_foldl(cls, xs, combine, initial):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import foldl
+        a = Foldable.foldl(xs, combine, initial)
+        assert a == xs.foldl(combine, initial)
+        assert a == foldl(combine, initial, xs)
+        return
+
+
+    @given(st.data())
+    def test_foldable_foldl(cls, data):
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_foldl(
+                data.draw(cls.sample(st.integers())),
+                lambda acc, x: acc + str(x) + acc,
+                "johndoe",
+            )
+        return
+
+
+    def assert_foldable_fold(cls, xs, monoid):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import fold
+        assert Foldable.fold(monoid, xs) == xs.fold(monoid)
+        assert Foldable.fold(monoid, xs) == fold(monoid, xs)
+        return
+
+
+    @given(st.data())
+    def test_foldable_fold(cls, data):
+        from haskpy.types.monoids import Sum, And
+        cls.assert_foldable_fold(
+            data.draw(cls.sample(st.integers())).map(Sum),
+            Sum,
+        )
+        cls.assert_foldable_fold(
+            data.draw(cls.sample(st.booleans())).map(And),
+            And,
+        )
+        return
+
+
+    def assert_foldable_length(cls, xs):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import length
+        assert Foldable.__len__(xs) == len(xs)
+        assert Foldable.__len__(xs) == length(xs)
+        return
+
+
+    @given(st.data())
+    def test_foldable_length(cls, data):
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_length(
+                data.draw(cls.sample(st.integers()))
+            )
+        return
+
+
+    def assert_foldable_null(cls, xs):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import null
+        assert Foldable.null(xs) == xs.null()
+        assert Foldable.null(xs) == null(xs)
+        return
+
+
+    @given(st.data())
+    def test_foldable_null(cls, data):
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_null(
+                data.draw(cls.sample(st.integers()))
+            )
+        return
+
+
+    def assert_foldable_sum(cls, xs):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import sum
+        assert Foldable.sum(xs) == xs.sum()
+        assert Foldable.sum(xs) == sum(xs)
+        return
+
+
+    @given(st.data())
+    def test_foldable_sum(cls, data):
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_sum(
+                data.draw(cls.sample(st.integers()))
+            )
+        return
+
+
+    def assert_foldable_elem(cls, xs, e):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import elem
+        assert Foldable.__contains__(xs, e) == (e in xs)
+        assert Foldable.__contains__(xs, e) == elem(e, xs)
+        return
+
+
+    @given(st.data())
+    def test_foldable_elem(cls, data):
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_elem(
+                data.draw(cls.sample(st.integers())),
+                data.draw(st.integers()),
+            )
+        return
+
+
 @attr.s(frozen=True)
-class Foldable(metaclass=TypeclassMeta):
+class Foldable(metaclass=_FoldableMeta):
     """Foldable typeclass
 
     Minimal complete definition:
@@ -79,12 +254,8 @@ class Foldable(metaclass=TypeclassMeta):
         # The correct answer is:
         #
         # '(((x+a)+b)+c)'
-        #
-
-        # (b -> a -> b) -> (a -> (b -> b))
-        #
-        # initial
         from haskpy.functions import compose
+        warn("Using default implementation of foldl", PerformanceWarning)
         return self.foldr(
             lambda a, f: compose(f, lambda b: combine(b, a)),
             identity,
@@ -116,6 +287,7 @@ class Foldable(metaclass=TypeclassMeta):
 
         """
         from haskpy.functions import Function
+        warn("Using default implementation of foldr", PerformanceWarning)
         return self.fold_map(
             Function,
             lambda a: lambda b: combine(a, b),
@@ -127,18 +299,19 @@ class Foldable(metaclass=TypeclassMeta):
 
 
     def length(self):
-        """Override __len__ if you want to change the default implementation"""
-        return len(self)
-
-
-    def __len__(self):
         """t a -> int
 
         The default implementation isn't very efficient.
 
         """
         from haskpy.types.monoids import Sum
+        warn("Using default implementation of length", PerformanceWarning)
         return self.fold_map(Sum, lambda x: Sum(1)).number
+
+
+    def __len__(self):
+        """Override length if you want to change the default implementation"""
+        return self.length()
 
 
     def sum(self):
@@ -148,6 +321,7 @@ class Foldable(metaclass=TypeclassMeta):
 
         """
         from haskpy.types.monoids import Sum
+        warn("Using default implementation of sum", PerformanceWarning)
         return self.fold_map(Sum, Sum).number
 
 
@@ -160,15 +334,11 @@ class Foldable(metaclass=TypeclassMeta):
 
         """
         from haskpy.types.monoids import And
+        warn("Using default implementation of null", PerformanceWarning)
         return self.fold_map(And, lambda x: And(False)).boolean
 
 
     def elem(self, x):
-        """Override __contains__ if you want to change the default implementation"""
-        return x in self
-
-
-    def __contains__(self, x):
         """t a -> a -> bool
 
         The default implementation is bad because Python isn't lazy. Thus, it
@@ -176,7 +346,13 @@ class Foldable(metaclass=TypeclassMeta):
 
         """
         from haskpy.types.monoids import Or
+        warn("Using default implementation of elem", PerformanceWarning)
         return self.fold_map(Or, lambda y: Or(x == y)).boolean
+
+
+    def __contains__(self, x):
+        """Override elem if you want to change the default implementation"""
+        return self.elem(x)
 
 
     # TODO:

@@ -286,3 +286,7 @@ def curry_new(f, argspec=None):
 def identity(x):
     """a -> a"""
     return x
+
+
+class PerformanceWarning(Warning):
+    pass
