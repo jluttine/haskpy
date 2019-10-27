@@ -25,7 +25,7 @@ class _ListMeta(type(Monad), type(Monoid), type(Foldable)):
 
     @st.composite
     def sample(draw, cls, elements):
-        xs = draw(st.lists(elements))
+        xs = draw(st.lists(elements, max_size=10))
         return List(*xs)
 
 
@@ -59,6 +59,14 @@ class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
     def append(self, xs):
         """List a -> List a -> List a"""
         return List(*self.__xs, *xs.__xs)
+
+
+    def length(self):
+        return len(self.__xs)
+
+
+    def elem(self, e):
+        return e in self.__xs
 
 
     def foldl(self, combine, initial):
