@@ -179,6 +179,32 @@ class _FoldableMeta(TypeclassMeta):
         return
 
 
+    def assert_foldable_functor(cls, xs, monoid, f):
+        # Functor and foldable instances should be consistent
+        from .functor import Functor
+        import pytest
+        if not issubclass(cls, Functor):
+            pytest.skip("{0} not Functor".format(cls.__name__))
+        assert xs.fold_map(monoid, f) == xs.map(f).fold(monoid)
+        return
+
+
+    @given(st.data())
+    def test_foldable_functor(cls, data):
+        from haskpy.types.monoids import Sum, String
+        cls.assert_foldable_functor(
+            data.draw(cls.sample(st.integers())),
+            Sum,
+            lambda i: Sum(i * 2)
+        )
+        cls.assert_foldable_functor(
+            data.draw(cls.sample(st.integers())),
+            String,
+            lambda i: String(str(i)),
+        )
+        return
+
+
 @attr.s(frozen=True)
 class Foldable(metaclass=_FoldableMeta):
     """Foldable typeclass
@@ -363,11 +389,5 @@ class Foldable(metaclass=_FoldableMeta):
     # - to_list
 
 
-# @function
-# def fold(monoid, xs):
-#     pass
-
-
-# @function
-# def fold_map(monoid, f, xs):
-#     pass
+# Foldable-related functions are defined in function module because of circular
+# dependency.
