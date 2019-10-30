@@ -6,10 +6,6 @@ from .typeclass import TypeclassMeta
 from haskpy.utils import identity
 
 
-def _eq(map, x, y):
-    return map(x) == map(y)
-
-
 class _FunctorMeta(TypeclassMeta):
 
 
@@ -77,25 +73,25 @@ class _FunctorMeta(TypeclassMeta):
 
 
     def assert_functor_identity(cls, v, eqmap=identity):
-        assert _eq(eqmap, v.map(identity), v)
+        cls.assert_equal(eqmap, v.map(identity), v)
         return
 
 
     def assert_functor_composition(cls, v, f, g, eqmap=identity):
-        assert _eq(eqmap, v.map(lambda x: g(f(x))), v.map(f).map(g))
+        cls.assert_equal(eqmap, v.map(lambda x: g(f(x))), v.map(f).map(g))
         return
 
 
     def assert_functor_map(cls, v, f, eqmap=identity):
         from haskpy.functions import map
-        assert _eq(eqmap, map(f, v), v.map(f))
+        cls.assert_equal(eqmap, map(f, v), v.map(f))
         return
 
 
     def assert_functor_replace(cls, v, x, eqmap=identity):
         from haskpy.functions import replace
-        assert _eq(eqmap, Functor.replace(v, x), replace(x, v))
-        assert _eq(eqmap, Functor.replace(v, x), v.replace(x))
+        cls.assert_equal(eqmap, Functor.replace(v, x), replace(x, v))
+        cls.assert_equal(eqmap, Functor.replace(v, x), v.replace(x))
         return
 
 

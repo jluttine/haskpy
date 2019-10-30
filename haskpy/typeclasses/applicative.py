@@ -14,8 +14,12 @@ class _ApplicativeMeta(type(Functor)):
         raise NotImplementedError()
 
 
-    def assert_applicative_identity(cls, v):
-        assert cls.pure(identity).apply_to(v) == v
+    def assert_applicative_identity(cls, v, eqmap=identity):
+        cls.assert_equal(
+            eqmap,
+            cls.pure(identity).apply_to(v),
+            v
+        )
         return
 
 
@@ -28,10 +32,11 @@ class _ApplicativeMeta(type(Functor)):
         return
 
 
-    def assert_applicative_composition(cls, u, v, w):
+    def assert_applicative_composition(cls, u, v, w, eqmap=identity):
         from haskpy.functions import compose
-        assert (
-            cls.pure(compose).apply_to(u).apply_to(v).apply_to(w) ==
+        cls.assert_equal(
+            eqmap,
+            cls.pure(compose).apply_to(u).apply_to(v).apply_to(w),
             u.apply_to(v.apply_to(w))
         )
         return
@@ -57,8 +62,12 @@ class _ApplicativeMeta(type(Functor)):
         return
 
 
-    def assert_applicative_homomorphism(cls, f, x):
-        assert cls.pure(f).apply_to(cls.pure(x)) == cls.pure(f(x))
+    def assert_applicative_homomorphism(cls, f, x, eqmap=identity):
+        cls.assert_equal(
+            eqmap,
+            cls.pure(f).apply_to(cls.pure(x)),
+            cls.pure(f(x))
+        )
         return
 
 
@@ -72,8 +81,12 @@ class _ApplicativeMeta(type(Functor)):
         return
 
 
-    def assert_applicative_interchange(cls, u, y):
-        assert u.apply_to(cls.pure(y)) == cls.pure(lambda f: f(y)).apply_to(u)
+    def assert_applicative_interchange(cls, u, y, eqmap=identity):
+        cls.assert_equal(
+            eqmap,
+            u.apply_to(cls.pure(y)),
+            cls.pure(lambda f: f(y)).apply_to(u)
+        )
         return
 
 
@@ -86,10 +99,10 @@ class _ApplicativeMeta(type(Functor)):
         return
 
 
-    def assert_applicative_apply(cls, u, v):
+    def assert_applicative_apply(cls, u, v, eqmap=identity):
         from haskpy.functions import apply
-        assert apply(u, v) == v.apply(u)
-        assert v.apply(u) == u.apply_to(v)
+        cls.assert_equal(eqmap, apply(u, v), v.apply(u))
+        cls.assert_equal(eqmap, v.apply(u), u.apply_to(v))
         return
 
 
