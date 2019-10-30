@@ -2,7 +2,7 @@ import attr
 from hypothesis import given
 import hypothesis.strategies as st
 
-from .semigroup import Semigroup
+from .semigroup import Semigroup, Commutative
 from .typeclass import TypeclassMeta
 
 
@@ -41,6 +41,25 @@ class _MonoidMeta(type(Semigroup)):
 @attr.s(frozen=True)
 class Monoid(Semigroup, metaclass=_MonoidMeta):
     """Monoid typeclass
+
+    Minimal complete definition:
+
+    - ``empty`` (as a class method via metaclass)
+
+    - ``append``
+
+    """
+    pass
+
+
+
+class _CommutativeMonoidMeta(type(Monoid), type(Commutative)):
+    pass
+
+
+@attr.s(frozen=True)
+class CommutativeMonoid(Monoid, Commutative, metaclass=_CommutativeMonoidMeta):
+    """Monoid following the commutativity law
 
     Minimal complete definition:
 

@@ -41,5 +41,31 @@ class Semigroup(metaclass=_SemigroupMeta):
         raise NotImplementedError()
 
 
+class _CommutativeMeta(type(Semigroup)):
+
+
+    def assert_commutative_commutativity(cls, x, y):
+        assert x.append(y) == y.append(x)
+        return
+
+
+    def test_commutative_commutativity(cls):
+        raise NotImplementedError()
+
+
+@attr.s(frozen=True)
+class Commutative(Semigroup, metaclass=_CommutativeMeta):
+    """Semigroup following commutativity law
+
+    This typeclass doesn't add any features nor methods. It only adds a test
+    for the commutativity law.
+
+    Minimal complete definition:
+
+    - ``append``
+
+    """
+
+
 # Semigroup-related functions are defined in function module because of
 # circular dependency.
