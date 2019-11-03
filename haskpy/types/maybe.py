@@ -2,12 +2,73 @@ import attr
 import hypothesis.strategies as st
 from hypothesis import given
 
-from haskpy.typeclasses import Monad, Monoid, PatternMatchable
+from haskpy.typeclasses import Monad, CommutativeMonoid, PatternMatchable
 from .monadtransformer import MonadTransformer
-from haskpy.utils import singleton
+from haskpy.utils import singleton, sample_type, sample_sized
 
 
-class _MaybeMeta(type(Monad), type(Monoid)):
+import functools
+import inspect
+def with_size(f):
+
+    @functools.wraps(f)
+    def wrapped(*args, size=None, **kwargs):
+        return sample_sized(f(*args, **kwargs), size=size)
+
+    return wrapped
+
+
+def with_concrete_types(n):
+
+    def wrap(f):
+
+        @st.composite
+        @functools.wraps(f)
+        def wrapped(draw, cls, *args, **kwargs):
+            types = (
+                [arg for arg in args] +
+                [
+                    draw(st.from_type(type).map(st.from_type))
+                    for i in range(n - len(args))
+                ]
+            )
+            return draw(f(cls, *types, **kwargs))
+
+        return wrapped
+
+    return wrap
+
+
+def sample_semigroup_type():
+    from haskpy.types.monoids import String, Sum, And
+    from haskpy.types import List
+    return sample_type(
+        types=[
+            String.sample(),
+            Sum.sample(),
+            And.sample(),
+        ],
+        types1=[
+            Maybe.sample,
+            List.sample,
+        ],
+    )
+
+
+def sample_commutative_type():
+    from haskpy.types.monoids import Sum, And
+    return sample_type(
+        types=[
+            Sum.sample(),
+            And.sample(),
+        ],
+        types1=[
+            Maybe.sample,
+        ],
+    )
+
+
+class _MaybeMeta(type(Monad), type(CommutativeMonoid)):
 
 
     @property
@@ -19,28 +80,67 @@ class _MaybeMeta(type(Monad), type(Monoid)):
         return Just(x)
 
 
-    @given(st.data())
-    def test_semigroup_associativity(cls, data):
-        """Test semigroup associativity law"""
-        # Need to override the default implementation because we need to have
-        # semigroup instance as the encapsulated type, not just some plain
-        # values.
-        from haskpy.types import List
-        cls.assert_semigroup_associativity(
-            data.draw(cls.sample(List.sample(st.integers()))),
-            data.draw(cls.sample(List.sample(st.integers()))),
-            data.draw(cls.sample(List.sample(st.integers()))),
-        )
-        return
+    @with_concrete_types(1)
+    @with_size
+    def sample(cls, a):
+        return st.one_of(a.map(Just), st.just(Nothing))
 
 
-    @st.composite
-    def sample(draw, cls, elements):
-        b = draw(st.booleans())
-        return (
-            Just(draw(elements)) if b else
-            Nothing
+    def sample_monoid(cls, **kwargs):
+        # Any semigroup is ok as the type inside
+        return sample_semigroup_type().flatmap(
+            lambda t: cls.sample(t, **kwargs),
         )
+        # return sample_type(
+        #     types=[
+        #         String.sample(),
+        #         Sum.sample(),
+        #         And.sample(),
+        #     ],
+        #     types1=[
+        #         cls.sample,
+        #         List.sample,
+        #     ],
+        # ).flatmap(lambda t: sample_sized(cls.sample(t), **kwargs))
+
+
+
+    def sample_commutative(cls, **kwargs):
+        # Any commutative semigroup is ok as the type inside
+        from haskpy.types.monoids import Sum, And
+        return sample_type(
+            types=[
+                Sum.sample(),
+                And.sample(),
+            ],
+            types1=[
+                cls.sample,
+            ],
+        ).flatmap(lambda t: sample_sized(cls.sample(t), **kwargs))
+
+
+    # def sample(cls, a=None, **kwargs):
+    #     from haskpy.types.list import List
+    #     elements = (
+    #         st.just(a) if a is not None else
+    #         sample_type(
+    #             types=[
+    #                 st.integers(),
+    #                 st.lists(st.integers()),
+    #             ],
+    #             types1=[
+    #                 List.sample,
+    #                 cls.sample,
+    #             ]
+    #         )
+    #     )
+    #     return elements.flatmap(
+    #         lambda e: sample_sized(
+    #             st.one_of(e.map(Just), st.just(Nothing)),
+    #             **kwargs
+    #         )
+    #     )
+
 
 
 # Some thoughts on design: One could implement all the methods (except match)
@@ -52,7 +152,7 @@ class _MaybeMeta(type(Monad), type(Monoid)):
 
 
 @attr.s(frozen=True, repr=False)
-class Maybe(Monad, Monoid, PatternMatchable, metaclass=_MaybeMeta):
+class Maybe(Monad, CommutativeMonoid, PatternMatchable, metaclass=_MaybeMeta):
     """Maybe type for optional values"""
 
 
@@ -155,4 +255,53 @@ def MaybeT(BaseClass):
             )
 
 
+        # def bind(self, f):
+        #     """MaybeT m a -> (a -> MaybeT m b) -> MaybeT m b
+
+        #     In decompressed terms:
+
+        #       m (Maybe a) -> (a -> m (Maybe b)) -> m (Maybe b)
+
+        #     """
+
+        #     mMa = self.decompressed # :: m (Maybe a)
+
+        #     # f :: a -> MaybeT m b
+        #     # g :: Maybe a -> m (Maybe b)
+
+        #     g = lambda Ma: Ma.map(f) # :: Maybe (MaybeT m b)
+
+
+        #     y = self.decomposed.bind(g) # :: m (Maybe b)
+
+        #     return Transformed(y) # :: MaybeT m b
+
+
     return Transformed
+
+
+# class MaybeADT():
+
+
+#     class Just():
+#         __x = attr.ib()
+
+#     @singleton
+#     class Nothing():
+#         pass
+
+#     # or attrs programmatically
+
+#     Just = case(lambda x: x)
+#     Nothing = case(None)
+
+
+#     def match(self, Just, Nothing):
+#         pass
+
+
+# class LinkedListADT():
+
+
+#     Empty = case(None)
+#     Cons = case(lambda x, xs: (x, xs))

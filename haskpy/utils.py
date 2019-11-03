@@ -1,6 +1,7 @@
 import functools
 import inspect
 import attr
+import hypothesis.strategies as st
 
 
 def singleton(C):
@@ -290,3 +291,55 @@ def identity(x):
 
 class PerformanceWarning(Warning):
     pass
+
+
+@st.composite
+def draw_args(draw, f, *args):
+    return f(*(draw(a) for a in args))
+
+
+@st.composite
+def sample_type(draw, types, types1=[], types2=[]):
+    if len(types) == 0:
+        raise ValueError("Must provide at least one concrete type")
+    arg = st.deferred(lambda: sample_type(types, types1, types2))
+    return draw(
+        st.one_of(
+            # Concrete types
+            *[st.just(t) for t in types],
+            # One-argument type constructors
+            *[
+                draw_args(t1, arg)
+                for t1 in types1
+            ],
+            # Two-argument type constructors
+            *[
+                draw_args(t2, arg, arg)
+                for t2 in types2
+            ],
+        )
+    )
+
+
+def sample_sized(e, size=None):
+    return (
+        e if size is None else
+        st.tuples(*(size * [e]))
+    )
+
+
+def assert_output(f):
+    """Assert that the output pair elements are equal"""
+
+    @functools.wraps(f)
+    def wrapped(*args, **kwargs):
+        xs = f(*args)
+        x0 = xs[0]
+        for xi in xs[1:]:
+            try:
+                assert x0.__test_eq__(xi, **kwargs)
+            except AttributeError:
+                assert x0 == xi
+        return
+
+    return wrapped

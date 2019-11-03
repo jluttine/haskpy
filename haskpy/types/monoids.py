@@ -1,11 +1,12 @@
 """A collection of useful simple monoids"""
 
 import attr
+import hypothesis.strategies as st
 
-from haskpy.typeclasses import Monoid
+from haskpy.typeclasses import Monoid, CommutativeMonoid
 
 
-class _SumMeta(type(Monoid)):
+class _SumMeta(type(CommutativeMonoid)):
 
 
     @property
@@ -13,8 +14,12 @@ class _SumMeta(type(Monoid)):
         return cls(0)
 
 
+    def sample(cls):
+        return st.integers().map(Sum)
+
+
 @attr.s(frozen=True)
-class Sum(Monoid, metaclass=_SumMeta):
+class Sum(CommutativeMonoid, metaclass=_SumMeta):
 
 
     number = attr.ib()
@@ -24,7 +29,7 @@ class Sum(Monoid, metaclass=_SumMeta):
         return Sum(self.number + x.number)
 
 
-class _AndMeta(type(Monoid)):
+class _AndMeta(type(CommutativeMonoid)):
 
 
     @property
@@ -32,8 +37,12 @@ class _AndMeta(type(Monoid)):
         return cls(True)
 
 
+    def sample(cls):
+        return st.booleans().map(And)
+
+
 @attr.s(frozen=True)
-class And(Monoid, metaclass=_AndMeta):
+class And(CommutativeMonoid, metaclass=_AndMeta):
 
 
     boolean = attr.ib()
@@ -43,7 +52,7 @@ class And(Monoid, metaclass=_AndMeta):
         return And(self.boolean and x.boolean)
 
 
-class _OrMeta(type(Monoid)):
+class _OrMeta(type(CommutativeMonoid)):
 
 
     @property
@@ -51,8 +60,12 @@ class _OrMeta(type(Monoid)):
         return cls(False)
 
 
+    def sample(cls):
+        return st.booleans().map(Or)
+
+
 @attr.s(frozen=True)
-class Or(Monoid, metaclass=_OrMeta):
+class Or(CommutativeMonoid, metaclass=_OrMeta):
 
 
     boolean = attr.ib()
@@ -70,12 +83,24 @@ class _StringMeta(type(Monoid)):
         return cls("")
 
 
+    def sample(cls):
+        return st.characters().map(String)
+
+
 @attr.s(frozen=True, repr=False)
 class String(Monoid, metaclass=_StringMeta):
 
 
-    string = attr.ib()
+    string = attr.ib(converter=str)
 
 
     def append(self, s):
         return String(self.string + s.string)
+
+
+    def __str__(self):
+        return self.string
+
+
+    def __repr__(self):
+        return "String({})".format(self.string)

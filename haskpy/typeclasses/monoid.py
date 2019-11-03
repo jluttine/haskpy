@@ -2,8 +2,8 @@ import attr
 from hypothesis import given
 import hypothesis.strategies as st
 
+from haskpy.utils import assert_output
 from .semigroup import Semigroup, Commutative
-from .typeclass import TypeclassMeta
 
 
 class _MonoidMeta(type(Semigroup)):
@@ -22,20 +22,33 @@ class _MonoidMeta(type(Semigroup)):
         return xs.fold_map(cls, f)
 
 
+    def sample_semigroup(cls, **kwargs):
+        return cls.sample_monoid(**kwargs)
+
+
+    def sample_monoid(cls, **kwargs):
+        # By default, assume the class is a concrete type or that the
+        # monoid-property of the type constructor doesn't depend on the
+        # contained type.
+        return cls.sample(**kwargs)
+
+
     @given(st.data())
     def test_monoid_identity(cls, data):
         cls.assert_monoid_identity(
-            data.draw(cls.sample(st.integers()))
-        )
-        cls.assert_monoid_identity(
-            data.draw(cls.sample(cls.sample(st.integers())))
+            data.draw(cls.sample_monoid()),
+            data=data
         )
         return
 
 
+    @assert_output
     def assert_monoid_identity(cls, x):
-        assert x.append(cls.empty) == x == cls.empty.append(x)
-        return
+        return (
+            x,
+            x.append(cls.empty),
+            cls.empty.append(x),
+        )
 
 
 @attr.s(frozen=True)

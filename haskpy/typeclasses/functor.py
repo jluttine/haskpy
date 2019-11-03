@@ -2,101 +2,119 @@ import attr
 from hypothesis import given
 from hypothesis import strategies as st
 
-from .typeclass import TypeclassMeta
-from haskpy.utils import identity
+from .typeclass import Type
+from haskpy.utils import identity, assert_output
 
 
-class _FunctorMeta(TypeclassMeta):
+class _FunctorMeta(type(Type)):
+
+
+    def sample_functor(cls, elements):
+        # By default, assume the class is a one-argument type constructor
+        return cls.sample(elements)
+
+
+    @assert_output
+    def assert_functor_identity(cls, v):
+        return(
+            v,
+            v.map(identity),
+        )
 
 
     @given(st.data())
     def test_functor_identity(cls, data):
-        t = cls.assert_functor_identity
-        t(data.draw(cls.sample(st.integers())))
-        t(data.draw(cls.sample(st.dates())))
-        t(data.draw(cls.sample(st.lists(st.integers()))))
-        t(data.draw(cls.sample(cls.sample(st.integers()))))
+        cls.assert_functor_identity(
+            data.draw(cls.sample()),
+            data=data
+        )
         return
+
+
+    @assert_output
+    def assert_functor_composition(cls, v, f, g):
+        return (
+            v.map(f).map(g),
+            v.map(lambda x: g(f(x))),
+        )
 
 
     @given(st.data())
     def test_functor_composition(cls, data):
         t = cls.assert_functor_composition
         t(
-            data.draw(cls.sample(st.integers())),
+            data.draw(cls.sample_functor(st.integers())),
             lambda x: x + 1,
             lambda x: x * 2,
+            data=data
         )
         t(
-            data.draw(cls.sample(st.lists(st.dates()))),
+            data.draw(cls.sample_functor(st.lists(st.dates()))),
             lambda x: x + x[::-1],
             lambda x: x * 2,
+            data=data
         )
         t(
-            data.draw(cls.sample(cls.sample(st.integers()))),
+            data.draw(cls.sample_functor(cls.sample_functor(st.integers()))),
             lambda x: x.map(lambda y: y + 1),
             lambda x: x.map(lambda y: y * 2),
+            data=data
         )
         return
+
+
+    @assert_output
+    def assert_functor_map(cls, v, f):
+        from haskpy.functions import map
+        return (
+            v.map(f),
+            map(f, v),
+        )
 
 
     @given(st.data())
     def test_functor_map(cls, data):
         t = cls.assert_functor_map
         t(
-            data.draw(cls.sample(st.integers())),
+            data.draw(cls.sample_functor(st.integers())),
             lambda x: x + 42,
+            data=data
         )
         t(
-            data.draw(cls.sample(st.lists(st.dates()))),
+            data.draw(cls.sample_functor(st.lists(st.dates()))),
             lambda x: x + x[::-1],
+            data=data
         )
         t(
-            data.draw(cls.sample(cls.sample(st.integers()))),
+            data.draw(cls.sample_functor(cls.sample_functor(st.integers()))),
             lambda x: x.map(lambda y: y * 2),
+            data=data
         )
         return
+
+
+    @assert_output
+    def assert_functor_replace(cls, v, x):
+        from haskpy.functions import replace
+        return (
+            Functor.replace(v, x),
+            replace(x, v),
+            v.replace(x),
+        )
 
 
     @given(st.data())
     def test_functor_replace(cls, data):
-        t = cls.assert_functor_replace
-        t(
-            data.draw(cls.sample(st.integers())),
-            data.draw(st.dates()),
+        cls.assert_functor_replace(
+            data.draw(cls.sample()),
+            data.draw(st.one_of(st.integers(), st.dates())),
+            data=data
         )
-        t(
-            data.draw(cls.sample(cls.sample(st.dates()))),
-            data.draw(st.integers()),
-        )
-        return
-
-
-    def assert_functor_identity(cls, v, eqmap=identity):
-        cls.assert_equal(eqmap, v.map(identity), v)
-        return
-
-
-    def assert_functor_composition(cls, v, f, g, eqmap=identity):
-        cls.assert_equal(eqmap, v.map(lambda x: g(f(x))), v.map(f).map(g))
-        return
-
-
-    def assert_functor_map(cls, v, f, eqmap=identity):
-        from haskpy.functions import map
-        cls.assert_equal(eqmap, map(f, v), v.map(f))
-        return
-
-
-    def assert_functor_replace(cls, v, x, eqmap=identity):
-        from haskpy.functions import replace
-        cls.assert_equal(eqmap, Functor.replace(v, x), replace(x, v))
-        cls.assert_equal(eqmap, Functor.replace(v, x), v.replace(x))
         return
 
 
 @attr.s(frozen=True)
-class Functor(metaclass=_FunctorMeta):
+class Functor(Type, metaclass=_FunctorMeta):
     """Covariant functor"""
 
 

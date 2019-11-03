@@ -3,6 +3,7 @@ import functools
 from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Foldable
+from haskpy.utils import sample_type, sample_sized
 
 
 class _ListMeta(type(Monad), type(Monoid), type(Foldable)):
@@ -23,10 +24,30 @@ class _ListMeta(type(Monad), type(Monoid), type(Foldable)):
         return cls(*xs)
 
 
-    @st.composite
-    def sample(draw, cls, elements):
-        xs = draw(st.lists(elements, max_size=10))
-        return List(*xs)
+    def sample(cls, a=None, **kwargs):
+        elements = (
+            st.just(a) if a is not None else
+            sample_type(
+                types=[
+                    st.integers(),
+                    st.lists(st.integers()),
+                ],
+                types1=[
+                    List.sample,
+                    cls.sample,
+                ]
+            )
+        )
+        return elements.flatmap(
+            lambda e: sample_sized(
+                st.lists(e, max_size=10).map(lambda xs: cls(*xs)),
+                **kwargs
+            )
+        )
+
+
+    def sample_functor(cls, elements):
+        return st.lists(elements, max_size=10).map(lambda xs: cls(*xs))
 
 
 @attr.s(frozen=True, repr=False, init=False)

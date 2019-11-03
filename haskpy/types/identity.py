@@ -1,6 +1,7 @@
 import attr
 import hypothesis.strategies as st
 
+from haskpy.utils import sample_type, sample_sized
 from haskpy.typeclasses import Monad
 from .monadtransformer import MonadTransformer
 
@@ -12,9 +13,24 @@ class _IdentityMeta(type(Monad)):
         return cls(x)
 
 
-    @st.composite
-    def sample(draw, cls, elements):
-        return Identity(draw(elements))
+    def sample(cls, a=None, **kwargs):
+        from haskpy.types import List
+        elements = (
+            st.just(a) if a is not None else
+            sample_type(
+                types=[
+                    st.integers(),
+                    st.lists(st.integers()),
+                ],
+                types1=[
+                    List.sample,
+                    cls.sample,
+                ]
+            )
+        )
+        return elements.flatmap(
+            lambda e: sample_sized(e.map(Identity), **kwargs)
+        )
 
 
 @attr.s(frozen=True, repr=False)

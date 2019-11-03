@@ -5,7 +5,7 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid
-from haskpy.utils import curry, identity
+from haskpy.utils import curry, identity, sample_sized
 from haskpy import conftest
 
 
@@ -14,42 +14,37 @@ class _FunctionMeta(type(Monad), type(Monoid)):
 
     @property
     def empty(cls):
-        return Function(identity)
+        return cls(identity)
 
 
     def pure(cls, x):
-        return Function(lambda *args, **kwargs: x)
+        return cls(lambda *args, **kwargs: x)
 
 
-    def test_functor_identity(cls):
-        f = Function(lambda x: x ** 3.8)
-        x = 42.666
-        cls.assert_functor_identity(f, eqmap=lambda f: f(x))
-        return
+    @st.composite
+    def sample(draw, cls, a=None, b=st.integers(), **kwargs):
+        """Create an arbitrary function that returns values of type b
+
+        .. note::
+
+           The drawn function can only be used during tests, otherwise you'll
+           get an error ``Frozen: Cannot call start_example on frozen
+           ConjectureData``.
+
+        """
+        return draw(
+            sample_sized(
+                st.just(_TestFunction(lambda _: draw(b))),
+                **kwargs,
+            )
+        )
 
 
-    def test_functor_composition(cls):
-        f = Function(lambda x: x + "ff")
-        g = lambda x: x + "ggg"
-        h = lambda x: x + "hhhh"
-        cls.assert_functor_composition(f, g, h, eqmap=lambda f: f("a"))
-        return
+    def sample_functor(cls, a, **kwargs):
+        return cls.sample(None, a, **kwargs)
 
 
-    def test_functor_map(cls):
-        f = Function(lambda x: x + "ff")
-        g = lambda x: x + "ggg"
-        cls.assert_functor_map(f, g, eqmap=lambda f: f("a"))
-        return
-
-
-    def test_functor_replace(cls):
-        f = Function(lambda x: x + "ff")
-        cls.assert_functor_replace(f, "aa", eqmap=lambda f: f("x"))
-        return
-
-
-@attr.s(frozen=True, repr=False)
+@attr.s(frozen=True, repr=False, cmp=False)
 class Function(Monad, Monoid, metaclass=_FunctionMeta):
     """Monad instance for functions
 
@@ -68,14 +63,49 @@ class Function(Monad, Monoid, metaclass=_FunctionMeta):
     # TODO: Add __annotations__
 
 
+    def __Function(self, f):
+        # Instead of using self.__Function(f) to create a new Function
+        # instance, we could just use Function(f). But that doesn't work in
+        # tests, where we are using a subclass _TestClass. We need to create
+        # instances of that test class in tests, so this makes it work in both
+        # cases.
+        return attr.evolve(self, Function__f=f)
+
+
     def map(f, g):
         """(a -> b) -> (b -> c) -> (a -> c)"""
-        return compose(g, f)
+        return f.__Function(lambda x: g(f(x)))
+
+
+    def apply(f, g):
+        """(a -> b) -> (a -> b -> c) -> a -> c"""
+        # TODO: Currying doesn't work nicely here.. Should perhaps compose
+        # uncurried functions and then curry the end result?
+        return f.__Function(
+            lambda *args, **kwargs: g(*args, **kwargs)(
+                f(*args, **kwargs)
+            )
+        )
+
+
+    def bind(f, g):
+        """(a -> b) -> (b -> a -> c) -> a -> c"""
+        # TODO: Currying doesn't work nicely here.. Should perhaps compose
+        # uncurried functions and then curry the end result?
+        return f.__Function(
+            lambda *args, **kwargs: g(f(*args, **kwargs))(
+                *args,
+                **kwargs
+            )
+        )
 
 
     def append(f, g):
         """(a -> a) -> (a -> a) -> (a -> a)"""
         # FIXME: compose(f, g) or compose(g, f) ????
+        #
+        # FIXME: This is wrong for functions in general. It's some endofunction
+        # stuff.
         return compose(f, g)
 
 
@@ -83,7 +113,11 @@ class Function(Monad, Monoid, metaclass=_FunctionMeta):
         # Don't add docstring here because it shows up a bit stupidly in help
         # texts.
         y = self.__f(*args, **kwargs)
-        return Function(y) if callable(y) else y
+        return (
+            self.__Function(y)
+            if callable(y) and not isinstance(y, Function) else
+            y
+        )
 
 
     def __repr__(self):
@@ -121,10 +155,19 @@ class Function(Monad, Monoid, metaclass=_FunctionMeta):
             fp = functools.partial(self, obj)
             # Keep the docstring untouched
             fp.__doc__ = self.__doc__
-            return Function(fp)
+            return self.__Function(fp)
         else:
             # Class method
             return self
+
+
+    def __test_eq__(self, g, data):
+        # NOTE: This is used only in tests when the function input doesn't
+        # really matter so any hashable type here is ok. The type doesn't
+        # matter because the functions are either _TestFunction or created with
+        # pure.
+        x = data.draw(st.integers())
+        return self(x) == g(x)
 
 
 def function(f):
@@ -132,9 +175,52 @@ def function(f):
     return Function(curry(f))
 
 
+@attr.s(frozen=True, repr=False, cmp=False)
+class _TestFunction(Function, metaclass=_FunctionMeta):
+    """Function type for tests
+
+    Creates arbitrary "pure" functions of the desired type and enables
+    comparing functions.
+
+    """
+
+
+    __memory = attr.ib(factory=dict, init=False)
+
+
+    def __call__(self, x):
+        try:
+            return self.__memory[x]
+        except KeyError:
+            y = self._Function__f(x)
+            self.__memory[x] = y
+            return y
+
+
 @function
 def compose(g, f):
-    return Function(lambda *args, **kwargs: g(f(*args, **kwargs)))
+    # Problem with composing with *args and **kwargs as:
+    #
+    #   Function(lambda *args, **kwargs: g(f(*args, **kwargs)))
+    #
+    # Consider the following:
+    #
+    #   f = curry(lambda x, y: x + y)
+    #
+    #   g = lambda z: z * 2
+    #
+    #   h = compose(g, f)
+    #
+    # This doesn't work:
+    #
+    #   h(2)(3)
+    #
+    # This works:
+    #
+    #   h(2, 3)
+    #
+    # Thus, let's use exactly one argument:
+    return Function(lambda x: g(f(x)))
 
 
 # NOTE: Functor/Applicative/Monad-related functions couldn't be defined in the
