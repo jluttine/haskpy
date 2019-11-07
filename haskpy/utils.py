@@ -131,7 +131,7 @@ def wraps(f):
 
 
 
-def curry(f):
+def curry(f, wrap=True):
     # toolz Python package has curry function but it's unusable. The main
     # problem being you don't get errors when doing something wrong but instead
     # some really weird results.
@@ -169,13 +169,6 @@ def curry(f):
     if not callable(f):
         raise TypeError("'{}' object is not callable".format(type(f).__name__))
 
-    # NOTE: functools.wraps is a bit slow. Thus, currying functions all the
-    # time might be a bit slow. Without wrapping, curry takes about 0.3
-    # microseconds. With functools.wraps, 3 microseconds. With my own simple
-    # wraps method, it takes 1 microsecond. Let's use that for now. Not sure if
-    # it misses something. If so, use functools.wraps.
-
-    @wraps(f)
     def wrapped(*args, **kwargs):
 
         try:
@@ -214,7 +207,7 @@ def curry(f):
                 #    In that case, don't raise the error, just partially
                 #    evaluate the function (and curry it).
                 if count_required_arguments(spec) > 0:
-                    return curry(fp)
+                    return curry(fp, wrap=wrap)
                 # 2. The function received all required arguments, thus the
                 #    error must have happened somewhere inside the
                 #    function. In that case, just raise the original error.
@@ -223,7 +216,13 @@ def curry(f):
             # somewhere inside its computations. Just raise that error.
             raise
 
-    return wrapped
+    # NOTE: functools.wraps is a bit slow. Thus, currying functions all the
+    # time might be a bit slow. Without wrapping, curry takes about 0.3
+    # microseconds. With functools.wraps, 3 microseconds. With my own simple
+    # wraps method, it takes 1 microsecond. Let's use that for now. Not sure if
+    # it misses something. If so, use functools.wraps.
+
+    return wraps(f)(wrapped) if wrap else wrapped
 
 
 def curry_new(f, argspec=None):

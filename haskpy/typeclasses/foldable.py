@@ -343,7 +343,7 @@ class Foldable(Type, metaclass=_FoldableMeta):
         # '(((x+a)+b)+c)'
         from haskpy.functions import compose, curry
         warn("Using default implementation of foldl", PerformanceWarning)
-        comb = curry(combine)
+        comb = curry(combine, wrap=False)
         return self.foldr(
             lambda a, f: compose(f, lambda b: comb(b)(a)),
             identity,
@@ -378,8 +378,7 @@ class Foldable(Type, metaclass=_FoldableMeta):
         warn("Using default implementation of foldr", PerformanceWarning)
         return self.fold_map(
             Function,
-            curry(combine),
-            #lambda a: lambda b: combine(a, b),
+            curry(combine, wrap=False),
         )(initial)
 
 
