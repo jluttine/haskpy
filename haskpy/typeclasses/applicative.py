@@ -4,6 +4,7 @@ import hypothesis.strategies as st
 
 from haskpy.utils import identity, assert_output
 from .functor import Functor
+from haskpy import testing
 
 
 class _ApplicativeMeta(type(Functor)):
@@ -24,10 +25,13 @@ class _ApplicativeMeta(type(Functor)):
 
     @given(st.data())
     def test_applicative_identity(cls, data):
-        cls.assert_applicative_identity(
-            data.draw(cls.sample()),
-            data=data,
-        )
+        # Draw types
+        a = data.draw(testing.sample_type())
+
+        # Draw values
+        v = data.draw(cls.sample_functor_value(a))
+
+        cls.assert_applicative_identity(v, data=data)
         return
 
 
@@ -42,23 +46,17 @@ class _ApplicativeMeta(type(Functor)):
 
     @given(st.data())
     def test_applicative_composition(cls, data):
-        t = cls.assert_applicative_composition
-        draw = lambda e: data.draw(cls.sample_functor(e))
-        t(
-            # Create some random functions
-            draw(st.integers().map(lambda i: lambda x: x * i)),
-            draw(st.integers().map(lambda i: lambda x: x + i)),
-            draw(st.integers()),
-            data=data,
-        )
-        from haskpy.functions import map
-        # Nested structure
-        t(
-            draw(st.integers().map(lambda i: map(lambda x: x * i))),
-            draw(st.integers().map(lambda i: map(lambda x: x + i))),
-            draw(cls.sample_functor(st.integers())),
-            data=data,
-        )
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_hashable_type())
+        c = data.draw(testing.sample_type())
+
+        # Draw values
+        w = data.draw(cls.sample_functor_value(a))
+        v = data.draw(cls.sample_functor_value(testing.sample_function(b)))
+        u = data.draw(cls.sample_functor_value(testing.sample_function(c)))
+
+        cls.assert_applicative_composition(u, v, w, data=data)
         return
 
 
@@ -72,12 +70,15 @@ class _ApplicativeMeta(type(Functor)):
 
     @given(st.data())
     def test_applicative_homomorphism(cls, data):
-        cls.assert_applicative_homomorphism(
-            # Create randomish functions
-            data.draw(st.integers().map(lambda i: lambda x: x * i)),
-            data.draw(st.integers()),
-            data=data
-        )
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        x = data.draw(a)
+        f = data.draw(testing.sample_function(b))
+
+        cls.assert_applicative_homomorphism(f, x, data=data)
         return
 
 
@@ -91,13 +92,15 @@ class _ApplicativeMeta(type(Functor)):
 
     @given(st.data())
     def test_applicative_interchange(cls, data):
-        cls.assert_applicative_interchange(
-            data.draw(cls.sample_functor(
-                st.integers().map(lambda i: lambda x: x * i))
-            ),
-            data.draw(st.integers()),
-            data=data
-        )
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        y = data.draw(a)
+        u = data.draw(cls.sample_functor_value(testing.sample_function(b)))
+
+        cls.assert_applicative_interchange(u, y, data=data)
         return
 
 
@@ -113,13 +116,15 @@ class _ApplicativeMeta(type(Functor)):
 
     @given(st.data())
     def test_applicative_apply(cls, data):
-        cls.assert_applicative_apply(
-            data.draw(cls.sample_functor(
-                st.integers().map(lambda i: lambda x: x * i)
-            )),
-            data.draw(cls.sample_functor(st.integers())),
-            data=data
-        )
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        v = data.draw(cls.sample_functor_value(a))
+        u = data.draw(cls.sample_functor_value(testing.sample_function(b)))
+
+        cls.assert_applicative_apply(u, v, data=data)
         return
 
 

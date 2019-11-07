@@ -3,33 +3,40 @@ import hypothesis.strategies as st
 from hypothesis import given
 
 from .typeclass import Type
+from haskpy.utils import assert_output
 
 
 class _SemigroupMeta(type(Type)):
 
 
-    def sample_semigroup(draw, cls):
+    def sample_semigroup_type(draw, cls):
         # By default, assume the class is a concrete type or that any random
         # types for the type constructor make the concrete type semigroup.
-        return cls.sample()
+        return cls.sample_type()
 
 
     @given(st.data())
     def test_semigroup_associativity(cls, data):
         """Test semigroup associativity law"""
-        cls.assert_semigroup_associativity(
-            # NOTE: By using size argument instead of sampling independently,
-            # we get the same concrete type even with type constructors that
-            # can give many concrete types.
-            *data.draw(cls.sample_semigroup(size=3)),
-        )
+        # Draw types
+        t = data.draw(cls.sample_semigroup_type())
+
+        # Draw values
+        x = data.draw(t)
+        y = data.draw(t)
+        z = data.draw(t)
+
+        cls.assert_semigroup_associativity(x, y, z, data=data)
         return
 
 
+    @assert_output
     def assert_semigroup_associativity(cls, x, y, z):
         """x <> (y <> z) = (x <> y) <> z"""
-        assert x.append(y).append(z) == x.append(y.append(z))
-        return
+        return (
+            x.append(y).append(z),
+            x.append(y.append(z)),
+        )
 
 
 @attr.s(frozen=True)
@@ -51,19 +58,27 @@ class Semigroup(Type, metaclass=_SemigroupMeta):
 class _CommutativeMeta(type(Semigroup)):
 
 
-    @st.composite
-    def sample_commutative(draw, cls, **kwargs):
-        return draw(cls.sample(**kwargs))
+    def sample_commutative_type(cls):
+        # By default, assume the class is a concrete type or that the
+        # commutative-property of the type constructor doesn't depend on the
+        # contained type.
+        return cls.sample_type()
 
 
+    @assert_output
     def assert_commutative_commutativity(cls, x, y):
-        assert x.append(y) == y.append(x)
-        return
+        return (x.append(y), y.append(x))
 
 
     @given(st.data())
     def test_commutative_commutativity(cls, data):
-        (x, y) = data.draw(cls.sample_commutative(size=2))
+        # Draw types
+        t = data.draw(cls.sample_commutative_type())
+
+        # Draw values
+        x = data.draw(t)
+        y = data.draw(t)
+
         cls.assert_commutative_commutativity(x, y)
         return
 

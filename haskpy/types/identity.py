@@ -13,24 +13,8 @@ class _IdentityMeta(type(Monad)):
         return cls(x)
 
 
-    def sample(cls, a=None, **kwargs):
-        from haskpy.types import List
-        elements = (
-            st.just(a) if a is not None else
-            sample_type(
-                types=[
-                    st.integers(),
-                    st.lists(st.integers()),
-                ],
-                types1=[
-                    List.sample,
-                    cls.sample,
-                ]
-            )
-        )
-        return elements.flatmap(
-            lambda e: sample_sized(e.map(Identity), **kwargs)
-        )
+    def sample_value(cls, a):
+        return a.map(Identity)
 
 
 @attr.s(frozen=True, repr=False)

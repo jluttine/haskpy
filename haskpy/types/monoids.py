@@ -3,10 +3,10 @@
 import attr
 import hypothesis.strategies as st
 
-from haskpy.typeclasses import Monoid, CommutativeMonoid
+from haskpy.typeclasses import Monoid, CommutativeMonoid, Hashable
 
 
-class _SumMeta(type(CommutativeMonoid)):
+class _SumMeta(type(CommutativeMonoid), type(Hashable)):
 
 
     @property
@@ -14,12 +14,12 @@ class _SumMeta(type(CommutativeMonoid)):
         return cls(0)
 
 
-    def sample(cls):
-        return st.integers().map(Sum)
+    def sample_type(cls):
+        return st.just(st.integers().map(Sum))
 
 
 @attr.s(frozen=True)
-class Sum(CommutativeMonoid, metaclass=_SumMeta):
+class Sum(CommutativeMonoid, Hashable, metaclass=_SumMeta):
 
 
     number = attr.ib()
@@ -29,7 +29,7 @@ class Sum(CommutativeMonoid, metaclass=_SumMeta):
         return Sum(self.number + x.number)
 
 
-class _AndMeta(type(CommutativeMonoid)):
+class _AndMeta(type(CommutativeMonoid), type(Hashable)):
 
 
     @property
@@ -37,12 +37,12 @@ class _AndMeta(type(CommutativeMonoid)):
         return cls(True)
 
 
-    def sample(cls):
-        return st.booleans().map(And)
+    def sample_type(cls):
+        return st.just(st.booleans().map(And))
 
 
 @attr.s(frozen=True)
-class And(CommutativeMonoid, metaclass=_AndMeta):
+class And(CommutativeMonoid, Hashable, metaclass=_AndMeta):
 
 
     boolean = attr.ib()
@@ -52,7 +52,7 @@ class And(CommutativeMonoid, metaclass=_AndMeta):
         return And(self.boolean and x.boolean)
 
 
-class _OrMeta(type(CommutativeMonoid)):
+class _OrMeta(type(CommutativeMonoid), type(Hashable)):
 
 
     @property
@@ -60,12 +60,12 @@ class _OrMeta(type(CommutativeMonoid)):
         return cls(False)
 
 
-    def sample(cls):
-        return st.booleans().map(Or)
+    def sample_type(cls):
+        return st.just(st.booleans().map(Or))
 
 
 @attr.s(frozen=True)
-class Or(CommutativeMonoid, metaclass=_OrMeta):
+class Or(CommutativeMonoid, Hashable, metaclass=_OrMeta):
 
 
     boolean = attr.ib()
@@ -75,7 +75,7 @@ class Or(CommutativeMonoid, metaclass=_OrMeta):
         return Or(self.boolean or x.boolean)
 
 
-class _StringMeta(type(Monoid)):
+class _StringMeta(type(Monoid), type(Hashable)):
 
 
     @property
@@ -83,12 +83,12 @@ class _StringMeta(type(Monoid)):
         return cls("")
 
 
-    def sample(cls):
-        return st.characters().map(String)
+    def sample_type(cls):
+        return st.just(st.text().map(lambda s: String(s)))
 
 
 @attr.s(frozen=True, repr=False)
-class String(Monoid, metaclass=_StringMeta):
+class String(Monoid, Hashable, metaclass=_StringMeta):
 
 
     string = attr.ib(converter=str)
@@ -103,4 +103,4 @@ class String(Monoid, metaclass=_StringMeta):
 
 
     def __repr__(self):
-        return "String({})".format(self.string)
+        return "String({})".format(repr(self.string))

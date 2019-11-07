@@ -2,73 +2,14 @@ import attr
 import hypothesis.strategies as st
 from hypothesis import given
 
-from haskpy.typeclasses import Monad, CommutativeMonoid, PatternMatchable
+from haskpy.typeclasses import Monad, CommutativeMonoid, PatternMatchable, Hashable
 from .monadtransformer import MonadTransformer
 from haskpy.utils import singleton, sample_type, sample_sized
 
-
-import functools
-import inspect
-def with_size(f):
-
-    @functools.wraps(f)
-    def wrapped(*args, size=None, **kwargs):
-        return sample_sized(f(*args, **kwargs), size=size)
-
-    return wrapped
+from haskpy import testing
 
 
-def with_concrete_types(n):
-
-    def wrap(f):
-
-        @st.composite
-        @functools.wraps(f)
-        def wrapped(draw, cls, *args, **kwargs):
-            types = (
-                [arg for arg in args] +
-                [
-                    draw(st.from_type(type).map(st.from_type))
-                    for i in range(n - len(args))
-                ]
-            )
-            return draw(f(cls, *types, **kwargs))
-
-        return wrapped
-
-    return wrap
-
-
-def sample_semigroup_type():
-    from haskpy.types.monoids import String, Sum, And
-    from haskpy.types import List
-    return sample_type(
-        types=[
-            String.sample(),
-            Sum.sample(),
-            And.sample(),
-        ],
-        types1=[
-            Maybe.sample,
-            List.sample,
-        ],
-    )
-
-
-def sample_commutative_type():
-    from haskpy.types.monoids import Sum, And
-    return sample_type(
-        types=[
-            Sum.sample(),
-            And.sample(),
-        ],
-        types1=[
-            Maybe.sample,
-        ],
-    )
-
-
-class _MaybeMeta(type(Monad), type(CommutativeMonoid)):
+class _MaybeMeta(type(Monad), type(CommutativeMonoid), type(Hashable)):
 
 
     @property
@@ -80,67 +21,23 @@ class _MaybeMeta(type(Monad), type(CommutativeMonoid)):
         return Just(x)
 
 
-    @with_concrete_types(1)
-    @with_size
-    def sample(cls, a):
+    def sample_value(cls, a):
         return st.one_of(a.map(Just), st.just(Nothing))
 
 
-    def sample_monoid(cls, **kwargs):
-        # Any semigroup is ok as the type inside
-        return sample_semigroup_type().flatmap(
-            lambda t: cls.sample(t, **kwargs),
-        )
-        # return sample_type(
-        #     types=[
-        #         String.sample(),
-        #         Sum.sample(),
-        #         And.sample(),
-        #     ],
-        #     types1=[
-        #         cls.sample,
-        #         List.sample,
-        #     ],
-        # ).flatmap(lambda t: sample_sized(cls.sample(t), **kwargs))
+    def sample_hashable_type(cls):
+        t = testing.sample_hashable_type()
+        return t.map(cls.sample_value)
 
 
-
-    def sample_commutative(cls, **kwargs):
-        # Any commutative semigroup is ok as the type inside
-        from haskpy.types.monoids import Sum, And
-        return sample_type(
-            types=[
-                Sum.sample(),
-                And.sample(),
-            ],
-            types1=[
-                cls.sample,
-            ],
-        ).flatmap(lambda t: sample_sized(cls.sample(t), **kwargs))
+    def sample_monoid_type(cls):
+        t = testing.sample_monoid_type()
+        return t.map(cls.sample_value)
 
 
-    # def sample(cls, a=None, **kwargs):
-    #     from haskpy.types.list import List
-    #     elements = (
-    #         st.just(a) if a is not None else
-    #         sample_type(
-    #             types=[
-    #                 st.integers(),
-    #                 st.lists(st.integers()),
-    #             ],
-    #             types1=[
-    #                 List.sample,
-    #                 cls.sample,
-    #             ]
-    #         )
-    #     )
-    #     return elements.flatmap(
-    #         lambda e: sample_sized(
-    #             st.one_of(e.map(Just), st.just(Nothing)),
-    #             **kwargs
-    #         )
-    #     )
-
+    def sample_commutative_type(cls):
+        t = testing.sample_commutative_type()
+        return t.map(cls.sample_value)
 
 
 # Some thoughts on design: One could implement all the methods (except match)

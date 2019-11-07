@@ -4,6 +4,8 @@ from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Foldable
 from haskpy.utils import sample_type, sample_sized
+from haskpy import testing
+from haskpy.functions import curry
 
 
 class _ListMeta(type(Monad), type(Monoid), type(Foldable)):
@@ -24,30 +26,13 @@ class _ListMeta(type(Monad), type(Monoid), type(Foldable)):
         return cls(*xs)
 
 
-    def sample(cls, a=None, **kwargs):
-        elements = (
-            st.just(a) if a is not None else
-            sample_type(
-                types=[
-                    st.integers(),
-                    st.lists(st.integers()),
-                ],
-                types1=[
-                    List.sample,
-                    cls.sample,
-                ]
-            )
-        )
-        return elements.flatmap(
-            lambda e: sample_sized(
-                st.lists(e, max_size=10).map(lambda xs: cls(*xs)),
-                **kwargs
-            )
-        )
+    def sample_value(cls, a):
+        return st.lists(a, max_size=10).map(lambda xs: cls(*xs))
 
 
-    def sample_functor(cls, elements):
-        return st.lists(elements, max_size=10).map(lambda xs: cls(*xs))
+    def sample_monoid_type(cls):
+        t = testing.sample_type()
+        return t.map(cls.sample_value)
 
 
 @attr.s(frozen=True, repr=False, init=False)
@@ -96,7 +81,7 @@ class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
         # use parallelized implementation because they use monoids. Now, the
         # default implementations use foldl/foldr which both are sequential.
         return functools.reduce(
-            combine,
+            lambda a, b: curry(combine)(a)(b),
             self.__xs,
             initial,
         )
@@ -108,7 +93,7 @@ class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
         # use parallelized implementation because they use monoids. Now, the
         # default implementations use foldl/foldr which both are sequential.
         return functools.reduce(
-            lambda b, a: combine(a, b),
+            lambda b, a: curry(combine)(a)(b),
             self.__xs[::-1],
             initial,
         )

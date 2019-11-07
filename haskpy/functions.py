@@ -6,7 +6,7 @@ from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid
 from haskpy.utils import curry, identity, sample_sized
-from haskpy import conftest
+from haskpy import conftest, testing
 
 
 class _FunctionMeta(type(Monad), type(Monoid)):
@@ -21,27 +21,8 @@ class _FunctionMeta(type(Monad), type(Monoid)):
         return cls(lambda *args, **kwargs: x)
 
 
-    @st.composite
-    def sample(draw, cls, a=None, b=st.integers(), **kwargs):
-        """Create an arbitrary function that returns values of type b
-
-        .. note::
-
-           The drawn function can only be used during tests, otherwise you'll
-           get an error ``Frozen: Cannot call start_example on frozen
-           ConjectureData``.
-
-        """
-        return draw(
-            sample_sized(
-                st.just(_TestFunction(lambda _: draw(b))),
-                **kwargs,
-            )
-        )
-
-
-    def sample_functor(cls, a, **kwargs):
-        return cls.sample(None, a, **kwargs)
+    def sample_value(cls, a):
+        return testing.sample_function(a).map(Function)
 
 
 @attr.s(frozen=True, repr=False, cmp=False)
@@ -173,28 +154,6 @@ class Function(Monad, Monoid, metaclass=_FunctionMeta):
 def function(f):
     """Decorator for currying and transforming functions into monads"""
     return Function(curry(f))
-
-
-@attr.s(frozen=True, repr=False, cmp=False)
-class _TestFunction(Function, metaclass=_FunctionMeta):
-    """Function type for tests
-
-    Creates arbitrary "pure" functions of the desired type and enables
-    comparing functions.
-
-    """
-
-
-    __memory = attr.ib(factory=dict, init=False)
-
-
-    def __call__(self, x):
-        try:
-            return self.__memory[x]
-        except KeyError:
-            y = self._Function__f(x)
-            self.__memory[x] = y
-            return y
 
 
 @function

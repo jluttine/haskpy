@@ -4,14 +4,19 @@ from hypothesis import strategies as st
 
 from .typeclass import Type
 from haskpy.utils import identity, assert_output
+from haskpy import testing
 
 
 class _FunctorMeta(type(Type)):
 
 
-    def sample_functor(cls, elements):
-        # By default, assume the class is a one-argument type constructor
-        return cls.sample(elements)
+    def sample_type(cls):
+        t = testing.sample_type()
+        return t.map(cls.sample_value)
+
+
+    def sample_functor_value(cls, a):
+        return cls.sample_value(a)
 
 
     @assert_output
@@ -24,8 +29,9 @@ class _FunctorMeta(type(Type)):
 
     @given(st.data())
     def test_functor_identity(cls, data):
+        t = data.draw(cls.sample_type())
         cls.assert_functor_identity(
-            data.draw(cls.sample()),
+            data.draw(t),
             data=data
         )
         return
@@ -41,25 +47,17 @@ class _FunctorMeta(type(Type)):
 
     @given(st.data())
     def test_functor_composition(cls, data):
-        t = cls.assert_functor_composition
-        t(
-            data.draw(cls.sample_functor(st.integers())),
-            lambda x: x + 1,
-            lambda x: x * 2,
-            data=data
-        )
-        t(
-            data.draw(cls.sample_functor(st.lists(st.dates()))),
-            lambda x: x + x[::-1],
-            lambda x: x * 2,
-            data=data
-        )
-        t(
-            data.draw(cls.sample_functor(cls.sample_functor(st.integers()))),
-            lambda x: x.map(lambda y: y + 1),
-            lambda x: x.map(lambda y: y * 2),
-            data=data
-        )
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_hashable_type())
+        c = data.draw(testing.sample_type())
+
+        # Draw values
+        v = data.draw(cls.sample_functor_value(a))
+        f = data.draw(testing.sample_function(b))
+        g = data.draw(testing.sample_function(c))
+
+        cls.assert_functor_composition(v, f, g, data=data)
         return
 
 
@@ -74,22 +72,15 @@ class _FunctorMeta(type(Type)):
 
     @given(st.data())
     def test_functor_map(cls, data):
-        t = cls.assert_functor_map
-        t(
-            data.draw(cls.sample_functor(st.integers())),
-            lambda x: x + 42,
-            data=data
-        )
-        t(
-            data.draw(cls.sample_functor(st.lists(st.dates()))),
-            lambda x: x + x[::-1],
-            data=data
-        )
-        t(
-            data.draw(cls.sample_functor(cls.sample_functor(st.integers()))),
-            lambda x: x.map(lambda y: y * 2),
-            data=data
-        )
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        v = data.draw(cls.sample_functor_value(a))
+        f = data.draw(testing.sample_function(b))
+
+        cls.assert_functor_map(v, f, data=data)
         return
 
 
@@ -105,11 +96,15 @@ class _FunctorMeta(type(Type)):
 
     @given(st.data())
     def test_functor_replace(cls, data):
-        cls.assert_functor_replace(
-            data.draw(cls.sample()),
-            data.draw(st.one_of(st.integers(), st.dates())),
-            data=data
-        )
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        v = data.draw(cls.sample_functor_value(a))
+        x = data.draw(b)
+
+        cls.assert_functor_replace(v, x, data=data)
         return
 
 

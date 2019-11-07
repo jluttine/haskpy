@@ -22,23 +22,26 @@ class _MonoidMeta(type(Semigroup)):
         return xs.fold_map(cls, f)
 
 
-    def sample_semigroup(cls, **kwargs):
-        return cls.sample_monoid(**kwargs)
+    def sample_semigroup_type(cls):
+        return cls.sample_monoid_type()
 
 
-    def sample_monoid(cls, **kwargs):
+    def sample_monoid_type(cls):
         # By default, assume the class is a concrete type or that the
         # monoid-property of the type constructor doesn't depend on the
         # contained type.
-        return cls.sample(**kwargs)
+        return cls.sample_type()
 
 
     @given(st.data())
     def test_monoid_identity(cls, data):
-        cls.assert_monoid_identity(
-            data.draw(cls.sample_monoid()),
-            data=data
-        )
+        # Draw types
+        t = data.draw(cls.sample_monoid_type())
+
+        # Draw values
+        x = data.draw(t)
+
+        cls.assert_monoid_identity(x, data=data)
         return
 
 
@@ -66,12 +69,12 @@ class Monoid(Semigroup, metaclass=_MonoidMeta):
 
 
 
-class _CommutativeMonoidMeta(type(Monoid), type(Commutative)):
+class _CommutativeMonoidMeta(type(Commutative), type(Monoid)):
     pass
 
 
 @attr.s(frozen=True)
-class CommutativeMonoid(Monoid, Commutative, metaclass=_CommutativeMonoidMeta):
+class CommutativeMonoid(Commutative, Monoid, metaclass=_CommutativeMonoidMeta):
     """Monoid following the commutativity law
 
     Minimal complete definition:
