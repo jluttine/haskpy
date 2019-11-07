@@ -1,4 +1,5 @@
-from haskpy.types.maybe import Maybe, Just, Nothing
+from haskpy.types.maybe import Maybe, Just, Nothing, MaybeT
+from haskpy.types import List
 from haskpy.conftest import make_test_class
 
 
@@ -17,3 +18,7 @@ def test_maybe_map():
     """Make sure the originally given value isn't kept constant"""
     assert Just(42).map(lambda x: x + 1) == Just(43)
     return
+
+
+# Test typeclass laws for MaybeT monad transformer (using some example monad).
+TestMaybeT = make_test_class(MaybeT(List))
