@@ -4,12 +4,6 @@ import attr
 from haskpy.utils import singleton
 
 
-
-def sample_list(**kwargs):
-    t = sample_any_type(**kwargs)
-    return t.map(st.lists)
-
-
 def types():
     from haskpy import types
     from haskpy.types import hypothesis

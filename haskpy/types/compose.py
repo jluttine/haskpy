@@ -104,6 +104,10 @@ def Compose(X, Y):
             )
 
 
+        def sample_value(cls, a):
+            return X.sample_value(Y.sample_value(a)).map(cls)
+
+
     # It's also Foldable and Traversable if both X and Y are.
 
 
