@@ -13,7 +13,7 @@ def MonadTransformer(InnerMonad):
             X = Compose(OuterMonad, InnerMonad)
 
 
-            class BaseClassMeta(type(X)):
+            class BaseClassMeta(type(X), type(Monad)):
 
 
                 def __repr__(cls):
