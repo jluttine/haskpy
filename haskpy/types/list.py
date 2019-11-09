@@ -67,6 +67,10 @@ class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
         return List(*self.__xs, *xs.__xs)
 
 
+    def to_iter(self):
+        yield from self.__xs
+
+
     def length(self):
         return len(self.__xs)
 

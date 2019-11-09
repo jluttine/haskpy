@@ -106,6 +106,14 @@ class Just(Maybe):
         return combine(self.__x, initial)
 
 
+    def length(self):
+        return 1
+
+
+    def to_iter(self):
+        yield from (self.__x,)
+
+
     def __repr__(self):
         return "Just({0})".format(repr(self.__x))
 
@@ -145,6 +153,14 @@ class Nothing(Maybe):
 
     def foldr(self, combine, initial):
         return initial
+
+
+    def length(self):
+        return 0
+
+
+    def to_iter(self):
+        yield from ()
 
 
     def __repr__(self):

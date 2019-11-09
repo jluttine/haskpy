@@ -1,4 +1,5 @@
 import attr
+import itertools
 from warnings import warn, filterwarnings, catch_warnings
 import hypothesis.strategies as st
 from hypothesis import given
@@ -276,12 +277,27 @@ class _FoldableMeta(type(Type)):
 class Foldable(Type, metaclass=_FoldableMeta):
     """Foldable typeclass
 
-    Minimal complete definition:
+    Strictly minimal complete definition:
 
     - ``fold_map`` or ``foldl`` or ``foldr``
 
+    Recommended minimal complete definition:
+
+    - ``foldl``
+
+    - ``foldr``
+
+    - ``to_iter``
+
+    - ``length``
+
+    If default implementation is used for any of those, a performance warning
+    is raised.
+
     It is very strongly recommended to implement both ``foldl`` and ``foldr``
-    because the default implementations won't scale up in Python.
+    because the default implementations won't scale up in Python. Also,
+    ``to_iter`` is strongly recommended as many other methods rely on that and
+    the default implementation is slow.
 
     Note that ``foldl`` and ``foldr`` are sequential, but ``fold_map`` could be
     parallelized because it uses monoids. Thus, if parallelized implementation
@@ -391,56 +407,59 @@ class Foldable(Type, metaclass=_FoldableMeta):
         return self.fold_map(monoid, identity)
 
 
+    def to_iter(self):
+        """t a -> Iter a
+
+        Instead of to_list (as in Haskell), let's provide to_iter. With
+        iterables, we can write efficient implementations for many other
+        methods (e.g., sum, elem) even for large or sometimes infinite
+        foldables.
+
+        The default implementation isn't very efficient as it uses folding to
+        construct the iterator.
+
+        """
+        warn("Using default implementation of to_iter", PerformanceWarning)
+        return self.foldl(
+            lambda acc, x: itertools.chain(acc, (x,)),
+            itertools.chain()
+        )
+
+
     def length(self):
         """t a -> int
 
-        The default implementation isn't very efficient.
+        The default implementation isn't very efficient as it traverses through
+        the iterator.
 
         """
-        from haskpy.types.monoids import Sum
         warn("Using default implementation of length", PerformanceWarning)
-        return self.fold_map(Sum, lambda x: Sum(1)).number
+        return sum(1 for _ in self.to_iter())
+
+
+    def sum(self):
+        """t a -> number"""
+        return sum(self.to_iter())
+
+
+    def null(self):
+        """t a -> bool"""
+        return all(False for _ in self.to_iter())
+
+
+    def elem(self, x):
+        """t a -> a -> bool"""
+        return any(x == y for y in self.to_iter())
+
+
+    def __iter__(self):
+        """Override to_iter if you want to change the default implementation"""
+        yield from self.to_iter()
 
 
     def __len__(self):
         """Override length if you want to change the default implementation"""
         return self.length()
-
-
-    def sum(self):
-        """t a -> number
-
-        The default implementation isn't very efficient.
-
-        """
-        from haskpy.types.monoids import Sum
-        warn("Using default implementation of sum", PerformanceWarning)
-        return self.fold_map(Sum, Sum).number
-
-
-    def null(self):
-        """t a -> bool
-
-        The default implementation is bad because Python isn't lazy. Thus, it
-        traverses the whole structure even though the first element would
-        already tell that the structure is non-empty..
-
-        """
-        from haskpy.types.monoids import And
-        warn("Using default implementation of null", PerformanceWarning)
-        return self.fold_map(And, lambda x: And(False)).boolean
-
-
-    def elem(self, x):
-        """t a -> a -> bool
-
-        The default implementation is bad because Python isn't lazy. Thus, it
-        traverses the whole structure even after it has found a match..
-
-        """
-        from haskpy.types.monoids import Or
-        warn("Using default implementation of elem", PerformanceWarning)
-        return self.fold_map(Or, lambda y: Or(x == y)).boolean
 
 
     def __contains__(self, x):
