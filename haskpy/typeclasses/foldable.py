@@ -64,8 +64,11 @@ class _FoldableMeta(type(Type)):
 
         # Draw values
         xs = data.draw(cls.sample_foldable_value(a))
-        f = data.draw(testing.sample_function(testing.sample_function(b)))
+        g = data.draw(testing.sample_function(testing.sample_function(b)))
         initial = data.draw(b)
+
+        # Uncurry the function
+        f = lambda x, y: g(x)(y)
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
@@ -94,8 +97,11 @@ class _FoldableMeta(type(Type)):
 
         # Draw values
         xs = data.draw(cls.sample_foldable_value(a))
-        f = data.draw(testing.sample_function(testing.sample_function(b)))
         initial = data.draw(b)
+        g = data.draw(testing.sample_function(testing.sample_function(b)))
+
+        # Uncurry the function
+        f = lambda x, y: g(x)(y)
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
@@ -341,11 +347,10 @@ class Foldable(Type, metaclass=_FoldableMeta):
         # The correct answer is:
         #
         # '(((x+a)+b)+c)'
-        from haskpy.functions import compose, curry
+        from haskpy.functions import compose
         warn("Using default implementation of foldl", PerformanceWarning)
-        comb = curry(combine, wrap=False)
         return self.foldr(
-            lambda a, f: compose(f, lambda b: comb(b)(a)),
+            lambda a, f: compose(f, lambda b: combine(b, a)),
             identity,
         )(initial)
 
@@ -374,11 +379,11 @@ class Foldable(Type, metaclass=_FoldableMeta):
         this function to the initial value.
 
         """
-        from haskpy.functions import Function, curry
+        from haskpy.functions import Function
         warn("Using default implementation of foldr", PerformanceWarning)
         return self.fold_map(
             Function,
-            curry(combine, wrap=False),
+            lambda x: lambda y: combine(x, y),
         )(initial)
 
 
