@@ -7,15 +7,13 @@ from haskpy.utils import singleton
 def types():
     from haskpy import types
     from haskpy.types import hypothesis
+    # Some example types. The more types you add here, the longer it takes to
+    # run the tests.
     return (
         types.Maybe,
         types.List,
-        types.Identity,
         types.And,
-        types.Or,
-        types.Sum,
         types.String,
-        hypothesis.HypothesisList,
         hypothesis.HypothesisInteger,
     )
 
