@@ -10,59 +10,28 @@ classes and functions inspired by Hask.
 
 ### Features
 
-Typeclasses:
+- Typeclasses: `Functor`, `Applicative`, `Monad`, `Semigroup`, `Monoid`,
+  `Commutative`, `CommutativeMonoid`, `Foldable`
 
-- Functor
-- Applicative
-- Monad
-- Semigroup
-- Monoid
-- Commutative
-- CommutativeMonoid
-- Foldable
-- *TODO: Traversable*
-- *TODO: Contravariant*
-- *TODO: Bifunctor*
-- *TODO: Profunctor*
+  - **TODO:** `Traversable`, `Contravariant`, `Bifunctor`, `Profunctor`
 
-Types and type constructors:
+- Types and type constructors: `Identity`, `Maybe`, `List`, `Function`,
+  `Compose`
 
-- Identity
-- Maybe
-- List
-- Compose
-- *TODO: Either*
-- *TODO: Constant*
-- *TODO: Validation*
-- *TODO: Dictionary or HashMap*
-- *TODO: LinkedList?*
-- *TODO: State*
-- *TODO: Reader*
-- *TODO: Writer*
-- *TODO: IO*
+  - **TODO:** `Either`, `Constant`, `Validation`, `Dictionary`, `LinkedList`,
+    `State`, `Reader`, `Writer`, `IO`
 
-Monad transformers:
+- Monad transformers: MaybeT, IdentityT
 
-- MaybeT
-- IdentityT
-- *TODO: StateT*
-- *TODO: ReaderT*
-- *TODO: WriterT*
-- *TODO: ListT?*
+  - **TODO:** `StateT`, `ReaderT`, `WriterT`, `ListT`
 
-Simple monoids:
+- Simple monoids: `Sum`, `And`, `Or`, `String`
 
-- Sum
-- *TODO: Product*
-- And
-- Or
-- String
-- *TODO: Endo*
-
-Other stuff:
+  - **TODO:** `Product`, `Endo`
 
 - Property-based testing of typeclass laws
-- *TODO: Profunctor optics*
+
+- **TODO:** Profunctor optics
 
 HaskPy has implemented typeclass laws as property-based tests. Thus, one can
 easily test that an implementation satisfies all the laws it should. Just add
