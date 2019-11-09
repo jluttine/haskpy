@@ -8,6 +8,79 @@ classes and functions inspired by Hask.
 
 ## Overview
 
+### Features
+
+Typeclasses:
+
+- Functor
+- Applicative
+- Monad
+- Semigroup
+- Monoid
+- Commutative
+- CommutativeMonoid
+- Foldable
+- *TODO: Traversable*
+- *TODO: Contravariant*
+- *TODO: Bifunctor*
+- *TODO: Profunctor*
+
+Types and type constructors:
+
+- Identity
+- Maybe
+- List
+- Compose
+- *TODO: Either*
+- *TODO: Constant*
+- *TODO: Validation*
+- *TODO: Dictionary or HashMap*
+- *TODO: LinkedList?*
+- *TODO: State*
+- *TODO: Reader*
+- *TODO: Writer*
+- *TODO: IO*
+
+Monad transformers:
+
+- MaybeT
+- IdentityT
+- *TODO: StateT*
+- *TODO: ReaderT*
+- *TODO: WriterT*
+- *TODO: ListT?*
+
+Simple monoids:
+
+- Sum
+- *TODO: Product*
+- And
+- Or
+- String
+- *TODO: Endo*
+
+Other stuff:
+
+- Property-based testing of typeclass laws
+- *TODO: Profunctor optics*
+
+HaskPy has implemented typeclass laws as property-based tests. Thus, one can
+easily test that an implementation satisfies all the laws it should. Just add
+something like this to your test module and run with pytest:
+
+```python
+from haskpy.conftest import make_test_class
+from mystuff import MyClass
+TestMyClass = make_test_class(MyClass)
+```
+
+This will automatically verify that `MyClass` satisfies all the typeclass laws
+of those typeclasses that it inherits. It makes use of great [Hypothesis
+package](https://hypothesis.readthedocs.io/en/latest/).
+
+
+## Examples
+
 ### Functors
 
 A minimal example of functorial mapping:
@@ -103,25 +176,6 @@ decorator. Note that `function` also curries the function, so there's no need to
 use `curry` in addition to `function`.
 
 Almost all functions in HaskPy have been decorated with `function`.
-
-
-## TODO
-
-- Typeclasses:
-  - Monoid
-  - Foldable
-  - Contravariant
-  - Profunctor
-  - Bifunctor
-  - ...
-- Types and type construtors:
-  - Either
-  - String
-  - Dictionary (or HashMap)
-  - Monad transformers
-  - ...
-- Profunctor optics
-- Property based testing with `hypothesis`
 
 
 ## Copyright
