@@ -2,14 +2,20 @@ import attr
 import hypothesis.strategies as st
 from hypothesis import given
 
-from haskpy.typeclasses import Monad, CommutativeMonoid, PatternMatchable, Hashable
+from haskpy.typeclasses import (
+    Monad,
+    CommutativeMonoid,
+    PatternMatchable,
+    Hashable,
+    Foldable,
+)
 from .monadtransformer import MonadTransformer
 from haskpy.utils import singleton, sample_type, sample_sized
 
 from haskpy import testing
 
 
-class _MaybeMeta(type(Monad), type(CommutativeMonoid), type(Hashable)):
+class _MaybeMeta(type(Monad), type(CommutativeMonoid), type(Hashable), type(Foldable)):
 
 
     @property
@@ -49,7 +55,8 @@ class _MaybeMeta(type(Monad), type(CommutativeMonoid), type(Hashable)):
 
 
 @attr.s(frozen=True, repr=False)
-class Maybe(Monad, CommutativeMonoid, PatternMatchable, metaclass=_MaybeMeta):
+class Maybe(Monad, CommutativeMonoid, PatternMatchable, Hashable, Foldable,
+            metaclass=_MaybeMeta):
     """Maybe type for optional values"""
 
 
@@ -87,6 +94,18 @@ class Just(Maybe):
         )
 
 
+    def fold_map(self, monoid, f):
+        return f(self.__x)
+
+
+    def foldl(self, combine, initial):
+        return combine(initial, self.__x)
+
+
+    def foldr(self, combine, initial):
+        return combine(self.__x, initial)
+
+
     def __repr__(self):
         return "Just({0})".format(repr(self.__x))
 
@@ -114,6 +133,18 @@ class Nothing(Maybe):
 
     def append(self, m):
         return m
+
+
+    def fold_map(self, monoid, f):
+        return monoid.empty
+
+
+    def foldl(self, combine, initial):
+        return initial
+
+
+    def foldr(self, combine, initial):
+        return initial
 
 
     def __repr__(self):

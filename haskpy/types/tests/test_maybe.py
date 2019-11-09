@@ -22,3 +22,9 @@ def test_maybe_map():
 
 # Test typeclass laws for MaybeT monad transformer (using some example monad).
 TestMaybeT = make_test_class(MaybeT(List))
+
+
+def test_maybe_foldl():
+    """Make sure the folding is done as we expect"""
+    assert Just("foo").foldl(lambda x, y: x + y, "bar") == "barfoo"
+    return
