@@ -25,7 +25,7 @@ class _MonadMeta(type(Applicative)):
         f = data.draw(testing.sample_function(cls.sample_functor_value(tb)))
         a = data.draw(ta)
 
-        cls.assert_monad_left_identity(f, a)
+        cls.assert_monad_left_identity(f, a, data=data)
         return
 
 
@@ -42,7 +42,7 @@ class _MonadMeta(type(Applicative)):
         # Draw values
         m = data.draw(cls.sample_functor_value(a))
 
-        cls.assert_monad_right_identity(m)
+        cls.assert_monad_right_identity(m, data=data)
         return
 
 
@@ -64,7 +64,7 @@ class _MonadMeta(type(Applicative)):
         f = data.draw(testing.sample_function(cls.sample_functor_value(b)))
         g = data.draw(testing.sample_function(cls.sample_functor_value(c)))
 
-        cls.assert_monad_associativity(m, f, g)
+        cls.assert_monad_associativity(m, f, g, data=data)
         return
 
 
