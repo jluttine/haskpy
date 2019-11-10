@@ -19,6 +19,11 @@ class _FunctorMeta(type(Type)):
         return cls.sample_value(a)
 
 
+    #
+    # Test typeclass laws
+    #
+
+
     @assert_output
     def assert_functor_identity(cls, v):
         return(
@@ -59,6 +64,11 @@ class _FunctorMeta(type(Type)):
 
         cls.assert_functor_composition(v, f, g, data=data)
         return
+
+
+    #
+    # Test laws based on default implementations
+    #
 
 
     @assert_output
