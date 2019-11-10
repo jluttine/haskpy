@@ -182,6 +182,12 @@ def compose(g, f):
     return Function(lambda x: g(f(x)))
 
 
+@function
+def const(x, y):
+    """a -> b -> a"""
+    return x
+
+
 # NOTE: Functor/Applicative/Monad-related functions couldn't be defined in the
 # modules that defined those typeclasses because of circular dependency:
 # Function class inherits Monad&Applicative&Functor but the functions in those
