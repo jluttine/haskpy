@@ -220,6 +220,11 @@ def liftA2(f, x, y):
 
 
 @function
+def liftA3(f, x, y, z):
+    return liftA2(f, x, y).apply(z)
+
+
+@function
 def apply(f, x):
     return x.apply(f)
 
