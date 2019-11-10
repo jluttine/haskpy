@@ -157,7 +157,7 @@ class _ApplicativeMeta(type(Functor)):
         u = data.draw(cls.sample_functor_value(a))
         v = data.draw(cls.sample_functor_value(b))
 
-        cls.assert_applicative_sequence(u, v)
+        cls.assert_applicative_sequence(u, v, data=data)
         return
 
 
@@ -180,7 +180,7 @@ class _ApplicativeMeta(type(Functor)):
         v = data.draw(cls.sample_functor_value(a))
         f = data.draw(testing.sample_function(b))
 
-        cls.assert_applicative_map(v, f)
+        cls.assert_applicative_map(v, f, data=data)
         return
 
 

@@ -97,7 +97,7 @@ class _MonadMeta(type(Applicative)):
         u = data.draw(cls.sample_functor_value(a))
         f = data.draw(testing.sample_function(cls.sample_functor_value(b)))
 
-        cls.assert_monad_bind(u, f)
+        cls.assert_monad_bind(u, f, data=data)
         return
 
 
@@ -120,7 +120,7 @@ class _MonadMeta(type(Applicative)):
         # Draw values
         u = data.draw(cls.sample_functor_value(cls.sample_functor_value(b)))
 
-        cls.assert_monad_join(u)
+        cls.assert_monad_join(u, data=data)
         return
 
 
@@ -142,7 +142,7 @@ class _MonadMeta(type(Applicative)):
         u = data.draw(cls.sample_functor_value(a))
         f = data.draw(testing.sample_function(b))
 
-        cls.assert_monad_map(u, f)
+        cls.assert_monad_map(u, f, data=data)
         return
 
 
@@ -165,7 +165,7 @@ class _MonadMeta(type(Applicative)):
         v = data.draw(cls.sample_functor_value(a))
         u = data.draw(cls.sample_functor_value(testing.sample_function(b)))
 
-        cls.assert_monad_apply(u, v)
+        cls.assert_monad_apply(u, v, data=data)
         return
 
 
