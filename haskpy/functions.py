@@ -218,6 +218,11 @@ def apply(f, x):
     return x.apply(f)
 
 
+@function
+def sequence(x, y):
+    return x.sequence(y)
+
+
 #
 # Monad-related functions
 #

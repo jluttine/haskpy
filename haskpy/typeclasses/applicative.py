@@ -15,6 +15,10 @@ class _ApplicativeMeta(type(Functor)):
         raise NotImplementedError()
 
 
+    #
+    # Test typeclass laws
+    #
+
     @assert_output
     def assert_applicative_identity(cls, v):
         return (
@@ -104,6 +108,11 @@ class _ApplicativeMeta(type(Functor)):
         return
 
 
+    #
+    # Test laws based on default implementations
+    #
+
+
     @assert_output
     def assert_applicative_apply(cls, u, v):
         from haskpy.functions import apply
@@ -125,6 +134,53 @@ class _ApplicativeMeta(type(Functor)):
         u = data.draw(cls.sample_functor_value(testing.sample_function(b)))
 
         cls.assert_applicative_apply(u, v, data=data)
+        return
+
+
+    @assert_output
+    def assert_applicative_sequence(cls, u, v):
+        from haskpy.functions import sequence
+        return (
+            Applicative.sequence(u, v),
+            u.sequence(v),
+            sequence(u, v),
+        )
+
+
+    @given(st.data())
+    def test_applicative_sequence(cls, data):
+        # Draw types
+        a = data.draw(testing.sample_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        u = data.draw(cls.sample_functor_value(a))
+        v = data.draw(cls.sample_functor_value(b))
+
+        cls.assert_applicative_sequence(u, v)
+        return
+
+
+    @assert_output
+    def assert_applicative_map(cls, v, f):
+        return(
+            Applicative.map(v, f),
+            v.map(f),
+        )
+
+
+    @given(st.data())
+    def test_applicative_map(cls, data):
+        """Test consistency between Applicative and Functor implementations"""
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        v = data.draw(cls.sample_functor_value(a))
+        f = data.draw(testing.sample_function(b))
+
+        cls.assert_applicative_map(v, f)
         return
 
 
@@ -154,6 +210,12 @@ class Applicative(Functor, metaclass=_ApplicativeMeta):
 
         """
         return x.apply(self)
+
+
+    def sequence(self, x):
+        """f a -> f b -> f b"""
+        from haskpy.utils import identity
+        return self.replace(identity).apply_to(x)
 
 
     def map(self, f):
