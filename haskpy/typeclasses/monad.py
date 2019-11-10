@@ -227,16 +227,20 @@ class Monad(Applicative, metaclass=_MonadMeta):
           f :: m (a -> b)
 
         Default implementation is based on ``bind`` and ``map``. In order to
-        use ``bind``, we need to have a function of type:
+        use ``bind``, let's write its type as follows:
 
-          g :: a -> m b
+          bind :: m (a -> b) -> ((a -> b) -> m b) -> m b
 
-        We can get this as follows:
+        Let's also use a simple helper function:
 
-          g = \x -> map (\fh -> fh x) f
+          h = \g -> map g self :: (a -> b) -> m b
+
+        Now:
+
+          bind f h :: m b
 
         """
-        return self.bind(lambda x: f.map(lambda fh: fh(x)))
+        return f.bind(lambda g: self.map(g))
 
 
     def map(self, f):
