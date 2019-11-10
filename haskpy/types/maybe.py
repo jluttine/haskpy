@@ -167,85 +167,74 @@ class Nothing(Maybe):
         return "Nothing"
 
 
-@MonadTransformer(Maybe)
-def MaybeT(BaseClass):
+def MaybeT(M):
+    """m (Maybe a) -> MaybeT m a"""
+
+
+    # NOTE: It might be tempting to use Compose as a basis for this kind of
+    # Monad transformers. Indeed, it seems like these are just monadic
+    # extensions to the composition that can be written only for Applicatives
+    # in generic form. However, that is not the case. See an example in
+    # test_maybe.py on how MaybeT isn't a monadic extension of Compose but
+    # rather its Applicative instance is different from that of Compose. This
+    # is rather interesting as it's a common misconception that the common
+    # monad transformers are monadic extensions of Compose. Even "Learn Haskell
+    # programming from first principles" introduces monad transformers in such
+    # a way that it leads to that kind of understanding.
+
+
+    class _MaybeMMeta(type(Monad)):
+
+
+        def pure(cls, x):
+            """a -> MaybeT m a"""
+            return cls(M.pure(Maybe.pure(x)))
+
+
+        def sample_value(cls, a):
+            return M.sample_value(Maybe.sample_value(a)).map(cls)
+
+
+        def __repr__(cls):
+            return "MaybeT({})".format(repr(M))
 
 
     @attr.s(frozen=True, repr=False)
-    class Transformed(BaseClass):
+    class MaybeM(Monad, metaclass=_MaybeMMeta):
 
 
-        def join(self):
-            """MaybeT m (MaybeT m a) -> MaybeT m a
+        # The attribute name may sound weird but it makes sense once you
+        # understand that this indeed is the not-yet-composed variable and if
+        # you want to decompose a composed variable you get it by x.decomposed.
+        # Thus, there's no need to write a simple function to just return this
+        # attribute, just use this directly.
+        decomposed = attr.ib()
 
-            As decompressed:
 
-              m (Maybe (m (Maybe a))) -> m (Maybe a)
+        def bind(self, f):
+            """MaybeT m a -> (a -> MaybeT m b) -> MaybeT m b
 
-            For instance,
+            In decompressed terms:
 
-            List(Just(List(Just(1), Nothing)), Nothing, Just(List(Nothing, Just(4))))
+              m (Maybe a) -> (a -> m (Maybe b)) -> m (Maybe b)
 
-            -> List(Just(1), Nothing, Nothing, Nothing, Just(4))
             """
-            cls = self.__class__
-            return Transformed(
-                self.decomposed.map(
-                    lambda x: x.match(
-                        Nothing=lambda: cls.OuterClass.pure(Nothing),
-                        Just=lambda x: x.decomposed,
-                    )
-                ).join()
+
+            # :: m (Maybe a)
+            mMa = self.decomposed
+
+            # :: Maybe a -> m (Maybe b)
+            g = lambda Ma: Ma.match(
+                Nothing=lambda: M.pure(Nothing),
+                Just=lambda x: f(x).decomposed,
             )
 
-
-        # def bind(self, f):
-        #     """MaybeT m a -> (a -> MaybeT m b) -> MaybeT m b
-
-        #     In decompressed terms:
-
-        #       m (Maybe a) -> (a -> m (Maybe b)) -> m (Maybe b)
-
-        #     """
-
-        #     mMa = self.decompressed # :: m (Maybe a)
-
-        #     # f :: a -> MaybeT m b
-        #     # g :: Maybe a -> m (Maybe b)
-
-        #     g = lambda Ma: Ma.map(f) # :: Maybe (MaybeT m b)
+            # :: MaybeT m b
+            return MaybeM(mMa.bind(g))
 
 
-        #     y = self.decomposed.bind(g) # :: m (Maybe b)
-
-        #     return Transformed(y) # :: MaybeT m b
-
-
-    return Transformed
+        def __repr__(self):
+            return "{0}({1})".format(repr(MaybeM), repr(self.decomposed))
 
 
-# class MaybeADT():
-
-
-#     class Just():
-#         __x = attr.ib()
-
-#     @singleton
-#     class Nothing():
-#         pass
-
-#     # or attrs programmatically
-
-#     Just = case(lambda x: x)
-#     Nothing = case(None)
-
-
-#     def match(self, Just, Nothing):
-#         pass
-
-
-# class LinkedListADT():
-
-
-#     Empty = case(None)
-#     Cons = case(lambda x, xs: (x, xs))
+    return MaybeM
