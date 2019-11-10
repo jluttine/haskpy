@@ -3,7 +3,6 @@ import hypothesis.strategies as st
 
 from haskpy.utils import sample_type, sample_sized
 from haskpy.typeclasses import Monad
-from .monadtransformer import MonadTransformer
 
 
 class _IdentityMeta(type(Monad)):
@@ -33,11 +32,29 @@ class Identity(Monad, metaclass=_IdentityMeta):
         return "Identity({})".format(repr(self.x))
 
 
-@MonadTransformer(Identity)
-def IdentityT(BaseClass):
+def IdentityT(M):
+
+
+    class _IdentityMMeta(type(Monad)):
+
+
+        def pure(cls, x):
+            return cls(M.pure(Identity.pure(x)))
+
+
+        def sample_value(cls, a):
+            return M.sample_value(Identity.sample_value(a)).map(cls)
+
+
+        def __repr__(cls):
+            return "IdentityT({})".format(repr(M))
+
 
     @attr.s(frozen=True, repr=False)
-    class Transformed(BaseClass):
+    class IdentityM(Monad, metaclass=_IdentityMMeta):
+
+
+        decomposed = attr.ib()
 
 
         def bind(self, f):
@@ -74,7 +91,11 @@ def IdentityT(BaseClass):
             # y :: m (Identity b)
             y = self.decomposed.bind(g)
 
-            return Transformed(y) # :: IdentityT m b
+            return IdentityM(y) # :: IdentityT m b
 
 
-    return Transformed
+        def __repr__(self):
+            return "{0}({1})".format(repr(type(self)), repr(self.decomposed))
+
+
+    return IdentityM

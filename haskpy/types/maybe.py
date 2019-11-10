@@ -9,7 +9,6 @@ from haskpy.typeclasses import (
     Hashable,
     Foldable,
 )
-from .monadtransformer import MonadTransformer
 from haskpy.utils import singleton, sample_type, sample_sized
 
 from haskpy import testing

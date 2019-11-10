@@ -1,4 +1,5 @@
-from haskpy.types.identity import Identity
+from haskpy.types.identity import Identity, IdentityT
+from haskpy.types import List
 from haskpy.conftest import make_test_class
 
 
@@ -10,3 +11,6 @@ def test_identity_map():
     """Make sure the originally given value isn't kept constant"""
     assert Identity(42).map(lambda x: x + 1) == Identity(43)
     return
+
+
+TestIdentityT = make_test_class(IdentityT(List))
