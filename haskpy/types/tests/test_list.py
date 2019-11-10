@@ -14,6 +14,17 @@ def test_list_map():
     return
 
 
+def test_list_apply():
+    """Test apply puts values in desired order
+
+    Again, the laws don't force the ordering but we want them in particular
+    order.
+
+    """
+    assert List(1, 2).apply(List(lambda x: x+10, lambda x: x+100)) == \
+        List(11, 12, 101, 102)
+
+
 def test_list_foldr():
     # Foldable laws are tested already, but let's check that folding also does
     # what we expect, because the laws can be satisfied by some trivial
