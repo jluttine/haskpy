@@ -9,6 +9,9 @@ from haskpy import testing
 
 class _MonadMeta(type(Applicative)):
 
+    #
+    # Test typeclass laws
+    #
 
     @assert_output
     def assert_monad_left_identity(cls, f, a):
@@ -66,6 +69,105 @@ class _MonadMeta(type(Applicative)):
 
         cls.assert_monad_associativity(m, f, g, data=data)
         return
+
+
+    #
+    # Test laws based on default implementations
+    #
+
+
+    @assert_output
+    def assert_monad_bind(cls, u, f):
+        from haskpy.functions import bind
+        return (
+            Monad.bind(u, f),
+            u.bind(f),
+            bind(u, f),
+        )
+
+
+    @given(st.data())
+    def test_monad_bind(cls, data):
+        """Test consistency of ``bind`` with the default implementation"""
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        u = data.draw(cls.sample_functor_value(a))
+        f = data.draw(testing.sample_function(cls.sample_functor_value(b)))
+
+        cls.assert_monad_bind(u, f)
+        return
+
+
+    @assert_output
+    def assert_monad_join(cls, u):
+        from haskpy.functions import join
+        return (
+            Monad.join(u),
+            u.join(),
+            join(u),
+        )
+
+
+    @given(st.data())
+    def test_monad_join(cls, data):
+        """Test consistency of ``join`` with the default implementation"""
+        # Draw types
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        u = data.draw(cls.sample_functor_value(cls.sample_functor_value(b)))
+
+        cls.assert_monad_join(u)
+        return
+
+
+    @assert_output
+    def assert_monad_map(cls, u, f):
+        return (
+            Monad.map(u, f),
+            u.map(f),
+        )
+
+
+    @given(st.data())
+    def test_monad_map(cls, data):
+        """Test consistency of ``map`` with the default implementation"""
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        u = data.draw(cls.sample_functor_value(a))
+        f = data.draw(testing.sample_function(b))
+
+        cls.assert_monad_map(u, f)
+        return
+
+
+    @assert_output
+    def assert_monad_apply(cls, u, v):
+        return (
+            Monad.apply(v, u),
+            v.apply(u),
+        )
+
+
+    @given(st.data())
+    def test_monad_apply(cls, data):
+        """Test consistency ``apply`` with the default implementations"""
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        v = data.draw(cls.sample_functor_value(a))
+        u = data.draw(cls.sample_functor_value(testing.sample_function(b)))
+
+        cls.assert_monad_apply(u, v)
+        return
+
 
 
 @attr.s(frozen=True)
@@ -142,10 +244,11 @@ class Monad(Applicative, metaclass=_MonadMeta):
 
         Default implementation is based on ``bind`` and ``pure``. This
         implementation needs to be provided because the default implementation
-        of ``apply`` uses ``map``.
+        of ``apply`` uses ``map`` thus creating a circular dependency between
+        the default ``map`` defined in ``Applicative``.
 
         """
-        # Because of circular depdencies, need to import here inside
+        # Because of circular dependencies, need to import here inside
         from haskpy.functions import compose
         cls = type(self)
         return self.bind(compose(cls.pure, f))
