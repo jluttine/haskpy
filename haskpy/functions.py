@@ -4,12 +4,12 @@ import inspect
 from hypothesis import given
 from hypothesis import strategies as st
 
-from haskpy.typeclasses import Monad, Monoid, Profunctor
+from haskpy.typeclasses import Monad, Monoid, Cartesian
 from haskpy.utils import curry, identity, sample_sized
 from haskpy import conftest, testing
 
 
-class _FunctionMeta(type(Monad), type(Profunctor), type(Monoid)):
+class _FunctionMeta(type(Monad), type(Cartesian), type(Monoid)):
 
 
     @property
@@ -26,7 +26,7 @@ class _FunctionMeta(type(Monad), type(Profunctor), type(Monoid)):
 
 
 @attr.s(frozen=True, repr=False, cmp=False)
-class Function(Monad, Profunctor, Monoid, metaclass=_FunctionMeta):
+class Function(Monad, Cartesian, Monoid, metaclass=_FunctionMeta):
     """Monad instance for functions
 
     Use similar wrapping as functools.wraps does for some attributes. See
@@ -80,6 +80,16 @@ class Function(Monad, Profunctor, Monoid, metaclass=_FunctionMeta):
                 **kwargs
             )
         )
+
+
+    def first(f):
+        """(a -> b) -> (a, c) -> (b, c)"""
+        return _cross(f, identity)
+
+
+    def second(f):
+        """(a -> b) -> (c, a) -> (c, b)"""
+        return _cross(identity, f)
 
 
     def append(f, g):
@@ -187,6 +197,12 @@ def compose(g, f):
 def const(x, y):
     """a -> b -> a"""
     return x
+
+
+@function
+def _cross(f, g, ab):
+    """(a -> c) -> (b -> d) -> (a, b) -> (c, d)"""
+    return (f(ab[0]), g(ab[1]))
 
 
 # NOTE: Functor/Applicative/Monad-related functions couldn't be defined in the

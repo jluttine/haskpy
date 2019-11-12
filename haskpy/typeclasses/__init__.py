@@ -4,6 +4,7 @@ from .applicative import *
 from .monad import *
 from .contravariant import *
 from .profunctor import *
+from .cartesian import *
 from .monoid import *
 from .foldable import *
 from .patternmatchable import *
