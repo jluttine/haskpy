@@ -12,7 +12,7 @@ class _FunctorMeta(type(Type)):
 
     def sample_type(cls):
         t = testing.sample_type()
-        return t.map(cls.sample_value)
+        return t.map(cls.sample_functor_value)
 
 
     def sample_functor_value(cls, a):

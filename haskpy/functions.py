@@ -4,12 +4,12 @@ import inspect
 from hypothesis import given
 from hypothesis import strategies as st
 
-from haskpy.typeclasses import Monad, Monoid
+from haskpy.typeclasses import Monad, Monoid, Contravariant
 from haskpy.utils import curry, identity, sample_sized
 from haskpy import conftest, testing
 
 
-class _FunctionMeta(type(Monad), type(Monoid)):
+class _FunctionMeta(type(Monad), type(Contravariant), type(Monoid)):
 
 
     @property
@@ -21,12 +21,22 @@ class _FunctionMeta(type(Monad), type(Monoid)):
         return cls(lambda *args, **kwargs: x)
 
 
-    def sample_value(cls, a):
-        return testing.sample_function(a).map(Function)
+    def sample_value(cls, a, b):
+        return testing.sample_function(b).map(Function)
+
+
+    def sample_functor_value(cls, b):
+        return cls.sample_value(None, b)
+
+
+    @st.composite
+    def sample_contravariant_value(draw, cls, a):
+        b = draw(testing.sample_type())
+        return draw(cls.sample_value(None, b))
 
 
 @attr.s(frozen=True, repr=False, cmp=False)
-class Function(Monad, Monoid, metaclass=_FunctionMeta):
+class Function(Monad, Contravariant, Monoid, metaclass=_FunctionMeta):
     """Monad instance for functions
 
     Use similar wrapping as functools.wraps does for some attributes. See
@@ -44,25 +54,21 @@ class Function(Monad, Monoid, metaclass=_FunctionMeta):
     # TODO: Add __annotations__
 
 
-    def __Function(self, f):
-        # Instead of using self.__Function(f) to create a new Function
-        # instance, we could just use Function(f). But that doesn't work in
-        # tests, where we are using a subclass _TestClass. We need to create
-        # instances of that test class in tests, so this makes it work in both
-        # cases.
-        return attr.evolve(self, Function__f=f)
-
-
     def map(f, g):
         """(a -> b) -> (b -> c) -> (a -> c)"""
-        return f.__Function(lambda x: g(f(x)))
+        return Function(lambda x: g(f(x)))
+
+
+    def contramap(f, g):
+        """(b -> c) -> (a -> b) -> (a -> c)"""
+        return Function(lambda a: f(g(a)))
 
 
     def apply(f, g):
         """(a -> b) -> (a -> b -> c) -> a -> c"""
         # TODO: Currying doesn't work nicely here.. Should perhaps compose
         # uncurried functions and then curry the end result?
-        return f.__Function(
+        return Function(
             lambda *args, **kwargs: g(*args, **kwargs)(
                 f(*args, **kwargs)
             )
@@ -73,7 +79,7 @@ class Function(Monad, Monoid, metaclass=_FunctionMeta):
         """(a -> b) -> (b -> a -> c) -> a -> c"""
         # TODO: Currying doesn't work nicely here.. Should perhaps compose
         # uncurried functions and then curry the end result?
-        return f.__Function(
+        return Function(
             lambda *args, **kwargs: g(f(*args, **kwargs))(
                 *args,
                 **kwargs
@@ -95,7 +101,7 @@ class Function(Monad, Monoid, metaclass=_FunctionMeta):
         # texts.
         y = self.__f(*args, **kwargs)
         return (
-            self.__Function(y)
+            Function(y)
             if callable(y) and not isinstance(y, Function) else
             y
         )
@@ -136,7 +142,7 @@ class Function(Monad, Monoid, metaclass=_FunctionMeta):
             fp = functools.partial(self, obj)
             # Keep the docstring untouched
             fp.__doc__ = self.__doc__
-            return self.__Function(fp)
+            return Function(fp)
         else:
             # Class method
             return self
@@ -246,6 +252,22 @@ def bind(x, f):
 @function
 def join(x):
     return x.join()
+
+
+#
+# Contravariant-related functions
+#
+
+@function
+def contramap(f, x):
+    """(a -> b) -> f b -> f a"""
+    return x.contramap(f)
+
+
+@function
+def contrareplace(b, x):
+    """b -> f b -> f a"""
+    return x.contrareplace(b)
 
 
 #
