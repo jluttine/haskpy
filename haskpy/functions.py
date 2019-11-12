@@ -4,12 +4,12 @@ import inspect
 from hypothesis import given
 from hypothesis import strategies as st
 
-from haskpy.typeclasses import Monad, Monoid, Contravariant
+from haskpy.typeclasses import Monad, Monoid, Profunctor
 from haskpy.utils import curry, identity, sample_sized
 from haskpy import conftest, testing
 
 
-class _FunctionMeta(type(Monad), type(Contravariant), type(Monoid)):
+class _FunctionMeta(type(Monad), type(Profunctor), type(Monoid)):
 
 
     @property
@@ -21,22 +21,12 @@ class _FunctionMeta(type(Monad), type(Contravariant), type(Monoid)):
         return cls(lambda *args, **kwargs: x)
 
 
-    def sample_value(cls, a, b):
+    def sample_value(cls, _, b):
         return testing.sample_function(b).map(Function)
 
 
-    def sample_functor_value(cls, b):
-        return cls.sample_value(None, b)
-
-
-    @st.composite
-    def sample_contravariant_value(draw, cls, a):
-        b = draw(testing.sample_type())
-        return draw(cls.sample_value(None, b))
-
-
 @attr.s(frozen=True, repr=False, cmp=False)
-class Function(Monad, Contravariant, Monoid, metaclass=_FunctionMeta):
+class Function(Monad, Profunctor, Monoid, metaclass=_FunctionMeta):
     """Monad instance for functions
 
     Use similar wrapping as functools.wraps does for some attributes. See
@@ -52,6 +42,11 @@ class Function(Monad, Contravariant, Monoid, metaclass=_FunctionMeta):
 
 
     # TODO: Add __annotations__
+
+
+    def dimap(f, g, h):
+        """(b -> c) -> (a -> b) -> (c -> d) -> (a -> d)"""
+        return Function(lambda x: h(f(g(x))))
 
 
     def map(f, g):
@@ -269,6 +264,15 @@ def contrareplace(b, x):
     """b -> f b -> f a"""
     return x.contrareplace(b)
 
+
+#
+# Profunctor-related functions
+#
+
+@function
+def dimap(f, g, x):
+    """(a -> b) -> (c -> d) -> p b c -> p a d"""
+    return x.dimap(f, g)
 
 #
 # Monoid-related functions
