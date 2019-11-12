@@ -11,9 +11,9 @@ classes and functions inspired by Hask.
 ### Features
 
 - Typeclasses: `Functor`, `Applicative`, `Monad`, `Semigroup`, `Monoid`,
-  `Commutative`, `CommutativeMonoid`, `Foldable`
+  `Commutative`, `CommutativeMonoid`, `Foldable`, `Contravariant`, `Profunctor`
 
-  - **TODO:** `Traversable`, `Contravariant`, `Bifunctor`, `Profunctor`
+  - **TODO:** `Traversable`, `Bifunctor`, `Cartesian`, `Cocartesian`, `Monoidal`
 
 - Types and type constructors: `Identity`, `Maybe`, `List`, `Function`,
   `Compose`
@@ -31,7 +31,9 @@ classes and functions inspired by Hask.
 
 - Property-based testing of typeclass laws
 
-- **TODO:** Profunctor optics
+- Profunctor optics:
+
+  - **TODO**: `Adapter`, `Lens`, `Prism`, `Traversal`
 
 HaskPy has implemented typeclass laws as property-based tests. Thus, one can
 easily test that an implementation satisfies all the laws it should. Just add
