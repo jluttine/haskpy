@@ -5,6 +5,7 @@ from .monad import *
 from .contravariant import *
 from .profunctor import *
 from .cartesian import *
+from .cocartesian import *
 from .monoid import *
 from .foldable import *
 from .patternmatchable import *
