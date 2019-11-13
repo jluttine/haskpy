@@ -385,6 +385,17 @@ def elem(e, xs):
 
 
 #
+# Either-specific functions
+#
+
+@function
+def either(f, g, e):
+    """(a -> c) -> (b -> c) -> Either a b -> c"""
+    return e.match(Left=f, Right=g)
+
+
+
+#
 # PatternMatchable-related functions
 #
 # NOTE: Currying doesn't work as expected for this function, because this is a
