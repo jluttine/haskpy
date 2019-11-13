@@ -15,10 +15,10 @@ classes and functions inspired by Hask.
 
   - **TODO:** `Traversable`, `Bifunctor`, `Cartesian`, `Cocartesian`, `Monoidal`
 
-- Types and type constructors: `Identity`, `Maybe`, `List`, `Function`,
-  `Compose`
+- Types and type constructors: `Identity`, `Maybe`, `Either`, `List`,
+  `Function`, `Compose`
 
-  - **TODO:** `Either`, `Constant`, `Validation`, `Dictionary`, `LinkedList`,
+  - **TODO:** `Constant`, `Validation`, `Dictionary`, `LinkedList`,
     `State`, `Reader`, `Writer`, `IO`
 
 - Monad transformers: MaybeT, IdentityT
