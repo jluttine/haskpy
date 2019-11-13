@@ -4,12 +4,13 @@ import inspect
 from hypothesis import given
 from hypothesis import strategies as st
 
-from haskpy.typeclasses import Monad, Monoid, Cartesian
+from haskpy.typeclasses import Monad, Monoid, Cartesian, Cocartesian
 from haskpy.utils import curry, identity, sample_sized
 from haskpy import conftest, testing
 
 
-class _FunctionMeta(type(Monad), type(Cartesian), type(Monoid)):
+class _FunctionMeta(type(Monad), type(Cartesian), type(Cocartesian),
+                    type(Monoid)):
 
 
     @property
@@ -26,7 +27,7 @@ class _FunctionMeta(type(Monad), type(Cartesian), type(Monoid)):
 
 
 @attr.s(frozen=True, repr=False, cmp=False)
-class Function(Monad, Cartesian, Monoid, metaclass=_FunctionMeta):
+class Function(Monad, Cartesian, Cocartesian, Monoid, metaclass=_FunctionMeta):
     """Monad instance for functions
 
     Use similar wrapping as functools.wraps does for some attributes. See
@@ -92,6 +93,16 @@ class Function(Monad, Cartesian, Monoid, metaclass=_FunctionMeta):
         return _cross(identity, f)
 
 
+    def left(f):
+        """(a -> b) -> Either a c -> Either b c"""
+        return _plus(f, identity)
+
+
+    def right(f):
+        """(a -> b) -> Either c a -> Either c b"""
+        return _plus(identity, f)
+
+
     def append(f, g):
         """(a -> a) -> (a -> a) -> (a -> a)"""
         # FIXME: compose(f, g) or compose(g, f) ????
@@ -153,12 +164,12 @@ class Function(Monad, Cartesian, Monoid, metaclass=_FunctionMeta):
             return self
 
 
-    def __test_eq__(self, g, data):
+    def __test_eq__(self, g, data, input_strategy=st.integers()):
         # NOTE: This is used only in tests when the function input doesn't
         # really matter so any hashable type here is ok. The type doesn't
         # matter because the functions are either _TestFunction or created with
         # pure.
-        x = data.draw(st.integers())
+        x = data.draw(input_strategy)
         return self(x) == g(x)
 
 
@@ -203,6 +214,15 @@ def const(x, y):
 def _cross(f, g, ab):
     """(a -> c) -> (b -> d) -> (a, b) -> (c, d)"""
     return (f(ab[0]), g(ab[1]))
+
+
+@function
+def _plus(f, g, eab):
+    """(a -> c) -> (b -> d) -> Either a b -> Either c d"""
+    # FIXME: Once Bifunctor has been implemented, just use:
+    # eab.bimap(f, g)
+    from haskpy.types.either import Left, Right
+    return eab.match(Left=lambda a: Left(f(a)), Right=lambda b: Right(g(b)))
 
 
 # NOTE: Functor/Applicative/Monad-related functions couldn't be defined in the
