@@ -1,10 +1,7 @@
 import attr
 
-from haskpy.types.lens import Lens, lens
+from haskpy.types.lens import lens
 from haskpy.conftest import make_test_class
-
-
-TestLens = make_test_class(Lens)
 
 
 def test_lens_nested_structure():
