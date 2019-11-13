@@ -31,9 +31,9 @@ classes and functions inspired by Hask.
 
 - Property-based testing of typeclass laws
 
-- Profunctor optics: `Lens`
+- Profunctor optics: `lens`, `prism`
 
-  - **TODO**: `Adapter`, `Prism`, `Traversal`
+  - **TODO**: `adapter`, `traversal`
 
 HaskPy has implemented typeclass laws as property-based tests. Thus, one can
 easily test that an implementation satisfies all the laws it should. Just add
