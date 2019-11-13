@@ -8,130 +8,140 @@ from haskpy import testing
 
 
 class _CocartesianMeta(type(Profunctor)):
-    pass
 
 
-    # def sample_type(cls):
-    #     a = testing.sample_type()
-    #     b = testing.sample_type()
-    #     return st.tuples(a, b).map(lambda ab: cls.sample_profunctor_value(a, b))
+    @assert_output
+    def assert_cocartesian_unit(cls, h):
+        from haskpy.types import Left
+        lzero = lambda ea: ea.match(Left=lambda a: a, Right=lambda _: None)
+        rzero = lambda a: Left(a)
+        return (
+            h.dimap(lzero, rzero),
+            h.left(),
+        )
 
 
-    # def sample_profunctor_value(cls, a, b):
-    #     return cls.sample_value(a, b)
+    @given(st.data())
+    def test_cocartesian_unit(cls, data):
+        from haskpy.types import Either, Left
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        h = data.draw(cls.sample_profunctor_value(a, b))
+
+        cls.assert_cocartesian_unit(
+            h,
+            data=data,
+            input_strategy=a.map(Left),
+        )
+        return
 
 
-    # @st.composite
-    # def sample_contravariant_value(draw, cls, a):
-    #     b = draw(testing.sample_type())
-    #     return draw(cls.sample_profunctor_value(a, b))
+    @assert_output
+    def assert_cocartesian_associativity(cls, h):
+        from haskpy.types.either import Left, Right
+        lcoassoc = lambda ab_c: ab_c.match(
+            Left=lambda ab: ab.match(
+                Left=lambda a: Left(a),
+                Right=lambda b: Right(Left(b)),
+            ),
+            Right=lambda c: Right(Right(c))
+        )
+        rcoassoc = lambda a_bc: a_bc.match(
+            Left=lambda a: Left(Left(a)),
+            Right=lambda bc: bc.match(
+                Left=lambda b: Left(Right(b)),
+                Right=lambda c: Right(c)
+            )
+        )
+        return (
+            h.left().left().dimap(lcoassoc, rcoassoc),
+            h.left(),
+        )
 
 
-    # @st.composite
-    # def sample_functor_value(draw, cls, b):
-    #     a = draw(testing.sample_type())
-    #     return draw(cls.sample_profunctor_value(a, b))
+    @given(st.data())
+    def test_cocartesian_associativity(cls, data):
+        from haskpy.types.either import Either
+        # Draw types
+        a = data.draw(
+            st.tuples(
+                testing.sample_hashable_type(),
+                Either.sample_value(
+                    st.just("foo"),
+                    st.just("bar"),
+                )
+            )
+        )
+        b = data.draw(testing.sample_type())
+
+        # Draw values
+        h = data.draw(cls.sample_profunctor_value(a, b))
+
+        cls.assert_cocartesian_associativity(h, data=data, input_strategy=a)
+        return
+
 
     #
-    # Test typeclass laws
+    # Test laws based on default implementations
     #
 
 
-    # @assert_output
-    # def assert_profunctor_identity(cls, x):
-    #     return (
-    #         x,
-    #         x.dimap(identity, identity),
-    #     )
+    @assert_output
+    def assert_cocartesian_left(cls, x):
+        return (
+            Cocartesian.left(x),
+            x.left(),
+        )
 
 
-    # @given(st.data())
-    # def test_profunctor_identity(cls, data):
-    #     # Draw types
-    #     a = data.draw(testing.sample_hashable_type())
-    #     b = data.draw(testing.sample_type())
+    @given(st.data())
+    def test_cocartesian_left(cls, data):
+        from haskpy.types.either import Either
+        # Draw types
+        a1 = data.draw(testing.sample_hashable_type())
+        a2 = data.draw(testing.sample_hashable_type())
+        a = Either.sample_value(a1, a2)
+        b = data.draw(testing.sample_type())
 
-    #     # Draw values
-    #     x = data.draw(cls.sample_profunctor_value(a, b))
+        # Draw values
+        x = data.draw(cls.sample_profunctor_value(a, b))
 
-    #     cls.assert_profunctor_identity(x, data=data)
-    #     return
+        cls.assert_cocartesian_left(
+            x,
+            data=data,
+            input_strategy=a,
+        )
+        return
 
-
-    # #
-    # # Test laws based on default implementations
-    # #
-
-
-    # @assert_output
-    # def assert_profunctor_dimap(cls, x, f, g):
-    #     from haskpy.functions import dimap
-    #     return (
-    #         Profunctor.dimap(x, f, g),
-    #         x.dimap(f, g),
-    #         dimap(f, g, x),
-    #     )
-
-
-    # @given(st.data())
-    # def test_profunctor_dimap(cls, data):
-    #     # Draw types
-    #     b = data.draw(testing.sample_hashable_type())
-    #     c = data.draw(testing.sample_hashable_type())
-    #     d = data.draw(testing.sample_type())
-
-    #     # Draw values
-    #     x = data.draw(cls.sample_profunctor_value(b, c))
-    #     f = data.draw(testing.sample_function(b))
-    #     g = data.draw(testing.sample_function(d))
-
-    #     cls.assert_profunctor_dimap(x, f, g, data=data)
-    #     return
+    @assert_output
+    def assert_cocartesian_right(cls, x):
+        return (
+            Cocartesian.right(x),
+            x.right(),
+        )
 
 
-    # @assert_output
-    # def assert_profunctor_map(cls, x, f):
-    #     return (
-    #         Profunctor.map(x, f),
-    #         x.map(f),
-    #     )
+    @given(st.data())
+    def test_cocartesian_right(cls, data):
+        from haskpy.types.either import Either
+        # Draw types
+        a1 = data.draw(testing.sample_hashable_type())
+        a2 = data.draw(testing.sample_hashable_type())
+        a = Either.sample_value(a1, a2)
+        b = data.draw(testing.sample_type())
 
+        # Draw values
+        x = data.draw(cls.sample_profunctor_value(a, b))
 
-    # @given(st.data())
-    # def test_profunctor_map(cls, data):
-    #     # Draw types
-    #     b = data.draw(testing.sample_hashable_type())
-    #     c = data.draw(testing.sample_hashable_type())
-    #     d = data.draw(testing.sample_type())
-
-    #     # Draw values
-    #     x = data.draw(cls.sample_profunctor_value(b, c))
-    #     g = data.draw(testing.sample_function(d))
-
-    #     cls.assert_profunctor_map(x, g, data=data)
-    #     return
-
-
-    # @assert_output
-    # def assert_profunctor_contramap(cls, x, f):
-    #     return (
-    #         Profunctor.contramap(x, f),
-    #         x.contramap(f),
-    #     )
-
-
-    # @given(st.data())
-    # def test_profunctor_contramap(cls, data):
-    #     # Draw types
-    #     b = data.draw(testing.sample_hashable_type())
-    #     d = data.draw(testing.sample_type())
-
-    #     # Draw values
-    #     x = data.draw(cls.sample_profunctor_value(b, d))
-    #     f = data.draw(testing.sample_function(b))
-
-    #     cls.assert_profunctor_contramap(x, f, data=data)
-    #     return
+        cls.assert_cocartesian_right(
+            x,
+            data=data,
+            input_strategy=a,
+        )
+        return
 
 
 @attr.s(frozen=True)
@@ -151,19 +161,16 @@ class Cocartesian(Profunctor, metaclass=_CocartesianMeta):
 
 
     def left(self):
-        return self.dimap(_flip_either, _flip_either).right()
+        return self.right().dimap(_flip_either, _flip_either)
 
 
     def right(self):
-        return self.dimap(_flip_either, _flip_either).left()
+        return self.left().dimap(_flip_either, _flip_either)
 
 
 def _flip_either(x):
+    from haskpy.types.either import Left, Right
     return x.match(
         Left=lambda a: Right(a),
         Right=lambda b: Left(b),
     )
-
-
-# Profunctor-related functions are defined in function module because of
-# circular dependency.
