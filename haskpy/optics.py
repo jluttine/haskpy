@@ -2,6 +2,37 @@ from haskpy.functions import function, identity, either
 
 
 @function
+def lens(view, update):
+    """(s -> a) -> ((b, s) -> t) -> LensP a b s t
+
+    where
+
+    type LensP a b s t = Cartesian p => p a b -> p s t
+
+    """
+
+    def run(p):
+        """(a -> b) -> s -> t, or more generally, LensP a b s t
+
+        that is,
+
+        Cartesian p => p a b -> p s t
+
+        """
+
+        # For convenience, if we are given a plain Python function, let's wrap it
+        # with our function decorator to get all the Profunctor goodies
+        # automatically without the user needing to add the wrapping explicitly.
+        # Just a usability improvement.
+        if isinstance(p, type(lambda: 42)):
+            p = function(p)
+
+        return p.first().dimap(lambda x: (view(x), x), update)
+
+    return run
+
+
+@function
 def prism(match, build):
     """(s -> Either t a) -> (b -> t) -> PrismP a b s t
 

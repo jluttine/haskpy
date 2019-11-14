@@ -1,7 +1,7 @@
 import attr
 
-from haskpy.types.lens import lens
-from haskpy.conftest import make_test_class
+from haskpy.types.either import Left, Right
+from haskpy.optics import lens, prism
 
 
 def test_lens_nested_structure():
@@ -33,5 +33,27 @@ def test_lens_nested_structure():
         Person("Alice", 43),
         Person("Bob", 7),
     ]
+
+    return
+
+
+def test_prism():
+
+    none = prism(
+        match=lambda x: Left(None) if x is None else Right(x),
+        build=lambda x: x,
+    )
+
+    maybe_singleton = prism(
+        match=lambda xs: Left(xs) if len(xs) == 0 else Right(xs[0]),
+        build=lambda x: [x],
+    )
+
+    p = none(maybe_singleton(none(lambda x: x*10)))
+
+    assert p([42]) == [420]
+    assert p([]) == []
+    assert p([None]) == [None]
+    assert p(None) == None
 
     return
