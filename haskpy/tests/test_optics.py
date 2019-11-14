@@ -4,7 +4,8 @@ from haskpy.types.either import Left, Right
 from haskpy.optics import lens, prism
 
 
-def test_lens_nested_structure():
+def test_lens_composition():
+    """Test composition of lenses"""
 
     @attr.s(frozen=True)
     class Person():
@@ -37,7 +38,8 @@ def test_lens_nested_structure():
     return
 
 
-def test_prism():
+def test_prism_composition():
+    """Test composition of prisms"""
 
     none = prism(
         match=lambda x: Left(None) if x is None else Right(x),
@@ -55,5 +57,32 @@ def test_prism():
     assert p([]) == []
     assert p([None]) == [None]
     assert p(None) == None
+
+    return
+
+
+def test_lens_and_prism_composition():
+    """Test composition of lenses and prisms"""
+
+    def element(n):
+        check_length = prism(
+            match=lambda xs: Left(xs) if len(xs) <= n else Right(xs),
+            build=lambda xs: xs,
+        )
+        pick = lens(
+            view=lambda xs: xs[n],
+            update=lambda x_xs: x_xs[1][:n] + [x_xs[0]] + x_xs[1][n+1:],
+        )
+        return lambda f: check_length(pick(f))
+
+    first = element(0)
+    third = element(2)
+    op = lambda x: x * 10
+
+    assert first(op)([1, 2, 3]) == [10, 2, 3]
+    assert first(op)([42]) == [420]
+    assert first(op)([]) == []
+    assert third(op)([1, 2, 3, 4]) == [1, 2, 30, 4]
+    assert third(op)([1, 2]) == [1, 2]
 
     return
