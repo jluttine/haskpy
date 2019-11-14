@@ -1,7 +1,25 @@
 import attr
 
 from haskpy.types.either import Left, Right
-from haskpy.optics import lens, prism
+from haskpy.optics import adapter, lens, prism
+
+
+def test_adapter():
+    """Test adapter composition"""
+
+    scale = adapter(
+        receive=lambda i: 10 * i,
+        send=lambda i: i // 10,
+    )
+    int2str = adapter(
+        receive=lambda i: str(i),
+        send=lambda s: int(s),
+    )
+
+    # 42 -> 420 -> "420" -> "420420" -> 420420 -> 42042
+    scale(int2str(lambda s: s + s))(42) == 42042
+
+    return
 
 
 def test_lens_composition():
