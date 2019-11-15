@@ -118,7 +118,6 @@ class _FunctorMeta(type(Type)):
         return
 
 
-@attr.s(frozen=True)
 class Functor(Type, metaclass=_FunctorMeta):
     """Covariant functor"""
 

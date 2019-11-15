@@ -273,7 +273,6 @@ class _FoldableMeta(type(Type)):
         return
 
 
-@attr.s(frozen=True)
 class Foldable(Type, metaclass=_FoldableMeta):
     """Foldable typeclass
 

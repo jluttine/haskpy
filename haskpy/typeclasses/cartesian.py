@@ -126,7 +126,6 @@ class _CartesianMeta(type(Profunctor)):
         return
 
 
-@attr.s(frozen=True)
 class Cartesian(Profunctor, metaclass=_CartesianMeta):
     """Cartesian profunctor
 

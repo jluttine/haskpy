@@ -14,8 +14,11 @@ class _TypeMeta(type):
         raise NotImplementedError()
 
 
-@attr.s(frozen=True, repr=False)
 class Type(metaclass=_TypeMeta):
+
+
+    def __eq__(self, other):
+        raise TypeError("Eq not supported by default.")
 
 
     def __test_eq__(self, x, data=None):

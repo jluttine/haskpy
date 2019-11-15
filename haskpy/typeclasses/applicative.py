@@ -184,7 +184,6 @@ class _ApplicativeMeta(type(Functor)):
         return
 
 
-@attr.s(frozen=True)
 class Applicative(Functor, metaclass=_ApplicativeMeta):
     """Must define at least pure and either apply or apply_to
 

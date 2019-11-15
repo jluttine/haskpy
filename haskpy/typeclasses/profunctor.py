@@ -134,7 +134,6 @@ class _ProfunctorMeta(type(Functor), type(Contravariant)):
         return
 
 
-@attr.s(frozen=True)
 class Profunctor(Functor, Contravariant, metaclass=_ProfunctorMeta):
     """Profunctor
 

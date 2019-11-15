@@ -144,7 +144,6 @@ class _CocartesianMeta(type(Profunctor)):
         return
 
 
-@attr.s(frozen=True)
 class Cocartesian(Profunctor, metaclass=_CocartesianMeta):
     """Cocartesian profunctor
 

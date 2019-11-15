@@ -54,7 +54,6 @@ class _MonoidMeta(type(Semigroup)):
         )
 
 
-@attr.s(frozen=True)
 class Monoid(Semigroup, metaclass=_MonoidMeta):
     """Monoid typeclass
 
@@ -73,7 +72,6 @@ class _CommutativeMonoidMeta(type(Commutative), type(Monoid)):
     pass
 
 
-@attr.s(frozen=True)
 class CommutativeMonoid(Commutative, Monoid, metaclass=_CommutativeMonoidMeta):
     """Monoid following the commutativity law
 

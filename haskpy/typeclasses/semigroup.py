@@ -39,7 +39,6 @@ class _SemigroupMeta(type(Type)):
         )
 
 
-@attr.s(frozen=True)
 class Semigroup(Type, metaclass=_SemigroupMeta):
     """Semigroup typeclass
 
@@ -83,7 +82,6 @@ class _CommutativeMeta(type(Semigroup)):
         return
 
 
-@attr.s(frozen=True)
 class Commutative(Semigroup, metaclass=_CommutativeMeta):
     """Semigroup following commutativity law
 

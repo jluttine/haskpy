@@ -170,7 +170,6 @@ class _MonadMeta(type(Applicative)):
 
 
 
-@attr.s(frozen=True)
 class Monad(Applicative, metaclass=_MonadMeta):
     """Monad typeclass
 

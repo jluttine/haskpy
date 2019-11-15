@@ -118,7 +118,6 @@ class _ContravariantMeta(type(Type)):
         return
 
 
-@attr.s(frozen=True)
 class Contravariant(Type, metaclass=_ContravariantMeta):
     """Contravariant functor
 
