@@ -4,18 +4,39 @@ import inspect
 from hypothesis import given
 from hypothesis import strategies as st
 
-from haskpy.typeclasses import Monad, Monoid, Cartesian, Cocartesian
+from haskpy.typeclasses import Monad, Monoid, Cartesian, Cocartesian, Semigroup
 from haskpy.utils import curry, identity, sample_sized
 from haskpy import conftest, testing
 
 
+def FunctionMonoid(monoid):
+    """Create a function type that has a Monoid instance"""
+
+
+    class _FunctionMonoidMeta(type(Monoid), _FunctionMeta):
+
+
+        @property
+        def empty(cls):
+            return Function(lambda _: monoid.empty)
+
+
+        def sample_monoid_type(cls):
+            t = monoid.sample_monoid_type()
+            return t.map(lambda b: cls.sample_value(None, b))
+
+
+    @attr.s(frozen=True, repr=False, cmp=False)
+    class _FunctionMonoid(Monoid, Function, metaclass=_FunctionMonoidMeta):
+        """Function type with Monoid instance added"""
+        pass
+
+
+    return _FunctionMonoid
+
+
 class _FunctionMeta(type(Monad), type(Cartesian), type(Cocartesian),
-                    type(Monoid)):
-
-
-    @property
-    def empty(cls):
-        return cls(identity)
+                    type(Semigroup)):
 
 
     def pure(cls, x):
@@ -27,11 +48,21 @@ class _FunctionMeta(type(Monad), type(Cartesian), type(Cocartesian),
 
 
 @attr.s(frozen=True, repr=False, cmp=False)
-class Function(Monad, Cartesian, Cocartesian, Monoid, metaclass=_FunctionMeta):
+class Function(Monad, Cartesian, Cocartesian, Semigroup, metaclass=_FunctionMeta):
     """Monad instance for functions
 
     Use similar wrapping as functools.wraps does for some attributes. See
     CPython: https://github.com/python/cpython/blob/master/Lib/functools.py#L30
+
+    .. note::
+
+        Monoid instance of Function requires the knowledge of the contained
+        monoid type in order to be able to create ``empty``. The contained type
+        is not known because Function class can be used to create functions of
+        any type. This is just convenience and simpler user interface. If you
+        need Monoid instance of Function, use FunctionMonoid function to create
+        such a class. Note though that the Semigroup instance is available in
+        this Function without needing to use FunctionMonoid.
 
     """
 
@@ -104,12 +135,8 @@ class Function(Monad, Cartesian, Cocartesian, Monoid, metaclass=_FunctionMeta):
 
 
     def append(f, g):
-        """(a -> a) -> (a -> a) -> (a -> a)"""
-        # FIXME: compose(f, g) or compose(g, f) ????
-        #
-        # FIXME: This is wrong for functions in general. It's some endofunction
-        # stuff.
-        return compose(f, g)
+        """(a -> b) -> (a -> b) -> (a -> b)"""
+        return f.map(lambda x: lambda y: x.append(y)).apply_to(g)
 
 
     def __call__(self, *args, **kwargs):
