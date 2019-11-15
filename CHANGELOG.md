@@ -1,5 +1,12 @@
 # Change log
 
+
+## 0.1.1
+
+### Changed
+- Change bind operator to `%`.`
+
+
 ## 0.1.0
 
 ### Added
