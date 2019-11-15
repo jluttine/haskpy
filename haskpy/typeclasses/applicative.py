@@ -237,5 +237,20 @@ class Applicative(Functor, metaclass=_ApplicativeMeta):
         return self.apply(mf)
 
 
+    def __matmul__(self, x):
+        """Use ``@`` as apply operator similarly as ``<*>`` in Haskell
+
+        ``f @ x`` translates to ``f.apply_to(x)`` or ``x.apply(f)``.
+
+        """
+        return self.apply_to(x)
+
+
+    def __rshift__(self, x):
+        """Sequence with``>>`` similarly as with ``*>`` and ``>>`` in Haskell"""
+        return self.sequence(x)
+
+
+
 # Applicative-related functions are defined in function module because of
 # circular dependency.

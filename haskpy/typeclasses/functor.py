@@ -132,5 +132,14 @@ class Functor(Type, metaclass=_FunctorMeta):
         return self.map(lambda _: x)
 
 
+    def __rpow__(self, f):
+        """Use ``**`` operator to lift similarly as ``<$>`` in Haskell
+
+        ``f ** x`` translates to ``x.map(f)``
+
+        """
+        return self.map(f)
+
+
 # Functor-related functions are defined in function module because of circular
 # dependency.

@@ -257,5 +257,10 @@ class Monad(Applicative, metaclass=_MonadMeta):
         return self.bind(compose(cls.pure, f))
 
 
+    def __or__(self, f):
+        """Use ``|`` as bind operator similarly as ``>>=`` in Haskell"""
+        return self.bind(f)
+
+
 # Monad-related functions are defined in function module because of circular
 # dependency.
