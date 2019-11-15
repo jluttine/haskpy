@@ -133,9 +133,22 @@ class Functor(Type, metaclass=_FunctorMeta):
 
 
     def __rpow__(self, f):
-        """Use ``**`` operator to lift similarly as ``<$>`` in Haskell
+        """Lifting operator ``**`` lifts similarly as ``<$>`` in Haskell
 
-        ``f ** x`` translates to ``x.map(f)``
+        ``f ** x`` translates to ``x.map(f)`` and ``map(f, x)``.
+
+        Why ``**`` operator?
+
+        - It's not typically used as often as multiplication or addition so
+          less risk of confusion.
+
+        - It's not commutative operator as isn't lifting either.
+
+        - The two operands have very different roles. They are not at the same
+          "level".
+
+        - The right operand is "higher", that is, it's inside a structure and
+          the first operand needs to be raised to that "power".
 
         """
         return self.map(f)

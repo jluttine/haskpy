@@ -238,9 +238,22 @@ class Applicative(Functor, metaclass=_ApplicativeMeta):
 
 
     def __matmul__(self, x):
-        """Use ``@`` as apply operator similarly as ``<*>`` in Haskell
+        """Application operand ``@`` applies similarly as ``<*>`` in Haskell
 
-        ``f @ x`` translates to ``f.apply_to(x)`` or ``x.apply(f)``.
+        ``f @ x`` translates to ``f.apply_to(x)``, ``x.apply(f)`` and
+        ``apply(f, x)``.
+
+        Why ``@`` operator?
+
+        - It's not typically used as often as some other more common operators
+          so less risk for confusion.
+
+        - The operator is not a commutative as isn't ``apply`` either.
+
+        - If we see matrix as some structure, then matrix multiplication takes
+          both left and right operand inside this structure and gives a result
+          also inside this structure, similarly as ``apply`` does. So it's an
+          operator for two operands having a similar structure.
 
         """
         return self.apply_to(x)

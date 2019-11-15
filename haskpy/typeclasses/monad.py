@@ -257,8 +257,25 @@ class Monad(Applicative, metaclass=_MonadMeta):
         return self.bind(compose(cls.pure, f))
 
 
-    def __or__(self, f):
-        """Use ``|`` as bind operator similarly as ``>>=`` in Haskell"""
+    def __mod__(self, f):
+        """Use ``%`` as bind operator similarly as ``>>=`` in Haskell
+
+        That is, ``x % f`` is equivalent to ``bind(x, f)`` and ``x.bind(f)``.
+
+        Why ``%`` operator?
+
+        - It's not very often used so less risk for confusion.
+
+        - It's not commutative as isn't bind either.
+
+        - It is similar to bind in a sense that the result has the same unit as
+          the left operand while the right operand has different unit.
+
+        - The symbol works visually as a line "binds" two circles and on the
+          other hand two circles tell about two similar structures on both
+          sides but those structures are just on different "level".
+
+        """
         return self.bind(f)
 
 

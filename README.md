@@ -33,7 +33,7 @@ classes and functions inspired by Hask.
   - **TODO**: `traversal`, `grate`, `affine`, `setter`
 
 - Operators for common tasks: ``**`` for function composition or functorial
-  mapping, ``@`` for applicative application, ``|`` for monadic binding and
+  mapping, ``@`` for applicative application, ``%`` for monadic binding and
   ``>>`` for applicative/monadic sequencing.
 
 - Property-based testing of typeclass laws
