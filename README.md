@@ -25,9 +25,9 @@ classes and functions inspired by Hask.
 
   - **TODO:** `StateT`, `ReaderT`, `WriterT`, `ListT`
 
-- Simple monoids: `Sum`, `And`, `Or`, `String`
+- Simple monoids: `Sum`, `And`, `Or`, `String`, `Endo`
 
-  - **TODO:** `Product`, `Endo`
+  - **TODO:** `Product`
 
 - Property-based testing of typeclass laws
 

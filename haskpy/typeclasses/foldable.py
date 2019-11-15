@@ -394,12 +394,12 @@ class Foldable(Type, metaclass=_FoldableMeta):
         this function to the initial value.
 
         """
-        from haskpy.functions import Function
+        from haskpy.types.monoids import Endo
         warn("Using default implementation of foldr", PerformanceWarning)
         return self.fold_map(
-            Function,
-            lambda x: lambda y: combine(x, y),
-        )(initial)
+            Endo,
+            lambda x: Endo(lambda y: combine(x, y)),
+        ).app_endo(initial)
 
 
     def fold(self, monoid):

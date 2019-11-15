@@ -4,6 +4,8 @@ import attr
 import hypothesis.strategies as st
 
 from haskpy.typeclasses import Monoid, CommutativeMonoid, Hashable
+from haskpy import testing
+from haskpy.utils import identity
 
 
 class _SumMeta(type(CommutativeMonoid), type(Hashable)):
@@ -104,3 +106,39 @@ class String(Monoid, Hashable, metaclass=_StringMeta):
 
     def __repr__(self):
         return "String({})".format(repr(self.string))
+
+
+class _EndoMeta(type(Monoid)):
+
+
+    @property
+    def empty(cls):
+        return cls(identity)
+
+
+    def sample_type(cls):
+        return testing.sample_hashable_type().map(
+            lambda a: testing.sample_function(a).map(lambda f: Endo(f))
+        )
+
+
+@attr.s(frozen=True, repr=False, cmp=False)
+class Endo(Monoid, metaclass=_EndoMeta):
+    """Endofunction monoid (a -> a)"""
+
+
+    app_endo = attr.ib()
+
+
+    def append(self, f):
+        # Append by composing
+        return Endo(lambda a: self.app_endo(f.app_endo(a)))
+
+
+    def __repr__(self):
+        return "Endo({})".format(self.app_endo)
+
+
+    def __test_eq__(self, other, data, input_strategy=st.integers()):
+        x = data.draw(input_strategy)
+        return self.app_endo(x) == other.app_endo(x)
