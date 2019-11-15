@@ -3,8 +3,6 @@
 Hask is the category of types and functions in Haskell. This package provides
 classes and functions inspired by Hask.
 
-**This is currently in planning phase, consider this a proof of concept.**
-
 
 ## Overview
 
@@ -21,7 +19,7 @@ classes and functions inspired by Hask.
   - **TODO:** `Constant`, `Validation`, `Dictionary`, `LinkedList`,
     `State`, `Reader`, `Writer`, `IO`
 
-- Monad transformers: MaybeT, IdentityT
+- Monad transformers: `MaybeT`, `IdentityT`
 
   - **TODO:** `StateT`, `ReaderT`, `WriterT`, `ListT`
 
@@ -29,11 +27,11 @@ classes and functions inspired by Hask.
 
   - **TODO:** `Product`
 
-- Property-based testing of typeclass laws
-
 - Profunctor optics: `adapter`, `lens`, `prism`
 
-  - **TODO**: `traversal`
+  - **TODO**: `traversal`, `grate`, `affine`, `setter`
+
+- Property-based testing of typeclass laws
 
 HaskPy has implemented typeclass laws as property-based tests. Thus, one can
 easily test that an implementation satisfies all the laws it should. Just add
