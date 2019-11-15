@@ -42,19 +42,19 @@ class _CocartesianMeta(type(Profunctor)):
     @assert_output
     def assert_cocartesian_associativity(cls, h):
         from haskpy.types.either import Left, Right
-        lcoassoc = lambda ab_c: ab_c.match(
-            Left=lambda ab: ab.match(
-                Left=lambda a: Left(a),
-                Right=lambda b: Right(Left(b)),
-            ),
-            Right=lambda c: Right(Right(c))
-        )
-        rcoassoc = lambda a_bc: a_bc.match(
+        lcoassoc = lambda a_bc: a_bc.match(
             Left=lambda a: Left(Left(a)),
             Right=lambda bc: bc.match(
                 Left=lambda b: Left(Right(b)),
                 Right=lambda c: Right(c)
             )
+        )
+        rcoassoc = lambda ab_c: ab_c.match(
+            Left=lambda ab: ab.match(
+                Left=lambda a: Left(a),
+                Right=lambda b: Right(Left(b)),
+            ),
+            Right=lambda c: Right(Right(c))
         )
         return (
             h.left().left().dimap(lcoassoc, rcoassoc),
@@ -66,13 +66,11 @@ class _CocartesianMeta(type(Profunctor)):
     def test_cocartesian_associativity(cls, data):
         from haskpy.types.either import Either
         # Draw types
-        a = data.draw(
-            st.tuples(
-                testing.sample_hashable_type(),
-                Either.sample_value(
-                    st.just("foo"),
-                    st.just("bar"),
-                )
+        a = Either.sample_value(
+            data.draw(testing.sample_hashable_type()),
+            Either.sample_value(
+                st.just("foo"),
+                st.just("bar"),
             )
         )
         b = data.draw(testing.sample_type())

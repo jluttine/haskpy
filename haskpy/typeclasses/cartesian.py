@@ -40,7 +40,7 @@ class _CartesianMeta(type(Profunctor)):
     @assert_output
     def assert_cartesian_associativity(cls, h):
         lassoc = lambda a_bc: ((a_bc[0], a_bc[1][0]), a_bc[1][1])
-        rassoc = lambda ab_c: (ab_c[0][0], (ab_c[0][1], ab_c[1][0]))
+        rassoc = lambda ab_c: (ab_c[0][0], (ab_c[0][1], ab_c[1]))
         return (
             h.first().first().dimap(lassoc, rassoc),
             h.first(),
@@ -50,13 +50,11 @@ class _CartesianMeta(type(Profunctor)):
     @given(st.data())
     def test_cartesian_associativity(cls, data):
         # Draw types
-        a = data.draw(
+        a = st.tuples(
+            data.draw(testing.sample_hashable_type()),
             st.tuples(
-                testing.sample_hashable_type(),
-                st.tuples(
-                    st.just("foo"),
-                    st.just("bar"),
-                )
+                st.just("foo"),
+                st.just("bar"),
             )
         )
         b = data.draw(testing.sample_type())
