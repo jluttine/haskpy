@@ -148,7 +148,13 @@ class Functor(Type, metaclass=_FunctorMeta):
           "level".
 
         - The right operand is "higher", that is, it's inside a structure and
-          the first operand needs to be raised to that "power".
+          the left operand is kind of "raised to the power" of the second
+          operand, where the "power" is the functorial structure.
+
+        - The same operand is also used for function composition because
+          function composition is just mapping. Visually the symbol can be
+          seen as chaining two stars similarly as function composition chains
+          two functions.
 
         """
         return self.map(f)
