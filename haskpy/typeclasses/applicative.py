@@ -254,7 +254,7 @@ class Applicative(Functor, metaclass=_ApplicativeMeta):
           both left and right operand inside this structure and gives a result
           also inside this structure, similarly as ``apply`` does. So it's an
           operator for two operands having a similar structure.
-          
+
         - The operator evaluates the contained function(s) at the contained
           value(s). Thus, ``f`` "at" ``x`` makes perfect sense.
 
