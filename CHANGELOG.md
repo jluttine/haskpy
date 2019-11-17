@@ -1,7 +1,15 @@
 # Change log
 
 
+## 0.1.3
+
+### Fixed
+- Fix PyPI releasing on GitHub
+
+
 ## 0.1.2
+
+### Changed
 - Improve operator docstrings.
 
 
