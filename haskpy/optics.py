@@ -1,3 +1,16 @@
+"""Profunctor optics
+
+Resources:
+
+- Profunctor Optics: Modular Data Accessors by Pickering, Gibbons, and Wu
+- Profunctor Optics: The Categorical View by Bartosz Milewski
+- https://github.com/cmk/profunctor-extras/tree/master/profunctor-optics
+- https://github.com/hablapps/DontFearTheProfunctorOptics
+- http://oleg.fi/gists/images/optics-hierarchy.svg
+
+"""
+
+
 from haskpy.functions import function, identity, either
 
 
