@@ -1,6 +1,14 @@
 # Change log
 
 
+## Dev
+
+### Changed
+- Mask out some built-in class methods such as ``__eq__`` and ``__hash__``.
+  Python doesn't allow deleting these methods so we need to do some black magic
+  to hide them as if they didn't exist.
+
+
 ## 0.1.3
 
 ### Fixed
