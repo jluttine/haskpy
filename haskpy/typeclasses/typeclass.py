@@ -74,9 +74,11 @@ class _MetaType(type):
     def __le__(self, other):
         pass
 
-    @nonexisting
-    def __str__(self):
-        pass
+    # Note that we aren't hiding __str__ here. That's because Sphinx converts
+    # classes to strings when writing the documentation. This isn't a problem
+    # really, because we are anyway more interested about the instances
+    # (values) rather than the classes (types), so it's more important that we
+    # don't have __str__ defined for the values.
 
     # IPython doesn't work properly if the type isn't hashable. See:
     # https://github.com/ipython/ipython/issues/12320
