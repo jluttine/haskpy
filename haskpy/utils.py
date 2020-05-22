@@ -4,6 +4,19 @@ import attr
 import hypothesis.strategies as st
 
 
+def immutable(maybe_cls=None, **kwargs):
+    return attr.s(
+        maybe_cls=maybe_cls,
+        frozen=True,
+        eq=False,
+        order=False,
+        hash=False,
+        str=False,
+        repr=False,
+        **kwargs
+    )
+
+
 def singleton(C):
     return C()
 
