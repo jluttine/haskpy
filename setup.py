@@ -32,6 +32,9 @@ if __name__ == "__main__":
                 "pytest",
                 "hypothesis",
             ],
+            "doc": [
+                "sphinx",
+            ],
         },
         keywords     = [
             "functional programming",
