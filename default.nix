@@ -1,0 +1,32 @@
+let
+  pkgs = import <nixpkgs> { };
+  # pkgs = import (builtins.fetchTarball {
+  #   name = "nixos-unstable-2019-02-26";
+  #   url = https://github.com/nixos/nixpkgs/archive/bc70e81b05474f630044a49fd31991aee71a2557.tar.gz;
+  #   sha256 = "14wpw8sqxf130i07vc4x9a8dqfvp2sa61ic6896971ia7mmqs8sf";
+  # }) {};
+
+  ps = pkgs.python3Packages;
+
+in
+ps.buildPythonPackage rec {
+  name = "haskpy";
+  doCheck = false;
+  src = ./.;
+  depsBuildBuild = with ps; [
+    ipython
+    pytest
+    pip
+    twine
+    sphinx
+  ];
+  propagatedBuildInputs = with ps; [
+    attrs
+    versioneer
+    attrs
+    hypothesis
+    toolz
+    cytoolz
+  ];
+
+}
