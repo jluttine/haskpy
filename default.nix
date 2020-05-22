@@ -19,14 +19,15 @@ ps.buildPythonPackage rec {
     pip
     twine
     sphinx
+    setuptools_scm
+    pkgs.git
   ];
   propagatedBuildInputs = with ps; [
-    attrs
-    versioneer
     attrs
     hypothesis
     toolz
     cytoolz
+    importlib-metadata
   ];
 
 }

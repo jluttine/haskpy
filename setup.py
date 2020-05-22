@@ -1,6 +1,5 @@
 import os
 from setuptools import setup, find_packages
-import versioneer
 
 
 if __name__ == "__main__":
@@ -13,22 +12,23 @@ if __name__ == "__main__":
     with open(os.path.join(base_dir, 'haskpy', '_meta.py')) as fp:
         exec(fp.read(), meta)
 
-
     setup(
-        name         = "haskpy",
-        version      = versioneer.get_version(),
-        author       = meta["__author__"],
-        author_email = meta["__contact__"],
-        description  = "Functions and classes inspired by Haskell and Hask category",
-        url          = "https://github.com/jluttine/HaskPy",
-        cmdclass     = versioneer.get_cmdclass(),
-        packages     = find_packages(),
-        install_requires = [
-            "attrs",
+        name="haskpy",
+        author=meta["__author__"],
+        author_email=meta["__contact__"],
+        description="Utilities inspired by Haskell and Hask category",
+        url="https://github.com/jluttine/HaskPy",
+        packages=find_packages(),
+        use_scm_version=True,
+        setup_requires=[
+            "setuptools_scm",
         ],
-        extras_require = {
+        install_requires=[
+            "attrs",
+            "importlib_metadata",
+        ],
+        extras_require={
             "dev": [
-                "versioneer",
                 "pytest",
                 "hypothesis",
             ],
@@ -36,7 +36,7 @@ if __name__ == "__main__":
                 "sphinx",
             ],
         },
-        keywords     = [
+        keywords=[
             "functional programming",
             "category theory",
             "Hask category",
@@ -44,7 +44,7 @@ if __name__ == "__main__":
             "functor",
             "monad",
         ],
-        classifiers = [
+        classifiers=[
             "Programming Language :: Python :: 3 :: Only",
             "Development Status :: 3 - Alpha",
             "Environment :: Console",
@@ -54,6 +54,6 @@ if __name__ == "__main__":
             "Topic :: Scientific/Engineering",
             "Topic :: Software Development :: Libraries",
         ],
-        long_description = read('README.md'),
-        long_description_content_type = "text/markdown",
+        long_description=read('README.md'),
+        long_description_content_type="text/markdown",
     )
