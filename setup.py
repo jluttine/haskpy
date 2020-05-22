@@ -46,7 +46,7 @@ if __name__ == "__main__":
         ],
         classifiers = [
             "Programming Language :: Python :: 3 :: Only",
-            "Development Status :: 1 - Planning",
+            "Development Status :: 3 - Alpha",
             "Environment :: Console",
             "Intended Audience :: Developers",
             "License :: OSI Approved :: {0}".format(meta["__license__"]),
