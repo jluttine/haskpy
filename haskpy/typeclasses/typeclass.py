@@ -33,8 +33,16 @@ class nonexisting():
         return nonexisting(self.method, cls=objtype)
 
 
-class MetaType(type):
-    """Base metaclass for typeclasses"""
+class _MetaType(type):
+    """Base metaclass for typeclasses
+
+    .. note::
+
+        There should be no need to import this class (or, in general, the
+        metaclasses of other typeclasses, because you can access it as
+        ``type(Type)`` (or whatever class you are interested in).
+
+    """
 
     def __repr__(cls):
         return cls.__name__
@@ -95,7 +103,7 @@ class MetaType(type):
             return attr
 
 
-class Type(object, metaclass=MetaType):
+class Type(object, metaclass=_MetaType):
     """Foo"""
 
     def __dir__(self):
