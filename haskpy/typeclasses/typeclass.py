@@ -117,6 +117,10 @@ class Type(object, metaclass=_MetaType):
         ]
 
     @nonexisting
+    def __init__(self):
+        pass
+
+    @nonexisting
     def __eq__(self, other):
         pass
 
