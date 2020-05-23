@@ -121,6 +121,37 @@ def abstract_class_function(f):
     return abstract_function(class_function(f))
 
 
+@immutable
+class nonexisting_function():
+    """Mark method non-existing
+
+    This is a workaround for Python forcefully creating some methods. One
+    cannot create objects that don't have ``__eq__``, ``__ge__``, ``__gt__``
+    and many other methods. They are there and it's not possible to delete
+    them. With this wrapper you can override those methods so that they won't
+    show up in ``__dir__`` listing and if accessed in any way,
+    ``AttributeError`` is raised. Note that it just hides the methods, one can
+    still access them as ``object.__getattribute__(obj, "__eq__")``.
+
+    """
+
+    method = attr.ib()
+    cls = attr.ib(default=None)
+
+    def __call__(self, *args, **kwargs):
+        name = self.method.__name__
+        # The method doesn't exist
+        raise TypeError(
+            "No {0} function".format(name)
+            if self.cls is None else
+            "Class {0} has no {1} method".format(self.cls.__name__, name)
+        )
+
+    def __get__(self, obj, objtype):
+        # Bind the method to a class
+        return nonexisting_function(self.method, cls=objtype)
+
+
 def update_argspec(spec, args, kwargs):
 
     # TODO: Instead of running getfullargspec after every partial evaluation,

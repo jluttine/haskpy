@@ -2,37 +2,6 @@ import attr
 from haskpy import utils
 
 
-@utils.immutable
-class nonexisting():
-    """Mark method non-existing
-
-    This is a workaround for Python forcefully creating some methods. One
-    cannot create objects that don't have ``__eq__``, ``__ge__``, ``__gt__``
-    and many other methods. They are there and it's not possible to delete
-    them. With this wrapper you can override those methods so that they won't
-    show up in ``__dir__`` listing and if accessed in any way,
-    ``AttributeError`` is raised. Note that it just hides the methods, one can
-    still access them as ``object.__getattribute__(obj, "__eq__")``.
-
-    """
-
-    method = attr.ib()
-    cls = attr.ib(default=None)
-
-    def __call__(self, *args, **kwargs):
-        name = self.method.__name__
-        # The method doesn't exist
-        raise TypeError(
-            "No {0} function".format(name)
-            if self.cls is None else
-            "Class {0} has no {1} method".format(self.cls.__name__, name)
-        )
-
-    def __get__(self, obj, objtype):
-        # Bind the method to a class
-        return nonexisting(self.method, cls=objtype)
-
-
 class _MetaType(type):
     """Base metaclass for typeclasses
 
@@ -50,27 +19,27 @@ class _MetaType(type):
     def sample(cls, *_, **__):
         raise NotImplementedError()
 
-    @nonexisting
+    @utils.nonexisting_function
     def __eq__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __ne__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __gt__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __ge__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __lt__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __le__(self, other):
         pass
 
@@ -84,7 +53,7 @@ class _MetaType(type):
     # https://github.com/ipython/ipython/issues/12320
     #
     # See the workarounds in that issue or use normal Python REPL.
-    @nonexisting
+    @utils.nonexisting_function
     def __hash__(self, other):
         pass
 
@@ -99,7 +68,7 @@ class _MetaType(type):
 
     def __getattribute__(self, name):
         attr = super().__getattribute__(name)
-        if isinstance(attr, nonexisting):
+        if isinstance(attr, utils.nonexisting_function):
             raise AttributeError()
         else:
             return attr
@@ -116,35 +85,35 @@ class Type(object, metaclass=_MetaType):
             if hasattr(self, x)
         ]
 
-    @nonexisting
+    @utils.nonexisting_function
     def __init__(self):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __eq__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __ne__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __gt__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __ge__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __lt__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __le__(self, other):
         pass
 
-    @nonexisting
+    @utils.nonexisting_function
     def __str__(self):
         pass
 
@@ -152,13 +121,13 @@ class Type(object, metaclass=_MetaType):
     # https://github.com/ipython/ipython/issues/12320
     #
     # See the workarounds in that issue or use normal Python REPL.
-    @nonexisting
+    @utils.nonexisting_function
     def __hash__(self, other):
         pass
 
     def __getattribute__(self, name):
         attr = super().__getattribute__(name)
-        if isinstance(attr, nonexisting):
+        if isinstance(attr, utils.nonexisting_function):
             raise AttributeError()
         else:
             return attr
