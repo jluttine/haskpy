@@ -21,6 +21,106 @@ def singleton(C):
     return C()
 
 
+class decorator():
+    """Base class for various decorators"""
+
+    def __init__(self, f):
+        self.f = f
+        self.__doc__ = f.__doc__
+        self.__name__ = f.__name__
+        return
+
+
+class class_function(decorator):
+    """Class method that isn't a method of the instances"""
+
+    def __get__(self, obj, cls):
+        if obj is None:
+            return self.f.__get__(cls, type(cls))
+        else:
+            raise AttributeError(
+                "'{0}' object has no attribute '{1}'".format(
+                    cls.__name__,
+                    self.f.__name__,
+                )
+            )
+
+
+class class_property(decorator):
+    """Class attribute that isn't an attribute of the instances
+
+    To access the docstring, use ``__dict__`` as
+    ``SomeClass.__dict__["some_attribute"].__doc__``
+
+    """
+
+    def __get__(self, obj, cls):
+        if obj is None:
+            return self.f.__get__(obj, cls)(cls)
+        else:
+            raise AttributeError(
+                "'{0}' object has no attribute '{1}'".format(
+                    cls.__name__,
+                    self.f.__name__,
+                )
+            )
+
+
+class abstract_function(decorator):
+    """Function that has no implementation yet"""
+
+    def __call__(self, *args, **kwargs):
+        raise NotImplementedError(
+            "'{0}' function is abstract".format(self.f.__name__)
+        )
+
+    def __get__(self, obj, cls):
+        return abstract_function(self.f.__get__(obj, cls))
+
+
+class abstract_property(decorator):
+    """Property that has no implementation yet
+
+    To access the property ``abstract_property`` object without raising
+    ``NotImplementedError``, use ``__dict__``. For instance, to access the
+    docstring:
+
+    .. code-block:: python
+
+        class Foo():
+
+            @abstract_property
+            def bar(self):
+                '''My docstring'''
+
+        Foo.__dict__["bar"].__doc__
+        isinstance(Foo.__dict__["bar"], abstract_property)
+
+    """
+
+    def __get__(self, obj, cls):
+        self.f.__get__(obj, cls)
+        raise NotImplementedError(
+            "'{0}' attribute of type object '{1}' is abstract".format(
+                self.f.__name__,
+                cls.__name__,
+            )
+            if obj is None else
+            "'{0}' attribute of object '{1}' is abstract".format(
+                self.f.__name__,
+                cls.__name__,
+            )
+        )
+
+
+def abstract_class_property(f):
+    return abstract_property(class_function(f))
+
+
+def abstract_class_function(f):
+    return abstract_function(class_function(f))
+
+
 def update_argspec(spec, args, kwargs):
 
     # TODO: Instead of running getfullargspec after every partial evaluation,
