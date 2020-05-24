@@ -10,3 +10,4 @@ from .monoid import *
 from .foldable import *
 from .patternmatchable import *
 from .hashable import *
+from .eq import Eq
