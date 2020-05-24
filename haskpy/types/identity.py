@@ -1,6 +1,6 @@
 import attr
 
-from haskpy.utils import class_function, immutable
+from haskpy.utils import class_function, immutable, eq_test
 from haskpy.typeclasses import Monad, Eq
 
 
@@ -27,6 +27,9 @@ class Identity(Monad, Eq):
     @class_function
     def sample_value(cls, a):
         return a.map(Identity)
+
+    def __eq_test__(self, other, data):
+        return eq_test(self.x, other.x, data)
 
 
 def IdentityT(M):
@@ -84,8 +87,8 @@ def IdentityT(M):
         def __repr__(self):
             return "{0}({1})".format(repr(type(self)), repr(self.decomposed))
 
-        def __test_eq__(self, other, data=None):
-            return self.decomposed.__test_eq__(other.decomposed, data=data)
+        def __eq_test__(self, other, data):
+            return eq_test(self.decomposed, other.decomposed, data=data)
 
         @class_function
         def sample_value(cls, a):

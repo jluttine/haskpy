@@ -7,9 +7,11 @@ from haskpy.utils import singleton, immutable
 def types():
     from haskpy import types
     from haskpy.types import hypothesis
+    from haskpy.functions import Function
     # Some example types. The more types you add here, the longer it takes to
     # run the tests.
     return (
+        Function,
         types.Maybe,
         types.List,
         types.And,
@@ -59,6 +61,10 @@ def sample_monoid_type():
 
 def sample_commutative_type():
     return sample_type_of(lambda cls: cls.sample_commutative_type())
+
+
+def sample_eq_type():
+    return sample_type_of(lambda cls: cls.sample_eq_type())
 
 
 @st.composite

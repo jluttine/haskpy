@@ -64,13 +64,3 @@ class Type(object, metaclass=MetaType):
             raise AttributeError()
         else:
             return attr
-
-    def __test_eq__(self, x, data=None):
-        """Equality used in unit tests
-
-        For some types, such as functions, direct == doesn't work but one needs
-        to compare the function outputs for many input points. Then, data can
-        be useful. But for most cases, normal equality works just fine.
-
-        """
-        return self == x

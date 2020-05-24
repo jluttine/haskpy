@@ -10,6 +10,7 @@ from haskpy.utils import (
     immutable,
     class_property,
     class_function,
+    eq_test,
 )
 from haskpy import testing
 
@@ -161,13 +162,13 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
             # Class method
             return self
 
-    def __test_eq__(self, g, data, input_strategy=st.integers()):
+    def __eq_test__(self, g, data, input_strategy=st.integers()):
         # NOTE: This is used only in tests when the function input doesn't
         # really matter so any hashable type here is ok. The type doesn't
         # matter because the functions are either _TestFunction or created with
         # pure.
         x = data.draw(input_strategy)
-        return self(x) == g(x)
+        return eq_test(self(x), g(x), data)
 
     @class_function
     def sample_value(cls, _, b):

@@ -99,7 +99,7 @@ class Commutative(Semigroup):
         x = data.draw(t)
         y = data.draw(t)
 
-        cls.assert_commutative_commutativity(x, y)
+        cls.assert_commutative_commutativity(x, y, data=data)
         return
 
 

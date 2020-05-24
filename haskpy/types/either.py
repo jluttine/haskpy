@@ -1,14 +1,14 @@
 import attr
 import hypothesis.strategies as st
 
-from haskpy.typeclasses import Monad
-from haskpy.utils import class_function, immutable
+from haskpy.typeclasses import Monad, Eq
+from haskpy.utils import class_function, immutable, eq_test
 
 from haskpy import testing
 
 
 @immutable
-class Either(Monad):
+class Either(Monad, Eq):
 
     def match(self, *, Left, Right):
         raise NotImplementedError()
@@ -45,6 +45,18 @@ class Left(Either):
     def bind(self, f):
         return self
 
+    def __eq__(self, other):
+        return other.match(
+            Left=lambda x: self.__x == x,
+            Right=lambda x: False,
+        )
+
+    def __eq_test__(self, other):
+        return other.match(
+            Left=lambda x: eq_test(self.__x, x),
+            Right=lambda x: False,
+        )
+
     def __repr__(self):
         return "Left({0})".format(repr(self.__x))
 
@@ -65,6 +77,18 @@ class Right(Either):
 
     def bind(self, f):
         return f(self.__x)
+
+    def __eq__(self, other):
+        return other.match(
+            Left=lambda x: False,
+            Right=lambda x: self.__x == x,
+        )
+
+    def __eq_test__(self, other):
+        return other.match(
+            Left=lambda x: False,
+            Right=lambda x: eq_test(self.__x, x),
+        )
 
     def __repr__(self):
         return "Right({0})".format(repr(self.__x))

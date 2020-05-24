@@ -5,7 +5,13 @@ import hypothesis.strategies as st
 
 from haskpy.typeclasses import Monoid, CommutativeMonoid, Hashable, Eq
 from haskpy import testing
-from haskpy.utils import identity, class_property, class_function, immutable
+from haskpy.utils import (
+    identity,
+    class_property,
+    class_function,
+    immutable,
+    eq_test,
+)
 
 
 @immutable
@@ -111,9 +117,9 @@ class Endo(Monoid):
     def __repr__(self):
         return "Endo({})".format(self.app_endo)
 
-    def __test_eq__(self, other, data, input_strategy=st.integers()):
+    def __eq_test__(self, other, data, input_strategy=st.integers()):
         x = data.draw(input_strategy)
-        return self.app_endo(x) == other.app_endo(x)
+        return eq_test(self.app_endo(x), other.app_endo(x), data)
 
     @class_function
     def sample_type(cls):

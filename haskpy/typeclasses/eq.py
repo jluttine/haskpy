@@ -1,4 +1,5 @@
 from .typeclass import Type
+from haskpy.utils import class_function
 
 
 class Eq(Type):
@@ -29,3 +30,10 @@ class Eq(Type):
 
         """
         return not self.__eq__(other)
+
+    @class_function
+    def sample_eq_type(cls):
+        # By default, assume that the type is always Eq. Subclasses should
+        # override this when needed, for instance, if a type from a type
+        # constructor is Eq only if it's type argument is Eq (e.g., Maybe)
+        return cls.sample_type()

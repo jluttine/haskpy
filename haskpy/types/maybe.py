@@ -13,6 +13,7 @@ from haskpy.utils import (
     immutable,
     class_function,
     class_property,
+    eq_test,
 )
 
 from haskpy import testing
@@ -65,6 +66,11 @@ class Maybe(
         t = testing.sample_commutative_type()
         return t.map(cls.sample_value)
 
+    @class_function
+    def sample_eq_type(cls):
+        t = testing.sample_eq_type()
+        return t.map(cls.sample_value)
+
 
 class Just(Maybe):
 
@@ -110,7 +116,16 @@ class Just(Maybe):
         return "Just({0})".format(repr(self.__x))
 
     def __eq__(self, other):
-        return other.match(Just=lambda x: self.__x == x, Nothing=lambda: False)
+        return other.match(
+            Just=lambda x: self.__x == x,
+            Nothing=lambda: False,
+        )
+
+    def __eq_test__(self, other, data):
+        return other.match(
+            Just=lambda x: eq_test(self.__x, x, data),
+            Nothing=lambda: False,
+        )
 
 
 @singleton
@@ -151,6 +166,9 @@ class Nothing(Maybe):
         return "Nothing"
 
     def __eq__(self, other):
+        return other.match(Just=lambda _: False, Nothing=lambda: True)
+
+    def __eq_test__(self, other, data):
         return other.match(Just=lambda _: False, Nothing=lambda: True)
 
 
@@ -213,8 +231,8 @@ def MaybeT(M):
         def __repr__(self):
             return "{0}({1})".format(repr(MaybeM), repr(self.decomposed))
 
-        def __test_eq__(self, other, data, **kwargs):
-            pass
+        def __eq_test__(self, other, data, **kwargs):
+            return eq_test(self.decomposed, other.decomposed, data)
 
         @class_function
         def sample_value(cls, a):

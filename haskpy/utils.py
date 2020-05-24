@@ -471,6 +471,18 @@ def sample_sized(e, size=None):
     )
 
 
+def eq_test(x, y, data, **kwargs):
+    try:
+        # Prefer __eq_test__ because it propagates data correctly. If it's not
+        # available, x and y are probably either built-in types or some other
+        # simple types which are always instances of Eq.
+        eq = x.__eq_test__
+    except AttributeError:
+        return x == y
+    else:
+        return eq(y, data, **kwargs)
+
+
 def assert_output(f):
     """Assert that the output pair elements are equal"""
 
@@ -479,10 +491,7 @@ def assert_output(f):
         xs = f(*args)
         x0 = xs[0]
         for xi in xs[1:]:
-            try:
-                assert x0.__test_eq__(xi, **kwargs)
-            except AttributeError:
-                assert x0 == xi
+            assert eq_test(x0, xi, **kwargs)
         return
 
     return wrapped

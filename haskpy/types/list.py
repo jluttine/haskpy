@@ -4,7 +4,12 @@ from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Foldable, Eq
 from haskpy import testing
-from haskpy.utils import immutable, class_property, class_function
+from haskpy.utils import (
+    immutable,
+    class_property,
+    class_function,
+    eq_test,
+)
 from haskpy.functions import curry
 
 
@@ -98,3 +103,17 @@ class List(Monad, Monoid, Foldable, Eq):
     def sample_monoid_type(cls):
         t = testing.sample_type()
         return t.map(cls.sample_value)
+
+    @class_function
+    def sample_eq_type(cls):
+        t = testing.sample_eq_type()
+        return t.map(cls.sample_value)
+
+    def __eq_test__(self, other, data=None):
+        return (
+            False if len(self.__xs) != len(other.__xs) else
+            all(
+                eq_test(x, y, data)
+                for (x, y) in zip(self.__xs, other.__xs)
+            )
+        )

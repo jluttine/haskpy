@@ -273,7 +273,7 @@ class Foldable(Type):
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_foldr(xs, f, initial)
+            cls.assert_foldable_foldr(xs, f, initial, data=data)
 
         return
 
@@ -333,7 +333,7 @@ class Foldable(Type):
         # Draw values
         xs = data.draw(cls.sample_foldable_value(a))
 
-        cls.assert_foldable_fold(xs, monoid)
+        cls.assert_foldable_fold(xs, monoid, data=data)
         return
 
     @class_function
@@ -359,7 +359,7 @@ class Foldable(Type):
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_length(xs)
+            cls.assert_foldable_length(xs, data=data)
 
         return
 
@@ -386,7 +386,7 @@ class Foldable(Type):
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_null(xs)
+            cls.assert_foldable_null(xs, data=data)
 
         return
 
@@ -410,7 +410,7 @@ class Foldable(Type):
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_sum(xs)
+            cls.assert_foldable_sum(xs, data=data)
 
         return
 
@@ -430,8 +430,7 @@ class Foldable(Type):
     @given(st.data())
     def test_foldable_elem(cls, data):
         # Draw types
-        # FIXME: Should draw Eq type
-        a = data.draw(testing.sample_type())
+        a = data.draw(testing.sample_eq_type())
 
         # Draw values
         e = data.draw(a)
@@ -439,7 +438,7 @@ class Foldable(Type):
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_elem(xs, e)
+            cls.assert_foldable_elem(xs, e, data=data)
 
         return
 
@@ -469,7 +468,7 @@ class Foldable(Type):
         f = data.draw(testing.sample_function(b))
         xs = data.draw(cls.sample_foldable_value(a))
 
-        cls.assert_foldable_functor(xs, monoid, f)
+        cls.assert_foldable_functor(xs, monoid, f, data=data)
         return
 
 
