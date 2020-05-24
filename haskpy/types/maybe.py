@@ -4,43 +4,18 @@ import hypothesis.strategies as st
 from haskpy.typeclasses import (
     Monad,
     CommutativeMonoid,
-    PatternMatchable,
     Hashable,
     Foldable,
+    Eq,
 )
-from haskpy import utils
+from haskpy.utils import (
+    singleton,
+    immutable,
+    class_function,
+    class_property,
+)
 
 from haskpy import testing
-
-
-class _MaybeMeta(
-        type(Monad),
-        type(CommutativeMonoid),
-        type(Hashable),
-        type(Foldable),
-):
-
-    @property
-    def empty(cls):
-        return Nothing
-
-    def pure(cls, x):
-        return Just(x)
-
-    def sample_value(cls, a):
-        return st.one_of(a.map(Just), st.just(Nothing))
-
-    def sample_hashable_type(cls):
-        t = testing.sample_hashable_type()
-        return t.map(cls.sample_value)
-
-    def sample_monoid_type(cls):
-        t = testing.sample_monoid_type()
-        return t.map(cls.sample_value)
-
-    def sample_commutative_type(cls):
-        t = testing.sample_commutative_type()
-        return t.map(cls.sample_value)
 
 
 # Some thoughts on design: One could implement all the methods (except match)
@@ -51,25 +26,52 @@ class _MaybeMeta(
 # class.
 
 
-@utils.immutable
 class Maybe(
         Monad,
         CommutativeMonoid,
-        PatternMatchable,
         Hashable,
         Foldable,
-        metaclass=_MaybeMeta
+        Eq,
 ):
     """Maybe type for optional values"""
 
     def match(self, *, Just, Nothing):
         raise NotImplementedError()
 
+    @class_property
+    def empty(cls):
+        return Nothing
 
-@utils.immutable
+    @class_function
+    def pure(cls, x):
+        return Just(x)
+
+    @class_function
+    def sample_value(cls, a):
+        return st.one_of(a.map(Just), st.just(Nothing))
+
+    @class_function
+    def sample_hashable_type(cls):
+        t = testing.sample_hashable_type()
+        return t.map(cls.sample_value)
+
+    @class_function
+    def sample_monoid_type(cls):
+        t = testing.sample_monoid_type()
+        return t.map(cls.sample_value)
+
+    @class_function
+    def sample_commutative_type(cls):
+        t = testing.sample_commutative_type()
+        return t.map(cls.sample_value)
+
+
 class Just(Maybe):
 
     __x = attr.ib()
+
+    def __init__(self, x):
+        self.__x = x
 
     def match(self, *, Just, Nothing):
         return Just(self.__x)
@@ -107,9 +109,12 @@ class Just(Maybe):
     def __repr__(self):
         return "Just({0})".format(repr(self.__x))
 
+    def __eq__(self, other):
+        return other.match(Just=lambda x: self.__x == x, Nothing=lambda: False)
 
-@utils.singleton
-@utils.immutable
+
+@singleton
+@immutable
 class Nothing(Maybe):
 
     def match(self, *, Just, Nothing):
@@ -145,6 +150,9 @@ class Nothing(Maybe):
     def __repr__(self):
         return "Nothing"
 
+    def __eq__(self, other):
+        return other.match(Just=lambda _: False, Nothing=lambda: True)
+
 
 def MaybeT(M):
     """m (Maybe a) -> MaybeT m a"""
@@ -160,20 +168,13 @@ def MaybeT(M):
     # programming from first principles" introduces monad transformers in such
     # a way that it leads to that kind of understanding.
 
-    class _MaybeMMeta(type(Monad)):
-
-        def pure(cls, x):
-            """a -> MaybeT m a"""
-            return cls(M.pure(Maybe.pure(x)))
-
-        def sample_value(cls, a):
-            return M.sample_value(Maybe.sample_value(a)).map(cls)
+    class MetaMaybeM(type(Monad)):
 
         def __repr__(cls):
             return "MaybeT({})".format(repr(M))
 
-    @attr.s(frozen=True, repr=False)
-    class MaybeM(Monad, metaclass=_MaybeMMeta):
+    @immutable
+    class MaybeM(Monad, metaclass=MetaMaybeM):
 
         # The attribute name may sound weird but it makes sense once you
         # understand that this indeed is the not-yet-composed variable and if
@@ -181,6 +182,11 @@ def MaybeT(M):
         # Thus, there's no need to write a simple function to just return this
         # attribute, just use this directly.
         decomposed = attr.ib()
+
+        @class_function
+        def pure(cls, x):
+            """a -> MaybeT m a"""
+            return cls(M.pure(Maybe.pure(x)))
 
         def bind(self, f):
             """MaybeT m a -> (a -> MaybeT m b) -> MaybeT m b
@@ -206,5 +212,12 @@ def MaybeT(M):
 
         def __repr__(self):
             return "{0}({1})".format(repr(MaybeM), repr(self.decomposed))
+
+        def __test_eq__(self, other, data, **kwargs):
+            pass
+
+        @class_function
+        def sample_value(cls, a):
+            return M.sample_value(Maybe.sample_value(a)).map(cls)
 
     return MaybeM

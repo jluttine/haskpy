@@ -24,21 +24,24 @@ def make_test_class(C):
 
     """
 
+    dct = {
+        name: getattr(C, name)
+        for name in dir(C)
+        if name.startswith("test_")
+    }
 
-    class FakeConstructor(type):
+    class MetaTestClass(type):
 
+        __dict__ = dct
 
-        def __call__(cls):
-            """Fake constructor to return the class we want, not instance"""
-            return C
+    class TestClass(metaclass=MetaTestClass):
 
+        __dict__ = dct
 
-    class Fake(metaclass=FakeConstructor):
-        """Fake() doesn't return an instance but the class we want to test"""
-        pass
+        def __getattr__(self, name):
+            return getattr(C, name)
 
-
-    return Fake
+    return TestClass
 
 
 def is_pytest():

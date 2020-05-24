@@ -1,15 +1,36 @@
-import attr
 from hypothesis import given
 from hypothesis import strategies as st
 
 from .profunctor import Profunctor
-from haskpy.utils import identity, assert_output
+from haskpy.utils import assert_output, class_function
 from haskpy import testing
 
 
-class _CocartesianMeta(type(Profunctor)):
+class Cocartesian(Profunctor):
+    """Cocartesian profunctor
 
+    Perhaps better known as Choice in Haskell:
 
+    https://hackage.haskell.org/package/profunctors-5.2/docs/Data-Profunctor-Choice.html
+
+    I decided to use name Cocartesian because that was used in the profunctor
+    optics paper.
+
+    Minimal complete definition: ``left | right``.
+
+    """
+
+    def left(self):
+        return self.right().dimap(_flip_either, _flip_either)
+
+    def right(self):
+        return self.left().dimap(_flip_either, _flip_either)
+
+    #
+    # Test Cocartesian laws
+    #
+
+    @class_function
     @assert_output
     def assert_cocartesian_unit(cls, h):
         from haskpy.types import Left
@@ -20,10 +41,10 @@ class _CocartesianMeta(type(Profunctor)):
             h.left(),
         )
 
-
+    @class_function
     @given(st.data())
     def test_cocartesian_unit(cls, data):
-        from haskpy.types import Either, Left
+        from haskpy.types import Left
         # Draw types
         a = data.draw(testing.sample_hashable_type())
         b = data.draw(testing.sample_type())
@@ -38,7 +59,7 @@ class _CocartesianMeta(type(Profunctor)):
         )
         return
 
-
+    @class_function
     @assert_output
     def assert_cocartesian_associativity(cls, h):
         from haskpy.types.either import Left, Right
@@ -61,7 +82,7 @@ class _CocartesianMeta(type(Profunctor)):
             h.left(),
         )
 
-
+    @class_function
     @given(st.data())
     def test_cocartesian_associativity(cls, data):
         from haskpy.types.either import Either
@@ -81,12 +102,11 @@ class _CocartesianMeta(type(Profunctor)):
         cls.assert_cocartesian_associativity(h, data=data, input_strategy=a)
         return
 
-
     #
     # Test laws based on default implementations
     #
 
-
+    @class_function
     @assert_output
     def assert_cocartesian_left(cls, x):
         return (
@@ -94,7 +114,7 @@ class _CocartesianMeta(type(Profunctor)):
             x.left(),
         )
 
-
+    @class_function
     @given(st.data())
     def test_cocartesian_left(cls, data):
         from haskpy.types.either import Either
@@ -114,6 +134,7 @@ class _CocartesianMeta(type(Profunctor)):
         )
         return
 
+    @class_function
     @assert_output
     def assert_cocartesian_right(cls, x):
         return (
@@ -121,7 +142,7 @@ class _CocartesianMeta(type(Profunctor)):
             x.right(),
         )
 
-
+    @class_function
     @given(st.data())
     def test_cocartesian_right(cls, data):
         from haskpy.types.either import Either
@@ -140,29 +161,6 @@ class _CocartesianMeta(type(Profunctor)):
             input_strategy=a,
         )
         return
-
-
-class Cocartesian(Profunctor, metaclass=_CocartesianMeta):
-    """Cocartesian profunctor
-
-    Perhaps better known as Choice in Haskell:
-
-    https://hackage.haskell.org/package/profunctors-5.2/docs/Data-Profunctor-Choice.html
-
-    I decided to use name Cocartesian because that was used in the profunctor
-    optics paper.
-
-    Minimal complete definition: ``left | right``.
-
-    """
-
-
-    def left(self):
-        return self.right().dimap(_flip_either, _flip_either)
-
-
-    def right(self):
-        return self.left().dimap(_flip_either, _flip_either)
 
 
 def _flip_either(x):

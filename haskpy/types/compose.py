@@ -3,6 +3,7 @@ import functools
 
 from haskpy.typeclasses import Applicative
 from haskpy.functions import map, apply
+from haskpy.utils import class_function, immutable
 
 
 def Compose(X, Y):
@@ -53,24 +54,10 @@ def Compose(X, Y):
 
     """
 
-
-    class ComposedMeta(type(Applicative)):
-
+    class MetaComposed(type(Applicative)):
 
         InnerClass = Y
         OuterClass = X
-
-
-        def pure(cls, x):
-            """a -> f a
-
-            Without composition, this corresponds to:
-
-              a -> f1 (f2 a)
-
-            """
-            return cls(X.pure(Y.pure(x)))
-
 
         def compress_init(cls):
             """Create a bit simplified constructor
@@ -96,24 +83,16 @@ def Compose(X, Y):
                 lambda *args, **kwargs: cls(X(*args, **kwargs))
             )
 
-
         def __repr__(cls):
             return "Compose({0}, {1})".format(
                 repr(cls.OuterClass),
                 repr(cls.InnerClass),
             )
 
-
-        def sample_value(cls, a):
-            return X.sample_value(Y.sample_value(a)).map(cls)
-
-
     # It's also Foldable and Traversable if both X and Y are.
 
-
-    @attr.s(frozen=True, repr=False)
-    class Composed(Applicative, metaclass=ComposedMeta):
-
+    @immutable
+    class Composed(Applicative, metaclass=MetaComposed):
 
         # The attribute name may sound weird but it makes sense once you
         # understand that this indeed is the not-yet-composed variable and if
@@ -122,6 +101,16 @@ def Compose(X, Y):
         # attribute, just use this directly.
         decomposed = attr.ib()
 
+        @class_function
+        def pure(cls, x):
+            """a -> f a
+
+            Without composition, this corresponds to:
+
+              a -> f1 (f2 a)
+
+            """
+            return cls(X.pure(Y.pure(x)))
 
         def apply(self, f):
             """f a -> f (a -> b) -> f b
@@ -134,15 +123,10 @@ def Compose(X, Y):
 
             """
             # TODO: Check this..
-            #
-            # NOTE: Instead of wrapping with Composed(...), use a bit more
-            # verbose attr.evolve(self, ...) so that a correct class is used in
-            # subclasses.
             return attr.evolve(
                 self,
                 decomposed=(apply(map(apply, f.decomposed), self.decomposed))
             )
-
 
         def map(self, f):
             """(a -> b) -> f a -> f b
@@ -155,19 +139,13 @@ def Compose(X, Y):
             # This implementation isn't necessary because Applicative has a
             # default implementation. But let's just provide this simple
             # implementation for efficiency.
-            #
-            # NOTE: Instead of wrapping with Composed(...), use a bit more
-            # verbose attr.evolve(self, ...) so that a correct class is used in
-            # subclasses.
             return attr.evolve(
                 self,
                 decomposed=(map(map(f))(self.decomposed))
             )
 
-
         def decompose(self):
             return self.decomposed
-
 
         def __repr__(self):
             return "{0}({1})".format(
@@ -175,6 +153,9 @@ def Compose(X, Y):
                 repr(self.decomposed),
             )
 
+        @class_function
+        def sample_value(cls, a):
+            return X.sample_value(Y.sample_value(a)).map(cls)
 
     return Composed
 

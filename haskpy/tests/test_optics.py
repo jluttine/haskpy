@@ -2,6 +2,7 @@ import attr
 
 from haskpy.types.either import Left, Right
 from haskpy.optics import adapter, lens, prism
+from haskpy.utils import immutable
 
 
 def test_adapter():
@@ -25,7 +26,7 @@ def test_adapter():
 def test_lens_composition():
     """Test composition of lenses"""
 
-    @attr.s(frozen=True)
+    @immutable
     class Person():
         name = attr.ib()
         age = attr.ib()

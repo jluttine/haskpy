@@ -226,7 +226,7 @@ def count_required_arguments(argspec):
     return n_args + n_kw
 
 
-@attr.s(frozen=True, repr=False)
+@immutable
 class Wrapped():
 
 

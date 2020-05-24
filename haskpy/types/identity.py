@@ -1,61 +1,49 @@
 import attr
-import hypothesis.strategies as st
 
-from haskpy.utils import sample_type, sample_sized
-from haskpy.typeclasses import Monad
-
-
-class _IdentityMeta(type(Monad)):
+from haskpy.utils import class_function, immutable
+from haskpy.typeclasses import Monad, Eq
 
 
-    def pure(cls, x):
-        return cls(x)
-
-
-    def sample_value(cls, a):
-        return a.map(Identity)
-
-
-@attr.s(frozen=True, repr=False)
-class Identity(Monad, metaclass=_IdentityMeta):
-
+@immutable
+class Identity(Monad, Eq):
 
     x = attr.ib()
 
+    @class_function
+    def pure(cls, x):
+        return cls(x)
 
     def bind(self, f):
         """Identity a -> (a -> Identity b) -> Identity b"""
         return f(self.x)
 
+    def __eq__(self, other):
+        """Identity a -> Identity a -> bool"""
+        return self.x == other.x
 
     def __repr__(self):
         return "Identity({})".format(repr(self.x))
 
+    @class_function
+    def sample_value(cls, a):
+        return a.map(Identity)
+
 
 def IdentityT(M):
 
-
-    class _IdentityMMeta(type(Monad)):
-
-
-        def pure(cls, x):
-            return cls(M.pure(Identity.pure(x)))
-
-
-        def sample_value(cls, a):
-            return M.sample_value(Identity.sample_value(a)).map(cls)
-
+    class MetaIdentityM(type(Monad)):
 
         def __repr__(cls):
             return "IdentityT({})".format(repr(M))
 
-
-    @attr.s(frozen=True, repr=False)
-    class IdentityM(Monad, metaclass=_IdentityMMeta):
-
+    @immutable
+    class IdentityM(Monad, metaclass=MetaIdentityM):
 
         decomposed = attr.ib()
 
+        @class_function
+        def pure(cls, x):
+            return cls(M.pure(Identity.pure(x)))
 
         def bind(self, f):
             """IdentityT m a -> (a -> IdentityT m b) -> IdentityT m b
@@ -89,13 +77,18 @@ def IdentityT(M):
             g = lambda ia: f(ia.x).decomposed
 
             # y :: m (Identity b)
-            y = self.decomposed.bind(g)
+            mib = mia.bind(g)
 
-            return IdentityM(y) # :: IdentityT m b
-
+            return IdentityM(mib)  # :: IdentityT m b
 
         def __repr__(self):
             return "{0}({1})".format(repr(type(self)), repr(self.decomposed))
 
+        def __test_eq__(self, other, data=None):
+            return self.decomposed.__test_eq__(other.decomposed, data=data)
+
+        @class_function
+        def sample_value(cls, a):
+            return M.sample_value(Identity.sample_value(a)).map(cls)
 
     return IdentityM

@@ -1,279 +1,19 @@
-import attr
 import itertools
 from warnings import warn, filterwarnings, catch_warnings
 import hypothesis.strategies as st
 from hypothesis import given
 
-from haskpy.utils import identity, PerformanceWarning, assert_output
+from haskpy.utils import (
+    identity,
+    PerformanceWarning,
+    assert_output,
+    class_function,
+)
 from haskpy import testing
 from .typeclass import Type
 
 
-class _FoldableMeta(type(Type)):
-
-
-    def sample_foldable_value(cls, elements):
-        # By default, assume the class is a one-argument type constructor
-        return cls.sample_value(elements)
-
-
-    @assert_output
-    def assert_foldable_fold_map(cls, xs, monoid, f):
-        # The default implementation defines the law (with respect to other
-        # methods)
-        from haskpy.functions import fold_map
-        return (
-            Foldable.fold_map(xs, monoid, f),
-            xs.fold_map(monoid, f),
-            fold_map(monoid, f, xs),
-        )
-
-
-    @given(st.data())
-    def test_foldable_fold_map(cls, data):
-        # Draw types
-        from haskpy.typeclasses import Monoid
-        monoid = data.draw(testing.sample_class(Monoid))
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(monoid.sample_monoid_type())
-
-        # Draw values
-        f = data.draw(testing.sample_function(b))
-        xs = data.draw(cls.sample_foldable_value(a))
-
-        cls.assert_foldable_fold_map(xs, monoid, f, data=data)
-        return
-
-
-    @assert_output
-    def assert_foldable_foldr(cls, xs, combine, initial):
-        # The default implementation defines the law (with respect to other
-        # methods)
-        from haskpy.functions import foldr
-        return (
-            Foldable.foldr(xs, combine, initial),
-            xs.foldr(combine, initial),
-            foldr(combine, initial, xs),
-        )
-
-
-    @given(st.data())
-    def test_foldable_foldr(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_hashable_type())
-
-        # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
-        g = data.draw(testing.sample_function(testing.sample_function(b)))
-        initial = data.draw(b)
-
-        # Uncurry the function
-        f = lambda x, y: g(x)(y)
-
-        with catch_warnings():
-            filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_foldr(xs, f, initial)
-
-        return
-
-
-    @assert_output
-    def assert_foldable_foldl(cls, xs, combine, initial):
-        # The default implementation defines the law (with respect to other
-        # methods)
-        from haskpy.functions import foldl
-        return (
-            Foldable.foldl(xs, combine, initial),
-            xs.foldl(combine, initial),
-            foldl(combine, initial, xs),
-        )
-
-
-    @given(st.data())
-    def test_foldable_foldl(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_hashable_type())
-
-        # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
-        initial = data.draw(b)
-        g = data.draw(testing.sample_function(testing.sample_function(b)))
-
-        # Uncurry the function
-        f = lambda x, y: g(x)(y)
-
-        with catch_warnings():
-            filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_foldl(xs, f, initial, data=data)
-
-        return
-
-
-    @assert_output
-    def assert_foldable_fold(cls, xs, monoid):
-        from haskpy.functions import fold
-        # The default implementation defines the law (with respect to other
-        # methods)
-        return (
-            Foldable.fold(xs, monoid),
-            xs.fold(monoid),
-            fold(monoid, xs),
-        )
-
-
-    @given(st.data())
-    def test_foldable_fold(cls, data):
-        # Draw types
-        from haskpy.typeclasses import Monoid
-        monoid = data.draw(testing.sample_class(Monoid))
-        a = data.draw(monoid.sample_monoid_type())
-
-        # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
-
-        cls.assert_foldable_fold(xs, monoid)
-        return
-
-
-    @assert_output
-    def assert_foldable_length(cls, xs):
-        # The default implementation defines the law (with respect to other
-        # methods)
-        from haskpy.functions import length
-        return (
-            Foldable.length(xs),
-            len(xs),
-            length(xs),
-        )
-
-
-    @given(st.data())
-    def test_foldable_length(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_type())
-
-        # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
-
-        with catch_warnings():
-            filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_length(xs)
-
-        return
-
-
-    @assert_output
-    def assert_foldable_null(cls, xs):
-        # The default implementation defines the law (with respect to other
-        # methods)
-        from haskpy.functions import null
-        return (
-            Foldable.null(xs),
-            xs.null(),
-            null(xs),
-        )
-
-
-    @given(st.data())
-    def test_foldable_null(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_type())
-
-        # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
-
-        with catch_warnings():
-            filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_null(xs)
-
-        return
-
-
-    @assert_output
-    def assert_foldable_sum(cls, xs):
-        # The default implementation defines the law (with respect to other
-        # methods)
-        from haskpy.functions import sum
-        return (
-            Foldable.sum(xs),
-            xs.sum(),
-            sum(xs),
-        )
-
-
-    @given(st.data())
-    def test_foldable_sum(cls, data):
-        # Draw values
-        xs = data.draw(cls.sample_foldable_value(st.integers()))
-
-        with catch_warnings():
-            filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_sum(xs)
-
-        return
-
-
-    @assert_output
-    def assert_foldable_elem(cls, xs, e):
-        # The default implementation defines the law (with respect to other
-        # methods)
-        from haskpy.functions import elem
-        return (
-            Foldable.elem(xs, e),
-            e in xs,
-            elem(e, xs),
-        )
-
-
-    @given(st.data())
-    def test_foldable_elem(cls, data):
-        # Draw types
-        # FIXME: Should draw Eq type
-        a = data.draw(testing.sample_type())
-
-        # Draw values
-        e = data.draw(a)
-        xs = data.draw(cls.sample_foldable_value(a))
-
-        with catch_warnings():
-            filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_elem(xs, e)
-
-        return
-
-
-    @assert_output
-    def assert_foldable_functor(cls, xs, monoid, f):
-        # Functor and foldable instances should be consistent
-        from .functor import Functor
-        import pytest
-        if not issubclass(cls, Functor):
-            pytest.skip("{0} not Functor".format(cls.__name__))
-        return (
-            xs.fold_map(monoid, f),
-            xs.map(f).fold(monoid),
-        )
-
-
-    @given(st.data())
-    def test_foldable_functor(cls, data):
-        # Draw types
-        from haskpy.typeclasses import Monoid
-        monoid = data.draw(testing.sample_class(Monoid))
-        b = data.draw(monoid.sample_monoid_type())
-        a = data.draw(testing.sample_hashable_type())
-
-        # Draw values
-        f = data.draw(testing.sample_function(b))
-        xs = data.draw(cls.sample_foldable_value(a))
-
-        cls.assert_foldable_functor(xs, monoid, f)
-        return
-
-
-class Foldable(Type, metaclass=_FoldableMeta):
+class Foldable(Type):
     """Foldable typeclass
 
     Strictly minimal complete definition:
@@ -310,7 +50,6 @@ class Foldable(Type, metaclass=_FoldableMeta):
 
     """
 
-
     def fold_map(self, monoid, f):
         """Monoid m => t a -> (a -> m) -> m (ignoring ``monoid`` argument)
 
@@ -337,7 +76,6 @@ class Foldable(Type, metaclass=_FoldableMeta):
             lambda m, x: m.append(f(x)),
             monoid.empty,
         )
-
 
     def foldl(self, combine, initial):
         """t a -> (b -> a -> b) -> b -> b
@@ -368,7 +106,6 @@ class Foldable(Type, metaclass=_FoldableMeta):
             lambda a, f: compose(f, lambda b: combine(b, a)),
             identity,
         )(initial)
-
 
     def foldr(self, combine, initial):
         """t a -> (a -> b -> b) -> b -> b
@@ -401,10 +138,11 @@ class Foldable(Type, metaclass=_FoldableMeta):
             lambda x: Endo(lambda y: combine(x, y)),
         ).app_endo(initial)
 
-
     def fold(self, monoid):
         return self.fold_map(monoid, identity)
 
+    def fold2(self, monoid):
+        return self.fold_map(monoid, identity)
 
     def to_iter(self):
         """t a -> Iter a
@@ -424,7 +162,6 @@ class Foldable(Type, metaclass=_FoldableMeta):
             itertools.chain()
         )
 
-
     def length(self):
         """t a -> int
 
@@ -435,36 +172,29 @@ class Foldable(Type, metaclass=_FoldableMeta):
         warn("Using default implementation of length", PerformanceWarning)
         return sum(1 for _ in self.to_iter())
 
-
     def sum(self):
         """t a -> number"""
         return sum(self.to_iter())
-
 
     def null(self):
         """t a -> bool"""
         return all(False for _ in self.to_iter())
 
-
     def elem(self, x):
         """t a -> a -> bool"""
         return any(x == y for y in self.to_iter())
-
 
     def __iter__(self):
         """Override to_iter if you want to change the default implementation"""
         yield from self.to_iter()
 
-
     def __len__(self):
         """Override length if you want to change the default implementation"""
         return self.length()
 
-
     def __contains__(self, x):
         """Override elem if you want to change the default implementation"""
         return self.elem(x)
-
 
     # TODO:
     #
@@ -472,6 +202,275 @@ class Foldable(Type, metaclass=_FoldableMeta):
     # - minimum
     # - product
     # - to_list
+
+    #
+    # Sampling methods for property tests
+    #
+
+    @class_function
+    def sample_foldable_value(cls, elements):
+        # By default, assume the class is a one-argument type constructor
+        return cls.sample_value(elements)
+
+    #
+    # Test Foldable laws
+    #
+
+    @class_function
+    @assert_output
+    def assert_foldable_fold_map(cls, xs, monoid, f):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import fold_map
+        return (
+            Foldable.fold_map(xs, monoid, f),
+            xs.fold_map(monoid, f),
+            fold_map(monoid, f, xs),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_fold_map(cls, data):
+        # Draw types
+        from haskpy.typeclasses import Monoid
+        monoid = data.draw(testing.sample_class(Monoid))
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(monoid.sample_monoid_type())
+
+        # Draw values
+        f = data.draw(testing.sample_function(b))
+        xs = data.draw(cls.sample_foldable_value(a))
+
+        cls.assert_foldable_fold_map(xs, monoid, f, data=data)
+        return
+
+    @class_function
+    @assert_output
+    def assert_foldable_foldr(cls, xs, combine, initial):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import foldr
+        return (
+            Foldable.foldr(xs, combine, initial),
+            xs.foldr(combine, initial),
+            foldr(combine, initial, xs),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_foldr(cls, data):
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_hashable_type())
+
+        # Draw values
+        xs = data.draw(cls.sample_foldable_value(a))
+        g = data.draw(testing.sample_function(testing.sample_function(b)))
+        initial = data.draw(b)
+
+        # Uncurry the function
+        f = lambda x, y: g(x)(y)
+
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_foldr(xs, f, initial)
+
+        return
+
+    @class_function
+    @assert_output
+    def assert_foldable_foldl(cls, xs, combine, initial):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import foldl
+        return (
+            Foldable.foldl(xs, combine, initial),
+            xs.foldl(combine, initial),
+            foldl(combine, initial, xs),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_foldl(cls, data):
+        # Draw types
+        a = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_hashable_type())
+
+        # Draw values
+        xs = data.draw(cls.sample_foldable_value(a))
+        initial = data.draw(b)
+        g = data.draw(testing.sample_function(testing.sample_function(b)))
+
+        # Uncurry the function
+        f = lambda x, y: g(x)(y)
+
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_foldl(xs, f, initial, data=data)
+
+        return
+
+    @class_function
+    @assert_output
+    def assert_foldable_fold(cls, xs, monoid):
+        from haskpy.functions import fold
+        # The default implementation defines the law (with respect to other
+        # methods)
+        return (
+            Foldable.fold(xs, monoid),
+            xs.fold(monoid),
+            fold(monoid, xs),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_fold(cls, data):
+        # Draw types
+        from haskpy.typeclasses import Monoid
+        monoid = data.draw(testing.sample_class(Monoid))
+        a = data.draw(monoid.sample_monoid_type())
+
+        # Draw values
+        xs = data.draw(cls.sample_foldable_value(a))
+
+        cls.assert_foldable_fold(xs, monoid)
+        return
+
+    @class_function
+    @assert_output
+    def assert_foldable_length(cls, xs):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import length
+        return (
+            Foldable.length(xs),
+            len(xs),
+            length(xs),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_length(cls, data):
+        # Draw types
+        a = data.draw(testing.sample_type())
+
+        # Draw values
+        xs = data.draw(cls.sample_foldable_value(a))
+
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_length(xs)
+
+        return
+
+    @class_function
+    @assert_output
+    def assert_foldable_null(cls, xs):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import null
+        return (
+            Foldable.null(xs),
+            xs.null(),
+            null(xs),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_null(cls, data):
+        # Draw types
+        a = data.draw(testing.sample_type())
+
+        # Draw values
+        xs = data.draw(cls.sample_foldable_value(a))
+
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_null(xs)
+
+        return
+
+    @class_function
+    @assert_output
+    def assert_foldable_sum(cls, xs):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import sum
+        return (
+            Foldable.sum(xs),
+            xs.sum(),
+            sum(xs),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_sum(cls, data):
+        # Draw values
+        xs = data.draw(cls.sample_foldable_value(st.integers()))
+
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_sum(xs)
+
+        return
+
+    @class_function
+    @assert_output
+    def assert_foldable_elem(cls, xs, e):
+        # The default implementation defines the law (with respect to other
+        # methods)
+        from haskpy.functions import elem
+        return (
+            Foldable.elem(xs, e),
+            e in xs,
+            elem(e, xs),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_elem(cls, data):
+        # Draw types
+        # FIXME: Should draw Eq type
+        a = data.draw(testing.sample_type())
+
+        # Draw values
+        e = data.draw(a)
+        xs = data.draw(cls.sample_foldable_value(a))
+
+        with catch_warnings():
+            filterwarnings("ignore", category=PerformanceWarning)
+            cls.assert_foldable_elem(xs, e)
+
+        return
+
+    @class_function
+    @assert_output
+    def assert_foldable_functor(cls, xs, monoid, f):
+        # Functor and foldable instances should be consistent
+        from .functor import Functor
+        import pytest
+        if not issubclass(cls, Functor):
+            pytest.skip("{0} not Functor".format(cls.__name__))
+        return (
+            xs.fold_map(monoid, f),
+            xs.map(f).fold(monoid),
+        )
+
+    @class_function
+    @given(st.data())
+    def test_foldable_functor(cls, data):
+        # Draw types
+        from haskpy.typeclasses import Monoid
+        monoid = data.draw(testing.sample_class(Monoid))
+        b = data.draw(monoid.sample_monoid_type())
+        a = data.draw(testing.sample_hashable_type())
+
+        # Draw values
+        f = data.draw(testing.sample_function(b))
+        xs = data.draw(cls.sample_foldable_value(a))
+
+        cls.assert_foldable_functor(xs, monoid, f)
+        return
 
 
 # Foldable-related functions are defined in function module because of circular

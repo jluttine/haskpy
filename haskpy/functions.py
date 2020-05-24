@@ -1,54 +1,40 @@
 import attr
 import functools
 import inspect
-from hypothesis import given
 from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Cartesian, Cocartesian, Semigroup
-from haskpy.utils import curry, identity, sample_sized
-from haskpy import conftest, testing
+from haskpy.utils import (
+    curry,
+    identity,
+    immutable,
+    class_property,
+    class_function,
+)
+from haskpy import testing
 
 
 def FunctionMonoid(monoid):
     """Create a function type that has a Monoid instance"""
 
+    @immutable
+    class _FunctionMonoid(Monoid, Function):
+        """Function type with Monoid instance added"""
 
-    class _FunctionMonoidMeta(type(Monoid), _FunctionMeta):
-
-
-        @property
+        @class_property
         def empty(cls):
             return Function(lambda _: monoid.empty)
 
-
+        @class_function
         def sample_monoid_type(cls):
             t = monoid.sample_monoid_type()
             return t.map(lambda b: cls.sample_value(None, b))
 
-
-    @attr.s(frozen=True, repr=False, cmp=False)
-    class _FunctionMonoid(Monoid, Function, metaclass=_FunctionMonoidMeta):
-        """Function type with Monoid instance added"""
-        pass
-
-
     return _FunctionMonoid
 
 
-class _FunctionMeta(type(Monad), type(Cartesian), type(Cocartesian),
-                    type(Semigroup)):
-
-
-    def pure(cls, x):
-        return cls(lambda *args, **kwargs: x)
-
-
-    def sample_value(cls, _, b):
-        return testing.sample_function(b).map(Function)
-
-
-@attr.s(frozen=True, repr=False, cmp=False)
-class Function(Monad, Cartesian, Cocartesian, Semigroup, metaclass=_FunctionMeta):
+@immutable
+class Function(Monad, Cartesian, Cocartesian, Semigroup):
     """Monad instance for functions
 
     Use similar wrapping as functools.wraps does for some attributes. See
@@ -66,30 +52,28 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup, metaclass=_FunctionMeta
 
     """
 
-
     # NOTE: Currying functions is a bit slow (mainly because of
     # functools.wraps). So don't use converter=curry here. Instead provide a
     # decorator ``function`` which combines Function and curry.
     __f = attr.ib()
 
-
     # TODO: Add __annotations__
 
+    @class_function
+    def pure(cls, x):
+        return cls(lambda *args, **kwargs: x)
 
     def dimap(f, g, h):
         """(b -> c) -> (a -> b) -> (c -> d) -> (a -> d)"""
         return Function(lambda x: h(f(g(x))))
 
-
     def map(f, g):
         """(a -> b) -> (b -> c) -> (a -> c)"""
         return Function(lambda x: g(f(x)))
 
-
     def contramap(f, g):
         """(b -> c) -> (a -> b) -> (a -> c)"""
         return Function(lambda a: f(g(a)))
-
 
     def apply(f, g):
         """(a -> b) -> (a -> b -> c) -> a -> c"""
@@ -100,7 +84,6 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup, metaclass=_FunctionMeta
                 f(*args, **kwargs)
             )
         )
-
 
     def bind(f, g):
         """(a -> b) -> (b -> a -> c) -> a -> c"""
@@ -113,31 +96,25 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup, metaclass=_FunctionMeta
             )
         )
 
-
     def first(f):
         """(a -> b) -> (a, c) -> (b, c)"""
         return _cross(f, identity)
-
 
     def second(f):
         """(a -> b) -> (c, a) -> (c, b)"""
         return _cross(identity, f)
 
-
     def left(f):
         """(a -> b) -> Either a c -> Either b c"""
         return _plus(f, identity)
-
 
     def right(f):
         """(a -> b) -> Either c a -> Either c b"""
         return _plus(identity, f)
 
-
     def append(f, g):
         """(a -> b) -> (a -> b) -> (a -> b)"""
         return f.map(lambda x: lambda y: x.append(y)).apply_to(g)
-
 
     def __call__(self, *args, **kwargs):
         # Don't add docstring here because it shows up a bit stupidly in help
@@ -149,30 +126,24 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup, metaclass=_FunctionMeta
             y
         )
 
-
     def __repr__(self):
         return repr(self.__f)
-
 
     @property
     def __module__(self):
         return self.__f.__module__
 
-
     # @property
     # def __annotations__(self):
     #     return self.__f.__annotations__
-
 
     @property
     def __signature__(self):
         return inspect.signature(self.__f)
 
-
     @property
     def __doc__(self):
         return self.__f.__doc__
-
 
     def __get__(self, obj, objtype):
         """Support instance methods.
@@ -190,7 +161,6 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup, metaclass=_FunctionMeta
             # Class method
             return self
 
-
     def __test_eq__(self, g, data, input_strategy=st.integers()):
         # NOTE: This is used only in tests when the function input doesn't
         # really matter so any hashable type here is ok. The type doesn't
@@ -198,6 +168,10 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup, metaclass=_FunctionMeta
         # pure.
         x = data.draw(input_strategy)
         return self(x) == g(x)
+
+    @class_function
+    def sample_value(cls, _, b):
+        return testing.sample_function(b).map(Function)
 
 
 def function(f):
@@ -337,6 +311,7 @@ def dimap(f, g, x):
     """(a -> b) -> (c -> d) -> p b c -> p a d"""
     return x.dimap(f, g)
 
+
 #
 # Monoid-related functions
 #
@@ -421,9 +396,8 @@ def either(f, g, e):
     return e.match(Left=f, Right=g)
 
 
-
 #
-# PatternMatchable-related functions
+# Pattern matching related functions
 #
 # NOTE: Currying doesn't work as expected for this function, because this is a
 # generic function and we don't know how many arguments are required. We would
@@ -433,7 +407,7 @@ def either(f, g, e):
 # be explicit that all the patterns would be given at the same time. Something
 # like:
 #
-# @function
+@function
 # def match(patterns, x):
 #     return x.match(**patterns)
 #

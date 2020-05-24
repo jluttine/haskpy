@@ -2,37 +2,14 @@ import attr
 import functools
 from hypothesis import strategies as st
 
-from haskpy.typeclasses import Monad, Monoid, Foldable
+from haskpy.typeclasses import Monad, Monoid, Foldable, Eq
 from haskpy import testing
-from haskpy import utils
+from haskpy.utils import immutable, class_property, class_function
 from haskpy.functions import curry
 
 
-class _ListMeta(type(Monad), type(Monoid), type(Foldable)):
-
-    @property
-    def empty(cls):
-        """Empty list, type ``List a``"""
-        return cls()
-
-    def pure(cls, x):
-        """a -> List a"""
-        return cls(x)
-
-    def from_iter(cls, xs):
-        """Iterable f => f a -> List a"""
-        return cls(*xs)
-
-    def sample_value(cls, a):
-        return st.lists(a, max_size=10).map(lambda xs: cls(*xs))
-
-    def sample_monoid_type(cls):
-        t = testing.sample_type()
-        return t.map(cls.sample_value)
-
-
-@utils.immutable
-class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
+@immutable(init=False)
+class List(Monad, Monoid, Foldable, Eq):
 
     __xs = attr.ib(converter=tuple)
 
@@ -44,6 +21,11 @@ class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
         """List a -> (a -> b) -> List b"""
         return List(*(f(x) for x in self.__xs))
 
+    @class_function
+    def pure(cls, x):
+        """a -> List a"""
+        return cls(x)
+
     def apply(self, fs):
         """List a -> List (a -> b) -> List b"""
         return List(*(y for f in fs.__xs for y in self.map(f).__xs))
@@ -52,12 +34,26 @@ class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
         """List a -> (a -> List b) -> List b"""
         return List(*(y for ys in self.map(f).__xs for y in ys.__xs))
 
+    def __eq__(self, other):
+        """List a -> List a -> bool"""
+        return self.__xs == other.__xs
+
+    @class_property
+    def empty(cls):
+        """Empty list, type ``List a``"""
+        return cls()
+
     def append(self, xs):
         """List a -> List a -> List a"""
         return List(*self.__xs, *xs.__xs)
 
     def to_iter(self):
         yield from self.__xs
+
+    @class_function
+    def from_iter(cls, xs):
+        """Iterable f => f a -> List a"""
+        return cls(*xs)
 
     def length(self):
         return len(self.__xs)
@@ -89,3 +85,16 @@ class List(Monad, Monoid, Foldable, metaclass=_ListMeta):
 
     def __repr__(self):
         return "List{}".format(repr(self.__xs))
+
+    #
+    # Sampling methods for property tests
+    #
+
+    @class_function
+    def sample_value(cls, a):
+        return st.lists(a, max_size=10).map(lambda xs: cls(*xs))
+
+    @class_function
+    def sample_monoid_type(cls):
+        t = testing.sample_type()
+        return t.map(cls.sample_value)

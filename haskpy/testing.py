@@ -1,7 +1,7 @@
 import hypothesis.strategies as st
 import attr
 
-from haskpy.utils import singleton
+from haskpy.utils import singleton, immutable
 
 
 def types():
@@ -21,11 +21,9 @@ def types():
 @singleton
 class sample_type_of():
 
-
     def __init__(self):
         self.__depth = 0
         return
-
 
     def __call__(self, f):
 
@@ -74,13 +72,11 @@ def sample_class(typeclass):
     )
 
 
-@attr.s(frozen=True)
+@immutable
 class memoize():
-
 
     __f = attr.ib()
     __memory = attr.ib(factory=list, init=False)
-
 
     def __call__(self, x):
         for (key, value) in self.__memory:

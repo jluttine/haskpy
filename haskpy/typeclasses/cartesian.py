@@ -1,15 +1,38 @@
-import attr
 from hypothesis import given
 from hypothesis import strategies as st
 
 from .profunctor import Profunctor
-from haskpy.utils import identity, assert_output
+from haskpy.utils import assert_output, class_function
 from haskpy import testing
 
 
-class _CartesianMeta(type(Profunctor)):
+class Cartesian(Profunctor):
+    """Cartesian profunctor
 
+    Perhaps better known as Strong in Haskell:
 
+    https://hackage.haskell.org/package/profunctors-5.2/docs/Data-Profunctor-Strong.html
+
+    I decided to use name Cartesian because that was used in the profunctor
+    optics paper.
+
+    Minimal complete definition: ``first | second``.
+
+    """
+
+    def first(self):
+        """p a b -> p (a, c) (b, c)"""
+        return self.second().dimap(_flip_tuple, _flip_tuple)
+
+    def second(self):
+        """p a b -> p (c, a) (c, a)"""
+        return self.first().dimap(_flip_tuple, _flip_tuple)
+
+    #
+    # Test Cartesian laws
+    #
+
+    @class_function
     @assert_output
     def assert_cartesian_identity(cls, h):
         lunit = lambda a_1: a_1[0]
@@ -19,7 +42,7 @@ class _CartesianMeta(type(Profunctor)):
             h.first(),
         )
 
-
+    @class_function
     @given(st.data())
     def test_cartesian_identity(cls, data):
         # Draw types
@@ -36,7 +59,7 @@ class _CartesianMeta(type(Profunctor)):
         )
         return
 
-
+    @class_function
     @assert_output
     def assert_cartesian_associativity(cls, h):
         lassoc = lambda a_bc: ((a_bc[0], a_bc[1][0]), a_bc[1][1])
@@ -46,7 +69,7 @@ class _CartesianMeta(type(Profunctor)):
             h.first(),
         )
 
-
+    @class_function
     @given(st.data())
     def test_cartesian_associativity(cls, data):
         # Draw types
@@ -65,12 +88,11 @@ class _CartesianMeta(type(Profunctor)):
         cls.assert_cartesian_associativity(h, data=data, input_strategy=a)
         return
 
-
     #
     # Test laws based on default implementations
     #
 
-
+    @class_function
     @assert_output
     def assert_cartesian_first(cls, x):
         return (
@@ -78,7 +100,7 @@ class _CartesianMeta(type(Profunctor)):
             x.first(),
         )
 
-
+    @class_function
     @given(st.data())
     def test_cartesian_first(cls, data):
         # Draw types
@@ -97,6 +119,7 @@ class _CartesianMeta(type(Profunctor)):
         )
         return
 
+    @class_function
     @assert_output
     def assert_cartesian_second(cls, x):
         return (
@@ -104,7 +127,7 @@ class _CartesianMeta(type(Profunctor)):
             x.second(),
         )
 
-
+    @class_function
     @given(st.data())
     def test_cartesian_second(cls, data):
         # Draw types
@@ -122,31 +145,6 @@ class _CartesianMeta(type(Profunctor)):
             input_strategy=a,
         )
         return
-
-
-class Cartesian(Profunctor, metaclass=_CartesianMeta):
-    """Cartesian profunctor
-
-    Perhaps better known as Strong in Haskell:
-
-    https://hackage.haskell.org/package/profunctors-5.2/docs/Data-Profunctor-Strong.html
-
-    I decided to use name Cartesian because that was used in the profunctor
-    optics paper.
-
-    Minimal complete definition: ``first | second``.
-
-    """
-
-
-    def first(self):
-        """p a b -> p (a, c) (b, c)"""
-        return self.second().dimap(_flip_tuple, _flip_tuple)
-
-
-    def second(self):
-        """p a b -> p (c, a) (c, a)"""
-        return self.first().dimap(_flip_tuple, _flip_tuple)
 
 
 def _flip_tuple(ab):

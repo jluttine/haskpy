@@ -1,12 +1,9 @@
 from haskpy.typeclasses.typeclass import Type
+from haskpy.utils import class_function
 
 
-class _HashableMeta(type(Type)):
+class Hashable(Type):
 
-
+    @class_function
     def sample_hashable_type(cls):
         return cls.sample_type()
-
-
-class Hashable(Type, metaclass=_HashableMeta):
-    pass
