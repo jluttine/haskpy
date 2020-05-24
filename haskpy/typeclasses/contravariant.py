@@ -70,9 +70,9 @@ class Contravariant(Type):
     @given(st.data())
     def test_contravariant_composition(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_hashable_type())
-        c = data.draw(testing.sample_type())
+        c = data.draw(testing.sample_hashable_type())
 
         # Draw values
         v = data.draw(cls.sample_contravariant_value(a))
@@ -99,8 +99,8 @@ class Contravariant(Type):
     @given(st.data())
     def test_contravariant_contramap(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_type())
+        a = data.draw(testing.sample_type())
+        b = data.draw(testing.sample_hashable_type())
 
         # Draw values
         v = data.draw(cls.sample_contravariant_value(a))
@@ -123,8 +123,8 @@ class Contravariant(Type):
     @given(st.data())
     def test_contravariant_contrareplace(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_type())
+        a = data.draw(testing.sample_type())
+        b = data.draw(testing.sample_hashable_type())
 
         # Draw values
         v = data.draw(cls.sample_contravariant_value(a))
