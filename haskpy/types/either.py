@@ -51,9 +51,9 @@ class Left(Either):
             Right=lambda x: False,
         )
 
-    def __eq_test__(self, other):
+    def __eq_test__(self, other, data):
         return other.match(
-            Left=lambda x: eq_test(self.__x, x),
+            Left=lambda x: eq_test(self.__x, x, data=data),
             Right=lambda x: False,
         )
 
@@ -84,10 +84,10 @@ class Right(Either):
             Right=lambda x: self.__x == x,
         )
 
-    def __eq_test__(self, other):
+    def __eq_test__(self, other, data):
         return other.match(
             Left=lambda x: False,
-            Right=lambda x: eq_test(self.__x, x),
+            Right=lambda x: eq_test(self.__x, x, data=data),
         )
 
     def __repr__(self):
