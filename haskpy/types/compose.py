@@ -1,9 +1,9 @@
 import attr
 import functools
 
-from haskpy.typeclasses import Applicative
+from haskpy.typeclasses import Applicative, Eq
 from haskpy.functions import map, apply
-from haskpy.utils import class_function, immutable
+from haskpy.utils import class_function, immutable, eq_test
 
 
 def Compose(X, Y):
@@ -92,7 +92,7 @@ def Compose(X, Y):
     # It's also Foldable and Traversable if both X and Y are.
 
     @immutable
-    class Composed(Applicative, metaclass=MetaComposed):
+    class Composed(Applicative, Eq, metaclass=MetaComposed):
 
         # The attribute name may sound weird but it makes sense once you
         # understand that this indeed is the not-yet-composed variable and if
@@ -156,6 +156,12 @@ def Compose(X, Y):
         @class_function
         def sample_value(cls, a):
             return X.sample_value(Y.sample_value(a)).map(cls)
+
+        def __eq__(self, other):
+            return self.decomposed == other.decomposed
+
+        def __eq_test__(self, other, data):
+            return eq_test(self.decomposed, other.decomposed, data)
 
     return Composed
 

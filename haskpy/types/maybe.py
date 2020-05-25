@@ -192,7 +192,7 @@ def MaybeT(M):
             return "MaybeT({})".format(repr(M))
 
     @immutable
-    class MaybeM(Monad, metaclass=MetaMaybeM):
+    class MaybeM(Monad, Eq, metaclass=MetaMaybeM):
 
         # The attribute name may sound weird but it makes sense once you
         # understand that this indeed is the not-yet-composed variable and if
@@ -228,10 +228,13 @@ def MaybeT(M):
             # :: MaybeT m b
             return MaybeM(mMa.bind(g))
 
+        def __eq__(self, other):
+            return self.decomposed == other.decomposed
+
         def __repr__(self):
             return "{0}({1})".format(repr(MaybeM), repr(self.decomposed))
 
-        def __eq_test__(self, other, data, **kwargs):
+        def __eq_test__(self, other, data):
             return eq_test(self.decomposed, other.decomposed, data)
 
         @class_function

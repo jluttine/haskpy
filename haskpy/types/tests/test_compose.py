@@ -1,10 +1,5 @@
-import hypothesis.strategies as st
-from hypothesis import given
-
 from haskpy.conftest import make_test_class
-from haskpy import testing
 from haskpy.types import Compose, Maybe, Identity, Just
-from haskpy.typeclasses import Applicative
 
 
 MaybeIdentity = Compose(Maybe, Identity)
