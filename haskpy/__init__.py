@@ -1,3 +1,13 @@
+"""HaskPy yey!
+
+.. autosummary::
+   :toctree: _autosummary
+
+   typeclasses
+   types
+
+"""
+
 from .functions import *
 from .utils import *
 from .typeclasses import *
