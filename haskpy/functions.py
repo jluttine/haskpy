@@ -174,6 +174,11 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
     def sample_value(cls, _, b):
         return testing.sample_function(b).map(Function)
 
+    @class_function
+    def sample_semigroup_type(cls):
+        t = testing.sample_semigroup_type()
+        return t.map(lambda b: cls.sample_value(None, b))
+
 
 def function(f):
     """Decorator for currying and transforming functions into monads"""

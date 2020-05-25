@@ -55,6 +55,10 @@ def sample_hashable_type():
     return sample_type_of(lambda cls: cls.sample_hashable_type())
 
 
+def sample_semigroup_type():
+    return sample_type_of(lambda cls: cls.sample_semigroup_type())
+
+
 def sample_monoid_type():
     return sample_type_of(lambda cls: cls.sample_monoid_type())
 
