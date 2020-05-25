@@ -1,5 +1,6 @@
 import sys
 import hypothesis.strategies as st
+from hypothesis import given
 
 
 def make_test_class(C):
@@ -51,7 +52,10 @@ def is_pytest():
 def pytest_configure(config):
     # Workaround for Hypothesis bug causing flaky tests if they use characters
     # or text: https://github.com/HypothesisWorks/hypothesis/issues/2108
-    st.text().example()
+    @given(st.text())
+    def foo(x):
+        pass
+    foo()
     return
 
 # PYTEST_RUNNING = False
