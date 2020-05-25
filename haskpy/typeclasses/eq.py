@@ -37,3 +37,6 @@ class Eq(Type):
         # override this when needed, for instance, if a type from a type
         # constructor is Eq only if it's type argument is Eq (e.g., Maybe)
         return cls.sample_type()
+
+
+# TODO: ADD EQ LAW TESTS!!!
