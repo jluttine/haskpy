@@ -234,6 +234,64 @@ def test_curry():
     return
 
 
+def benchmark_curry():
+
+    import toolz
+    import cytoolz
+    import functools
+
+    def f(x, y, z):
+        return
+
+    # HaskPy
+    fp = functools.partial(f, 1)
+    fh = utils.curry(f)(1)
+    fc = cytoolz.curry(f)(1)
+    ft = toolz.curry(f)(1)
+
+    # Benchmark full evaluation of a partially evaluated function
+    f(1, 2, 3) # baseline, normal evaluation
+    fp(2, 3)
+    fh(2, 3)
+    fc(2, 3)
+    ft(2, 3)
+
+    # Benchmark partial evaluation of a partially evaluated function
+    partial(f, 1, 2)
+    partial(fp, 2)
+    fh(2)
+    fc(2)
+    ft(2)
+
+
+    # @utils.curry
+    # def f(x, y, z, *args, prefix="", **kwargs):
+    #     return prefix + x + y +z
+
+    # # Benchmark normal evaluation
+    # f("a", "b", "c") # timeit
+
+    # # Benchmark partially evaluated function
+    # fa = f("a")
+    # fa("b", "c") # timeit
+
+    # # Benchmark creating partially evaluated functions
+    # f("a") # timeit
+    # fa("b") # timeit
+
+    # f("a")("b")("c") # timeit
+
+
+    # f("a", "b", "c", "d", "e")
+    # f("a")("b")("c")
+
+    # f("a", prefix="z", foo=42)("b", bar=666)(z="c")
+
+    # f(z="c")(x="a")(y="b")
+
+    return
+
+
 def test_class_property():
 
     class A():
