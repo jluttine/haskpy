@@ -23,7 +23,7 @@ class Semigroup(Type):
     #
 
     @class_function
-    def sample_semigroup_type(draw, cls):
+    def sample_semigroup_type(cls):
         # By default, assume the class is a concrete type or that any random
         # types for the type constructor make the concrete type semigroup.
         return cls.sample_type()
