@@ -12,7 +12,7 @@ classes and functions inspired by Hask.
   `Commutative`, `CommutativeMonoid`, `Foldable`, `Contravariant`, `Profunctor`,
   `Cartesian`, `Cocartesian`
 
-  - **TODO:** `Traversable`, `Bifunctor`, `Monoidal`
+  - **TODO:** `Traversable`, `Bifunctor`, `Monoidal`, `Ord`, `Show`, `Read`
 
 - Types and type constructors: `Identity`, `Maybe`, `Either`, `List`,
   `Function`, `Compose`
