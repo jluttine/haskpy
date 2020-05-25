@@ -26,7 +26,7 @@ def test_adapter():
 def test_lens_composition():
     """Test composition of lenses"""
 
-    @immutable
+    @immutable(repr=True, eq=True)
     class Person():
         name = attr.ib()
         age = attr.ib()

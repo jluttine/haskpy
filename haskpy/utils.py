@@ -4,15 +4,15 @@ import attr
 import hypothesis.strategies as st
 
 
-def immutable(maybe_cls=None, **kwargs):
+def immutable(maybe_cls=None, eq=False, repr=False, **kwargs):
     return attr.s(
         maybe_cls=maybe_cls,
         frozen=True,
-        eq=False,
+        eq=eq,
         order=False,
         hash=False,
         str=False,
-        repr=False,
+        repr=repr,
         **kwargs
     )
 
