@@ -11,27 +11,19 @@ import hypothesis.strategies as st
 
 from haskpy.typeclasses import Type, Hashable
 from haskpy import testing
+from haskpy.utils import class_function
 
 
-class _HypothesisListMeta(type(Type)):
+class HypothesisList(Type):
 
-
+    @class_function
     def sample_type(cls):
         a = testing.sample_type()
         return a.map(st.lists)
 
 
-class HypothesisList(Type, metaclass=_HypothesisListMeta):
-    pass
+class HypothesisInteger(Hashable):
 
-
-
-class _HypothesisIntegerMeta(type(Hashable)):
-
-
+    @class_function
     def sample_type(cls):
         return st.just(st.integers())
-
-
-class HypothesisInteger(Hashable, metaclass=_HypothesisIntegerMeta):
-    pass
