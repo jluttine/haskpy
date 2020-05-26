@@ -9,20 +9,30 @@
 
 import hypothesis.strategies as st
 
-from haskpy.typeclasses import Type, Hashable
+from haskpy.typeclasses import Eq, Hashable
 from haskpy import testing
 from haskpy.utils import class_function
 
 
-class HypothesisList(Type):
+class HypothesisList(Eq, Hashable):
 
     @class_function
     def sample_type(cls):
         a = testing.sample_type()
         return a.map(st.lists)
 
+    @class_function
+    def sample_hashable_type(cls):
+        a = testing.sample_hashable_type()
+        return a.map(st.lists)
 
-class HypothesisInteger(Hashable):
+    @class_function
+    def sample_eq_type(cls):
+        a = testing.sample_eq_type()
+        return a.map(st.lists)
+
+
+class HypothesisInteger(Eq, Hashable):
 
     @class_function
     def sample_type(cls):
