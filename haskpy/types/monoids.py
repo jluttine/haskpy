@@ -29,6 +29,9 @@ class Sum(CommutativeMonoid, Hashable, Eq):
     def __eq__(self, other):
         return self.number == other.number
 
+    def __repr__(self):
+        return "Sum({})".format(repr(self.number))
+
     @class_function
     def sample_type(cls):
         return st.just(st.integers().map(Sum))
@@ -49,6 +52,9 @@ class And(CommutativeMonoid, Hashable, Eq):
     def __eq__(self, other):
         return self.boolean == other.boolean
 
+    def __repr__(self):
+        return "And({})".format(repr(self.boolean))
+
     @class_function
     def sample_type(cls):
         return st.just(st.booleans().map(And))
@@ -68,6 +74,9 @@ class Or(CommutativeMonoid, Hashable, Eq):
 
     def __eq__(self, other):
         return self.boolean == other.boolean
+
+    def __repr__(self):
+        return "Or({})".format(repr(self.boolean))
 
     @class_function
     def sample_type(cls):
