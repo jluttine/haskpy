@@ -393,6 +393,22 @@ def elem(e, xs):
 
 
 #
+# Eq-specific functions
+#
+
+@function
+def eq(x, y):
+    """Equality: ``Eq a => a -> a -> Bool``"""
+    return x == y
+
+
+@function
+def ne(x, y):
+    """Inequality: ``Eq a => a -> a -> Bool``"""
+    return x != y
+
+
+#
 # Either-specific functions
 #
 
