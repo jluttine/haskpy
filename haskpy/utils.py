@@ -497,6 +497,15 @@ def assert_output(f):
     return wrapped
 
 
+@singleton
+@immutable
+class universal_set():
+    """Universal set is a set that contains all objects"""
+
+    def __contains__(self, _):
+        return True
+
+
 def make_test_class(C, typeclasses=universal_set):
     """Create a PyTest-compatible test class
 
