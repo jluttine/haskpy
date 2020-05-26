@@ -1,7 +1,7 @@
 from hypothesis import given
 import hypothesis.strategies as st
 
-from haskpy.conftest import make_test_class
+from haskpy.utils import make_test_class
 from haskpy.types.monoids import Sum, And, Or, String, Endo
 from haskpy.functions import Function
 from haskpy import testing

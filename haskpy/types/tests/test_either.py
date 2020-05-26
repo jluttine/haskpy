@@ -1,5 +1,5 @@
 from haskpy.types.either import Either, Left, Right
-from haskpy.conftest import make_test_class
+from haskpy.utils import make_test_class
 
 
 # Test typeclass laws for Either

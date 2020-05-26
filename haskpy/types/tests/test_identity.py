@@ -1,6 +1,7 @@
 from haskpy.types.identity import Identity, IdentityT
+from haskpy.functions import Function
 from haskpy.types import List
-from haskpy.conftest import make_test_class
+from haskpy.utils import make_test_class
 
 
 # Test typeclass laws for Identity
@@ -14,3 +15,4 @@ def test_identity_map():
 
 
 TestIdentityT = make_test_class(IdentityT(List))
+TestIdentityT = make_test_class(IdentityT(Function))

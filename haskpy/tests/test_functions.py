@@ -1,5 +1,5 @@
 from haskpy.functions import Function, FunctionMonoid
-from haskpy.conftest import make_test_class
+from haskpy.utils import make_test_class
 from haskpy.types.monoids import Sum
 
 

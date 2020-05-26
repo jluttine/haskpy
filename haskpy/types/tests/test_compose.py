@@ -1,4 +1,4 @@
-from haskpy.conftest import make_test_class
+from haskpy.utils import make_test_class
 from haskpy.types import Compose, Maybe, Identity, Just
 
 

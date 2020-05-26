@@ -1,5 +1,5 @@
 from haskpy.types.list import List
-from haskpy.conftest import make_test_class
+from haskpy.utils import make_test_class
 
 
 # Test typeclass laws for List
