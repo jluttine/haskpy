@@ -43,7 +43,7 @@ easily test that an implementation satisfies all the laws it should. Just add
 something like this to your test module and run with pytest:
 
 ```python
-from haskpy.conftest import make_test_class
+from haskpy.utils import make_test_class
 from mystuff import MyClass
 TestMyClass = make_test_class(MyClass)
 ```
