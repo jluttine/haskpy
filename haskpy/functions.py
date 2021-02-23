@@ -24,7 +24,7 @@ def FunctionMonoid(monoid):
 
         @class_property
         def empty(cls):
-            return Function(lambda _: monoid.empty)
+            return _FunctionMonoid(lambda _: monoid.empty)
 
         @class_function
         def sample_monoid_type(cls):
@@ -172,12 +172,36 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
 
     @class_function
     def sample_value(cls, _, b):
-        return testing.sample_function(b).map(Function)
+        return testing.sample_function(b).map(cls)
+
+    sample_type = testing.sample_type_from_value(
+        testing.sample_hashable_type(),
+        testing.sample_type(),
+    )
+
+    sample_semigroup_type = testing.sample_type_from_value(
+        testing.sample_hashable_type(),
+        testing.sample_semigroup_type(),
+    )
+
+    sample_monoid_type = testing.sample_type_from_value(
+        testing.sample_hashable_type(),
+        testing.sample_monoid_type(),
+    )
+
+    sample_functor_type = testing.sample_type_from_value(
+        testing.sample_hashable_type(),
+    )
+    sample_applicative_type = sample_functor_type
+    sample_monad_type = sample_functor_type
 
     @class_function
-    def sample_semigroup_type(cls):
-        t = testing.sample_semigroup_type()
-        return t.map(lambda b: cls.sample_value(None, b))
+    def sample_contravariant_type(cls, a):
+        return st.tuples(a, testing.sample_type()).map(
+            lambda args: cls.sample_value(*args)
+        )
+
+    sample_profunctor_type = testing.sample_type_from_value()
 
 
 def function(f):

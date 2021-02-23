@@ -37,3 +37,6 @@ class HypothesisInteger(Eq, Hashable):
     @class_function
     def sample_type(cls):
         return st.just(st.integers())
+
+    sample_hashable_type = sample_type
+    sample_eq_type = sample_type

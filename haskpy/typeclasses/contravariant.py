@@ -51,11 +51,14 @@ class Contravariant(Type):
     @class_function
     @given(st.data())
     def test_contravariant_identity(cls, data):
-        t = data.draw(cls.sample_contravariant_type())
-        cls.assert_contravariant_identity(
-            data.draw(t),
-            data=data
-        )
+        # Draw types
+        a = data.draw(testing.sample_type())
+        ta = data.draw(cls.sample_contravariant_type(a))
+
+        # Draw values
+        v = data.draw(ta)
+
+        cls.assert_contravariant_identity(v, data=data)
         return
 
     @class_function
@@ -73,9 +76,10 @@ class Contravariant(Type):
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_eq_type())
+        ta = data.draw(cls.sample_contravariant_type(a))
 
         # Draw values
-        v = data.draw(cls.sample_contravariant_value(a))
+        v = data.draw(ta)
         f = data.draw(testing.sample_function(b))
         g = data.draw(testing.sample_function(c))
 
@@ -101,9 +105,10 @@ class Contravariant(Type):
         # Draw types
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_eq_type())
+        ta = data.draw(cls.sample_contravariant_type(a))
 
         # Draw values
-        v = data.draw(cls.sample_contravariant_value(a))
+        v = data.draw(ta)
         f = data.draw(testing.sample_function(b))
 
         cls.assert_contravariant_contramap(v, f, data=data)
@@ -125,9 +130,10 @@ class Contravariant(Type):
         # Draw types
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_eq_type())
+        ta = data.draw(cls.sample_contravariant_type(a))
 
         # Draw values
-        v = data.draw(cls.sample_contravariant_value(a))
+        v = data.draw(ta)
         x = data.draw(b)
 
         cls.assert_contravariant_contrareplace(v, x, data=data)

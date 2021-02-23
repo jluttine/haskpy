@@ -48,9 +48,10 @@ class Cocartesian(Profunctor):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        fab = data.draw(cls.sample_profunctor_type(a, b))
 
         # Draw values
-        h = data.draw(cls.sample_profunctor_value(a, b))
+        h = data.draw(fab)
 
         cls.assert_cocartesian_unit(
             h,
@@ -95,9 +96,10 @@ class Cocartesian(Profunctor):
             )
         )
         b = data.draw(testing.sample_type())
+        fab = data.draw(cls.sample_profunctor_type(a, b))
 
         # Draw values
-        h = data.draw(cls.sample_profunctor_value(a, b))
+        h = data.draw(fab)
 
         cls.assert_cocartesian_associativity(h, data=data, input_strategy=a)
         return
@@ -123,9 +125,10 @@ class Cocartesian(Profunctor):
         a2 = data.draw(testing.sample_eq_type())
         a = Either.sample_value(a1, a2)
         b = data.draw(testing.sample_type())
+        fab = data.draw(cls.sample_profunctor_type(a, b))
 
         # Draw values
-        x = data.draw(cls.sample_profunctor_value(a, b))
+        x = data.draw(fab)
 
         cls.assert_cocartesian_left(
             x,
@@ -151,9 +154,10 @@ class Cocartesian(Profunctor):
         a2 = data.draw(testing.sample_eq_type())
         a = Either.sample_value(a1, a2)
         b = data.draw(testing.sample_type())
+        fab = data.draw(cls.sample_profunctor_type(a, b))
 
         # Draw values
-        x = data.draw(cls.sample_profunctor_value(a, b))
+        x = data.draw(fab)
 
         cls.assert_cocartesian_right(
             x,
