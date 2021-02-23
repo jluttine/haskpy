@@ -49,6 +49,11 @@ class Foldable(Type):
     But as said, instance implementations of at least both ``foldl`` and
     ``foldr`` are strongly recommended.
 
+    Examples
+    --------
+
+    In Haskell, Data.Set is Foldable, but not a Functor
+
     """
 
     def fold_map(self, monoid, f):
@@ -73,6 +78,18 @@ class Foldable(Type):
         # NOTE: foldl and foldr are sequential because they cannot assume
         # initial is empty. But fold_map can be parallelized. Thus, we cannot
         # use foldl nor foldr here.
+
+        # NOTE: fold_map should also work for infinite lists! This works in
+        # Haskell:
+        #
+        # foldMap id (repeat (Any True))
+
+        # FIXME: THIS DEFAULT IMPLEMENTATION ISN'T CORRECT BECAUSE IT DOESN'T
+        # WORK ON INFINITE LISTS. IN HASKELL:
+        #
+        # myfoldr combine initial xs = (foldl (\f -> \a -> (f . (\b -> combine a b))) id xs) initial
+        #
+        # myfoldr const 2 [0..]
         return self.foldl(
             lambda m, x: m.append(f(x)),
             monoid.empty,
@@ -85,6 +102,19 @@ class Foldable(Type):
         implemented, recursively on ``fold_map``). Either way, the default
         implementation doesn't scale up well, so an instance implementation is
         strongly recommended.
+
+        Intuition:
+
+        - equivalent to for-loop on lists
+
+        - never works on infinite lists (so not possible to implement ``map``
+          in terms of ``foldl``)
+
+        References
+        ----------
+
+        `Tony Morris - An Intuition for List Folds
+        <https://www.youtube.com/watch?v=GPwtT31zKRY>`_
 
         """
         # NOTE: An intuitive trivial implementation would be as follows, but
@@ -131,6 +161,21 @@ class Foldable(Type):
         endofunctions into a single endofunction ``b -> b``. Finally, apply
         this function to the initial value.
 
+        Intuition:
+
+        - performs constructor replacement
+
+        - may work on infinite lists
+
+        - doesn't "calculate from the right" but associates to the right
+          (otherwise it couldn't work on infinite lists)
+
+        References
+        ----------
+
+        `Tony Morris - An Intuition for List Folds
+        <https://www.youtube.com/watch?v=GPwtT31zKRY>`_
+
         """
         from haskpy.types.monoids import Endo
         warn("Using default implementation of foldr", PerformanceWarning)
@@ -162,6 +207,11 @@ class Foldable(Type):
             lambda acc, x: itertools.chain(acc, (x,)),
             itertools.chain()
         )
+
+    def head(self, default):
+        """Return head (or default if no head): ``f a -> a -> a``"""
+        # FIXME? Or flip const?
+        return self.foldr(const, default)
 
     def length(self):
         """t a -> int

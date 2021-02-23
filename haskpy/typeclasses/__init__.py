@@ -9,6 +9,8 @@
    Monad
    Monoid
 
+Read more at `Typeclassopedia <https://wiki.haskell.org/Typeclassopedia>`_.
+
 """
 from .typeclass import Type
 from .functor import Functor
