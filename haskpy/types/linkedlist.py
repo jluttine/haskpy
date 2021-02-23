@@ -9,8 +9,9 @@ from haskpy.utils import (
     class_property,
     class_function,
     eq_test,
+    curry,
 )
-from haskpy.utils import curry
+from haskpy.functions import function
 
 
 @immutable()
@@ -262,3 +263,22 @@ Nil = LinkedList(match=lambda Nil, Cons: Nil())
 def Cons(x, xs):
     """xs is a lambda function"""
     return LinkedList(match=lambda Nil, Cons: Cons(x, xs))
+
+
+@function
+def iterate(f, x):
+    return Cons(x, lambda: iterate(f, f(x)))
+
+
+@function
+def repeat(x):
+    xs = Cons(x, lambda: xs)
+    return xs
+
+
+@function
+def replicate(n, x):
+    return (
+        Nil if n <= 0 else
+        Cons(x, lambda: replicate(n - 1, x))
+    )

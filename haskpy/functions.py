@@ -4,7 +4,6 @@ import inspect
 from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Cartesian, Cocartesian, Semigroup
-from haskpy.types import Nil, Cons
 from haskpy.utils import (
     curry,
     identity,
@@ -512,28 +511,6 @@ def either(f, g, e):
     """(a -> c) -> (b -> c) -> Either a b -> c"""
     return e.match(Left=f, Right=g)
 
-
-#
-# Linked list specific functions
-#
-
-@function
-def iterate(f, x):
-    return Cons(x, lambda: iterate(f, f(x)))
-
-
-@function
-def repeat(x):
-    xs = Cons(x, lambda: xs)
-    return xs
-
-
-@function
-def replicate(n, x):
-    return (
-        Nil if n <= 0 else
-        Cons(x, lambda: replicate(n - 1, x))
-    )
 
 #
 # Pattern matching related functions
