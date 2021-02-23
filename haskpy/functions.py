@@ -4,6 +4,7 @@ import inspect
 from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Cartesian, Cocartesian, Semigroup
+from haskpy.types import Nil, Cons
 from haskpy.utils import (
     curry,
     identity,
@@ -357,6 +358,100 @@ def foldr(combine, initial, xs):
 
 
 @function
+def foldr_lazy(combine, initial, xs):
+    """Foldable t => (a -> (() -> b) -> (() -> b)) -> b -> t a -> b
+
+    Nonstrict right-associative fold.
+
+    This function is similar to ``foldr`` in Haskell, but note that the combine
+    function uses singleton lambda functions to achieve laziness and to enable
+    tail-call optimization.
+
+    Let's have a closer look on the signature of ``combine`` to understand the
+    possibilities a bit better:
+
+    The signature of ``combine`` is ``a -> (() -> b) -> (() -> b)``. You can
+    think of these ``() -> b`` as "lazy" accumulated values. ``() -> b`` is
+    just a lambda function that takes no arguments and returns a value of type
+    ``b``. Let's name the first argument ``x :: a`` and the second argument
+    ``lacc :: () -> b`` (as "lazy accumulator"). Now we can explain how to make
+    use of some powerful features:
+
+    - When ``combine`` doesn't use it's second argument ``lacc``, the recursion
+      stops (i.e., short-circuits). Therefore, infinite lists might be
+      processed in finite time.
+
+    - When ``combine`` returns ``lacc`` as such without modifying it, tail-call
+      optimization triggers. Therefore, very long lists might be processed
+      efficiently without exceeding maximum recursion depth or overflowing the
+      stack.
+
+    - When ``combine`` uses ``lacc`` but the evaluation ``lacc()`` is
+      "post-poned" (e.g., it happens inside yet another lambda function), the
+      recursion becomes "lazy" as it will continue only when ``lacc()``
+      actually gets evaluated. Therefore, infinite lists can be processed
+      lazily.
+
+    Note that Python's built-in ``reduce`` function doesn't support these
+    features.
+
+    Examples
+    --------
+
+    Short-circuiting and tail-call optimization for an infinite list:
+
+    >>> xs = iterate(lambda x: x + 1, 1)
+    >>> my_any = foldr_lazy(lambda x, lacc: (lambda: True) if x else lacc, False)
+    >>> my_any(xs.map(lambda x: x > 100000))
+    True
+
+    Looking at ``(lambda: True) if x else lacc``, we can see that when the left
+    side of the if-expression is evaluated, the fold short-circuits because
+    ``True`` makes no use of ``lacc``. When the right side of the if-expression
+    is evaluated, the fold uses efficient tail-call optimization because
+    ``lacc`` is returned unmodified.
+
+    Lazy evaluation makes it possible to transform infinite structures:
+
+    >>> from haskpy import Cons, Nil
+    >>> my_map = lambda f: foldr_lazy(lambda x, lacc: lambda: Cons(f(x), lacc), Nil)
+    >>> my_map(lambda x: x ** 2)(xs)
+    Cons(1, Cons(4, Cons(9, Cons(16, Cons(25, Cons(36, ...))))))
+
+    The infinite list gets mapped lazily because ``lacc`` isn't called at this
+    time, it is delayed as the linked list will call it only when the next
+    element is requested.
+
+    Note that sometimes you shouldn't use ``foldr_lazy`` because it can cause
+    stack overflow (or rather hit Python's recursion limit) because of too deep
+    recursion. This can happen with a long list when the recursion doesn't
+    short-circuit (early enough), tail-call optimization cannot be used and the
+    recursion doesn't pause for laziness. A simple such example is a summation:
+
+    >>> my_sum = foldr_lazy(lambda x, lacc: lambda: x + lacc(), 0)
+    >>> my_sum(xs.take(100))
+    5050
+    >>> my_sum(xs.take(1000000))
+    Error
+
+    For this kind of folds, you should use ``foldl``.
+
+    As already shown, ``foldr_lazy`` generalizes ``map`` and ``any``. It can
+    also be used to implement many other functions in a may that may seem a bit
+    surprising at first, for instance:
+
+    >>> from haskpy import Just, Nothing
+    >>> my_head = foldr_lazy(lambda x, lacc: lambda: Just(x), Nothing)
+    >>> my_head(xs)
+    Just(1)
+    >>> my_head(Nil)
+    Nothing
+
+    """
+    return xs.foldr_lazy(combine, initial)
+
+
+@function
 def fold(monoid, xs):
     """(Foldable t, Monoid m) => Monoid -> t a -> m
 
@@ -417,6 +512,28 @@ def either(f, g, e):
     """(a -> c) -> (b -> c) -> Either a b -> c"""
     return e.match(Left=f, Right=g)
 
+
+#
+# Linked list specific functions
+#
+
+@function
+def iterate(f, x):
+    return Cons(x, lambda: iterate(f, f(x)))
+
+
+@function
+def repeat(x):
+    xs = Cons(x, lambda: xs)
+    return xs
+
+
+@function
+def replicate(n, x):
+    return (
+        Nil if n <= 0 else
+        Cons(x, lambda: replicate(n - 1, x))
+    )
 
 #
 # Pattern matching related functions

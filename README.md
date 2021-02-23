@@ -15,7 +15,7 @@ classes and functions inspired by Hask.
   - **TODO:** `Traversable`, `Bifunctor`, `Monoidal`, `Ord`, `Show`, `Read`
 
 - Types and type constructors: `Identity`, `Maybe`, `Either`, `List`,
-  `Function`, `Compose`
+  `Function`, `Compose`, `LinkedList`
 
   - **TODO:** `Constant`, `Validation`, `Dictionary`, `LinkedList`,
     `State`, `Reader`, `Writer`, `IO`
