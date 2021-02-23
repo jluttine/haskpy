@@ -62,18 +62,6 @@ class Monoid(Semigroup):
         )
 
 
-class CommutativeMonoid(Commutative, Monoid):
-    """Monoid following the commutativity law
-
-    Minimal complete definition:
-
-    - ``empty`` (as a class method via metaclass)
-
-    - ``append``
-
-    """
-    pass
-
 
 # Monoid-related functions are defined in function module because of circular
 # dependency.

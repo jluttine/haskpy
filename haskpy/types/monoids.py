@@ -3,7 +3,7 @@
 import attr
 import hypothesis.strategies as st
 
-from haskpy.typeclasses import Monoid, CommutativeMonoid, Hashable, Eq
+from haskpy.typeclasses import Monoid, Commutative, Hashable, Eq
 from haskpy import testing
 from haskpy.utils import (
     identity,
@@ -15,7 +15,7 @@ from haskpy.utils import (
 
 
 @immutable
-class Sum(CommutativeMonoid, Hashable, Eq):
+class Sum(Commutative, Monoid, Hashable, Eq):
 
     number = attr.ib()
 
@@ -61,7 +61,7 @@ class And(CommutativeMonoid, Hashable, Eq):
 
 
 @immutable
-class Or(CommutativeMonoid, Hashable, Eq):
+class Or(Commutative, Monoid, Hashable, Eq):
 
     boolean = attr.ib()
 

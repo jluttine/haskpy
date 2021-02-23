@@ -9,8 +9,8 @@ classes and functions inspired by Hask.
 ### Features
 
 - Typeclasses: `Functor`, `Applicative`, `Monad`, `Semigroup`, `Monoid`,
-  `Commutative`, `CommutativeMonoid`, `Foldable`, `Contravariant`, `Profunctor`,
-  `Cartesian`, `Cocartesian`
+  `Commutative`, `Foldable`, `Contravariant`, `Profunctor`, `Cartesian`,
+  `Cocartesian`
 
   - **TODO:** `Traversable`, `Bifunctor`, `Monoidal`, `Ord`, `Show`, `Read`
 
