@@ -3,7 +3,11 @@ import hypothesis.strategies as st
 
 from haskpy.utils import identity, assert_output
 from .functor import Functor
-from haskpy import testing, utils
+from haskpy import testing
+from haskpy.utils import (
+    class_function,
+    abstract_class_function,
+)
 
 
 class Applicative(Functor):
@@ -14,7 +18,7 @@ class Applicative(Functor):
 
     """
 
-    @utils.abstract_class_function
+    @abstract_class_function
     def pure(cls, x):
         """a -> m a"""
 
@@ -87,10 +91,41 @@ class Applicative(Functor):
         return self.sequence(x)
 
     #
+    # Sampling methods for property tests
+    #
+
+    @abstract_class_function
+    def sample_applicative_type(cls, a):
+        """Sample an applicative type
+
+        Note that it would be tempting to define:
+
+        .. code-block:: python
+
+            def sample_functor_type(cls, a):
+                return cls.sample_applicative_type(a)
+
+        But we can have classes that are applicatives only if some of their
+        arguments are applicative too. For instance, MaybeT(cls, x) is
+        functor/applicative/monad only if cls is. So, we need to have a
+        separate sample_functor_type method.
+
+        But then, how do we make sure that the sampled applicative type is also
+        a functor? For instance, a pathological case could be such that
+        sample_functor_ype returns something completely different type than
+        sample_applicative_type. I suppose we just have to leave that as a
+        responsibility for the user that sample methods are implemented
+        correctly/consistently.
+
+        """
+        pass
+
+
+    #
     # Test typeclass laws
     #
 
-    @utils.class_function
+    @class_function
     @assert_output
     def assert_applicative_identity(cls, v):
         return (
@@ -98,19 +133,20 @@ class Applicative(Functor):
             cls.pure(identity).apply_to(v),
         )
 
-    @utils.class_function
+    @class_function
     @given(st.data())
     def test_applicative_identity(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_applicative_type(a))
 
         # Draw values
-        v = data.draw(cls.sample_functor_value(a))
+        v = data.draw(fa)
 
         cls.assert_applicative_identity(v, data=data)
         return
 
-    @utils.class_function
+    @class_function
     @assert_output
     def assert_applicative_composition(cls, u, v, w):
         from haskpy.functions import compose
@@ -119,23 +155,26 @@ class Applicative(Functor):
             cls.pure(compose).apply_to(u).apply_to(v).apply_to(w),
         )
 
-    @utils.class_function
+    @class_function
     @given(st.data())
     def test_applicative_composition(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
+        b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_applicative_type(a))
+        fab = data.draw(cls.sample_applicative_type(testing.sample_function(b)))
+        fbc = data.draw(cls.sample_applicative_type(testing.sample_function(c)))
 
         # Draw values
-        w = data.draw(cls.sample_functor_value(a))
-        v = data.draw(cls.sample_functor_value(testing.sample_function(b)))
-        u = data.draw(cls.sample_functor_value(testing.sample_function(c)))
+        w = data.draw(fa)
+        v = data.draw(fab)
+        u = data.draw(fbc)
 
         cls.assert_applicative_composition(u, v, w, data=data)
         return
 
-    @utils.class_function
+    @class_function
     @assert_output
     def assert_applicative_homomorphism(cls, f, x):
         return (
@@ -143,11 +182,11 @@ class Applicative(Functor):
             cls.pure(f(x))
         )
 
-    @utils.class_function
+    @class_function
     @given(st.data())
     def test_applicative_homomorphism(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
 
         # Draw values
@@ -157,7 +196,7 @@ class Applicative(Functor):
         cls.assert_applicative_homomorphism(f, x, data=data)
         return
 
-    @utils.class_function
+    @class_function
     @assert_output
     def assert_applicative_interchange(cls, u, y):
         return (
@@ -165,16 +204,17 @@ class Applicative(Functor):
             cls.pure(lambda f: f(y)).apply_to(u)
         )
 
-    @utils.class_function
+    @class_function
     @given(st.data())
     def test_applicative_interchange(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        fab = data.draw(cls.sample_applicative_type(testing.sample_function(b)))
 
         # Draw values
         y = data.draw(a)
-        u = data.draw(cls.sample_functor_value(testing.sample_function(b)))
+        u = data.draw(fab)
 
         cls.assert_applicative_interchange(u, y, data=data)
         return
@@ -183,7 +223,7 @@ class Applicative(Functor):
     # Test laws based on default implementations
     #
 
-    @utils.class_function
+    @class_function
     @assert_output
     def assert_applicative_apply(cls, u, v):
         from haskpy.functions import apply
@@ -193,21 +233,23 @@ class Applicative(Functor):
             u.apply_to(v),
         )
 
-    @utils.class_function
+    @class_function
     @given(st.data())
     def test_applicative_apply(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_applicative_type(a))
+        fab = data.draw(cls.sample_applicative_type(testing.sample_function(b)))
 
         # Draw values
-        v = data.draw(cls.sample_functor_value(a))
-        u = data.draw(cls.sample_functor_value(testing.sample_function(b)))
+        v = data.draw(fa)
+        u = data.draw(fab)
 
         cls.assert_applicative_apply(u, v, data=data)
         return
 
-    @utils.class_function
+    @class_function
     @assert_output
     def assert_applicative_sequence(cls, u, v):
         from haskpy.functions import sequence
@@ -217,21 +259,23 @@ class Applicative(Functor):
             sequence(u, v),
         )
 
-    @utils.class_function
+    @class_function
     @given(st.data())
     def test_applicative_sequence(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_applicative_type(a))
+        fb = data.draw(cls.sample_applicative_type(b))
 
         # Draw values
-        u = data.draw(cls.sample_functor_value(a))
-        v = data.draw(cls.sample_functor_value(b))
+        u = data.draw(fa)
+        v = data.draw(fb)
 
         cls.assert_applicative_sequence(u, v, data=data)
         return
 
-    @utils.class_function
+    @class_function
     @assert_output
     def assert_applicative_map(cls, v, f):
         return(
@@ -239,16 +283,17 @@ class Applicative(Functor):
             v.map(f),
         )
 
-    @utils.class_function
+    @class_function
     @given(st.data())
     def test_applicative_map(cls, data):
         """Test consistency between Applicative and Functor implementations"""
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_applicative_type(a))
 
         # Draw values
-        v = data.draw(cls.sample_functor_value(a))
+        v = data.draw(fa)
         f = data.draw(testing.sample_function(b))
 
         cls.assert_applicative_map(v, f, data=data)

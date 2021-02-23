@@ -3,7 +3,12 @@ from hypothesis import strategies as st
 
 from .contravariant import Contravariant
 from .functor import Functor
-from haskpy.utils import identity, assert_output, class_function
+from haskpy.utils import (
+    identity,
+    assert_output,
+    class_function,
+    abstract_class_function,
+)
 from haskpy import testing
 
 
@@ -33,27 +38,9 @@ class Profunctor(Functor, Contravariant):
     # Sampling methods for property tests
     #
 
-    @class_function
-    def sample_type(cls):
-        a = testing.sample_type()
-        b = testing.sample_type()
-        return st.tuples(a, b).map(lambda ab: cls.sample_profunctor_value(a, b))
-
-    @class_function
-    def sample_profunctor_value(cls, a, b):
-        return cls.sample_value(a, b)
-
-    @class_function
-    @st.composite
-    def sample_contravariant_value(draw, cls, a):
-        b = draw(testing.sample_type())
-        return draw(cls.sample_profunctor_value(a, b))
-
-    @class_function
-    @st.composite
-    def sample_functor_value(draw, cls, b):
-        a = draw(testing.sample_type())
-        return draw(cls.sample_profunctor_value(a, b))
+    @abstract_class_function
+    def sample_profunctor_type(cls, a, b):
+        pass
 
     #
     # Test typeclass laws
@@ -71,7 +58,7 @@ class Profunctor(Functor, Contravariant):
     @given(st.data())
     def test_profunctor_identity(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
 
         # Draw values
@@ -98,8 +85,8 @@ class Profunctor(Functor, Contravariant):
     @given(st.data())
     def test_profunctor_dimap(cls, data):
         # Draw types
-        b = data.draw(testing.sample_hashable_type())
-        c = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_eq_type())
+        c = data.draw(testing.sample_eq_type())
         d = data.draw(testing.sample_type())
 
         # Draw values
@@ -122,8 +109,8 @@ class Profunctor(Functor, Contravariant):
     @given(st.data())
     def test_profunctor_map(cls, data):
         # Draw types
-        b = data.draw(testing.sample_hashable_type())
-        c = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_eq_type())
+        c = data.draw(testing.sample_eq_type())
         d = data.draw(testing.sample_type())
 
         # Draw values
@@ -145,7 +132,7 @@ class Profunctor(Functor, Contravariant):
     @given(st.data())
     def test_profunctor_contramap(cls, data):
         # Draw types
-        b = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_eq_type())
         d = data.draw(testing.sample_type())
 
         # Draw values

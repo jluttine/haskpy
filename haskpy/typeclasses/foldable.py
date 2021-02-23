@@ -8,6 +8,7 @@ from haskpy.utils import (
     PerformanceWarning,
     assert_output,
     class_function,
+    abstract_class_function,
 )
 from haskpy import testing
 from .typeclass import Type
@@ -207,10 +208,14 @@ class Foldable(Type):
     # Sampling methods for property tests
     #
 
-    @class_function
-    def sample_foldable_value(cls, elements):
-        # By default, assume the class is a one-argument type constructor
-        return cls.sample_value(elements)
+    @abstract_class_function
+    def sample_foldable_type(cls, elements):
+        pass
+
+    @abstract_class_function
+    def sample_foldable_functor_type(cls, elements):
+        """Needed only for subclasses of both Foldable and Functor"""
+        pass
 
     #
     # Test Foldable laws
@@ -234,12 +239,13 @@ class Foldable(Type):
         # Draw types
         from haskpy.typeclasses import Monoid
         monoid = data.draw(testing.sample_class(Monoid))
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(monoid.sample_monoid_type())
+        fa = data.draw(cls.sample_foldable_type(a))
 
         # Draw values
         f = data.draw(testing.sample_function(b))
-        xs = data.draw(cls.sample_foldable_value(a))
+        xs = data.draw(fa)
 
         cls.assert_foldable_fold_map(xs, monoid, f, data=data)
         return
@@ -260,11 +266,12 @@ class Foldable(Type):
     @given(st.data())
     def test_foldable_foldr(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
+        b = data.draw(testing.sample_eq_type())
+        fa = data.draw(cls.sample_foldable_type(a))
 
         # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
+        xs = data.draw(fa)
         g = data.draw(testing.sample_function(testing.sample_function(b)))
         initial = data.draw(b)
 
@@ -293,11 +300,12 @@ class Foldable(Type):
     @given(st.data())
     def test_foldable_foldl(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
+        b = data.draw(testing.sample_eq_type())
+        fa = data.draw(cls.sample_foldable_type(a))
 
         # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
+        xs = data.draw(fa)
         initial = data.draw(b)
         g = data.draw(testing.sample_function(testing.sample_function(b)))
 
@@ -329,9 +337,10 @@ class Foldable(Type):
         from haskpy.typeclasses import Monoid
         monoid = data.draw(testing.sample_class(Monoid))
         a = data.draw(monoid.sample_monoid_type())
+        fa = data.draw(cls.sample_foldable_type(a))
 
         # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
+        xs = data.draw(fa)
 
         cls.assert_foldable_fold(xs, monoid, data=data)
         return
@@ -353,9 +362,10 @@ class Foldable(Type):
     def test_foldable_length(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_foldable_type(a))
 
         # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
+        xs = data.draw(fa)
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
@@ -380,9 +390,10 @@ class Foldable(Type):
     def test_foldable_null(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_foldable_type(a))
 
         # Draw values
-        xs = data.draw(cls.sample_foldable_value(a))
+        xs = data.draw(fa)
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
@@ -405,8 +416,11 @@ class Foldable(Type):
     @class_function
     @given(st.data())
     def test_foldable_sum(cls, data):
+        # Draw types
+        fa = data.draw(cls.sample_foldable_type(st.integers()))
+
         # Draw values
-        xs = data.draw(cls.sample_foldable_value(st.integers()))
+        xs = data.draw(fa)
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
@@ -431,10 +445,11 @@ class Foldable(Type):
     def test_foldable_elem(cls, data):
         # Draw types
         a = data.draw(testing.sample_eq_type())
+        fa = data.draw(cls.sample_foldable_type(a))
 
         # Draw values
         e = data.draw(a)
-        xs = data.draw(cls.sample_foldable_value(a))
+        xs = data.draw(fa)
 
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
@@ -446,10 +461,6 @@ class Foldable(Type):
     @assert_output
     def assert_foldable_functor(cls, xs, monoid, f):
         # Functor and foldable instances should be consistent
-        from .functor import Functor
-        import pytest
-        if not issubclass(cls, Functor):
-            pytest.skip("{0} not Functor".format(cls.__name__))
         return (
             xs.fold_map(monoid, f),
             xs.map(f).fold(monoid),
@@ -458,15 +469,22 @@ class Foldable(Type):
     @class_function
     @given(st.data())
     def test_foldable_functor(cls, data):
+
+        from .functor import Functor
+        import pytest
+        if not issubclass(cls, Functor):
+            pytest.skip("{0} not Functor".format(cls.__name__))
+
         # Draw types
         from haskpy.typeclasses import Monoid
         monoid = data.draw(testing.sample_class(Monoid))
         b = data.draw(monoid.sample_monoid_type())
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
+        fa = data.draw(cls.sample_foldable_functor_type(a))
 
         # Draw values
         f = data.draw(testing.sample_function(b))
-        xs = data.draw(cls.sample_foldable_value(a))
+        xs = data.draw(fa)
 
         cls.assert_foldable_functor(xs, monoid, f, data=data)
         return

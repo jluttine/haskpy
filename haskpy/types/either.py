@@ -21,11 +21,21 @@ class Either(Monad, Eq):
     def sample_value(cls, a, b):
         return st.one_of(a.map(Left), b.map(Right))
 
-    @class_function
-    @st.composite
-    def sample_functor_value(draw, cls, b):
-        a = draw(testing.sample_type())
-        return draw(cls.sample_value(a, b))
+    sample_type = testing.sample_type_from_value(
+        testing.sample_type(),
+        testing.sample_type(),
+    )
+
+    sample_functor_type = testing.sample_type_from_value(
+        testing.sample_type(),
+    )
+    sample_applicative_type = sample_functor_type
+    sample_monad_type = sample_functor_type
+
+    sample_eq_type = testing.sample_type_from_value(
+        testing.sample_eq_type(),
+        testing.sample_eq_type(),
+    )
 
 
 @immutable

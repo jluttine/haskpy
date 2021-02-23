@@ -11,7 +11,15 @@ class Eq(Type):
 
     Minimal complete definition:
 
-    - ``__eq__`` or ``__neq__``
+    ..
+
+        (__eq__ | __ne__) & sample_type
+
+    Minimal complete definition for type constructors:
+
+    ..
+
+        (__eq_generic__ | (__eq_test__ & (__eq__ | __ne__))) & sample_eq_type
 
     """
 

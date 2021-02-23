@@ -2,7 +2,12 @@ import hypothesis.strategies as st
 from hypothesis import given
 
 from .typeclass import Type
-from haskpy.utils import assert_output, class_function, abstract_function
+from haskpy.utils import (
+    assert_output,
+    class_function,
+    abstract_function,
+    abstract_class_function,
+)
 
 
 class Semigroup(Type):
@@ -10,7 +15,15 @@ class Semigroup(Type):
 
     Minimal complete definition:
 
-    - ``append``
+    ..
+
+        append
+
+    For property tests:
+
+    ..
+
+        sample_semigroup_type
 
     """
 
@@ -22,11 +35,9 @@ class Semigroup(Type):
     # Sampling methods for property tests
     #
 
-    @class_function
+    @abstract_class_function
     def sample_semigroup_type(cls):
-        # By default, assume the class is a concrete type or that any random
-        # types for the type constructor make the concrete type semigroup.
-        return cls.sample_type()
+        pass
 
     #
     # Test Semigroup laws
@@ -65,7 +76,15 @@ class Commutative(Semigroup):
 
     Minimal complete definition:
 
-    - ``append``
+    ..
+
+        append
+
+    For property tests:
+
+    ..
+
+        sample_semigroup_type & sample_commutative_type
 
     """
 
@@ -73,12 +92,9 @@ class Commutative(Semigroup):
     # Sampling methods for property tests
     #
 
-    @class_function
+    @abstract_class_function
     def sample_commutative_type(cls):
-        # By default, assume the class is a concrete type or that the
-        # commutative-property of the type constructor doesn't depend on the
-        # contained type.
-        return cls.sample_type()
+        pass
 
     #
     # Test Commutative laws

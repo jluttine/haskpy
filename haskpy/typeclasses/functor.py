@@ -2,13 +2,32 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from .typeclass import Type
-from haskpy.utils import identity, assert_output
+from haskpy.utils import identity, assert_output, abstract_class_function
 from haskpy import testing
 from haskpy import utils
 
 
 class Functor(Type):
-    """Covariant functor"""
+    """Covariant functor
+
+    Minimal complete definition:
+
+    ..
+
+        map
+
+    For property tests:
+
+    ..
+
+        sample_functor_type
+
+    Examples
+    --------
+
+    In Haskell, Map is a Functor, but not Applicative
+
+    """
 
     @utils.abstract_function
     def map(self, f):
@@ -46,17 +65,12 @@ class Functor(Type):
         return self.map(f)
 
     #
-    # Sampling functions for property tests
+    # Sampling methods for property tests
     #
 
-    @utils.class_function
-    def sample_type(cls):
-        t = testing.sample_type()
-        return t.map(cls.sample_functor_value)
-
-    @utils.class_function
-    def sample_functor_value(cls, a):
-        return cls.sample_value(a)
+    @abstract_class_function
+    def sample_functor_type(cls, a):
+        pass
 
     #
     # Test typeclass laws
@@ -73,11 +87,14 @@ class Functor(Type):
     @utils.class_function
     @given(st.data())
     def test_functor_identity(cls, data):
-        t = data.draw(cls.sample_type())
-        cls.assert_functor_identity(
-            data.draw(t),
-            data=data
-        )
+        # Draw types
+        a = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_functor_type(a))
+
+        # Draw values
+        v = data.draw(fa)
+
+        cls.assert_functor_identity(v, data=data)
         return
 
     @utils.class_function
@@ -92,12 +109,13 @@ class Functor(Type):
     @given(st.data())
     def test_functor_composition(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
+        b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_functor_type(a))
 
         # Draw values
-        v = data.draw(cls.sample_functor_value(a))
+        v = data.draw(fa)
         f = data.draw(testing.sample_function(b))
         g = data.draw(testing.sample_function(c))
 
@@ -121,11 +139,12 @@ class Functor(Type):
     @given(st.data())
     def test_functor_map(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_functor_type(a))
 
         # Draw values
-        v = data.draw(cls.sample_functor_value(a))
+        v = data.draw(fa)
         f = data.draw(testing.sample_function(b))
 
         cls.assert_functor_map(v, f, data=data)
@@ -145,11 +164,12 @@ class Functor(Type):
     @given(st.data())
     def test_functor_replace(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        fa = data.draw(cls.sample_functor_type(a))
 
         # Draw values
-        v = data.draw(cls.sample_functor_value(a))
+        v = data.draw(fa)
         x = data.draw(b)
 
         cls.assert_functor_replace(v, x, data=data)

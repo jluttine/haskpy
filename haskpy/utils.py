@@ -17,6 +17,28 @@ def immutable(maybe_cls=None, eq=False, repr=False, **kwargs):
     )
 
 
+def concrete_type(cls):
+
+    class ConcreteType(cls):
+        __name__ = cls.__name__
+        __module__ = cls.__module__
+
+    def sample_concrete_type():
+        return st.just(cls.sample_value())
+
+    # Provide implementation for abstract class methods that are used to sample
+    # types
+    for name in dir(cls):
+        if name.startswith("sample_") and name.endswith("_type"):
+            method = getattr(cls, name)
+            if isinstance(method, abstract_function):
+                n_args = len(inspect.signature(method).parameters)
+                if n_args == 0:
+                    setattr(ConcreteType, name, sample_concrete_type)
+
+    return immutable(ConcreteType)
+
+
 def singleton(C):
     return C()
 
@@ -76,6 +98,14 @@ class abstract_function(decorator):
 
     def __get__(self, obj, cls):
         return abstract_function(self.f.__get__(obj, cls))
+
+    @property
+    def __code__(self):
+        return self.f.__code__
+
+    @property
+    def __signature__(self):
+        return inspect.signature(self.f)
 
 
 class abstract_property(decorator):

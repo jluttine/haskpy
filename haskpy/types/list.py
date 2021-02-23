@@ -5,12 +5,12 @@ from hypothesis import strategies as st
 from haskpy.typeclasses import Monad, Monoid, Foldable, Eq
 from haskpy import testing
 from haskpy.utils import (
+    curry,
     immutable,
     class_property,
     class_function,
     eq_test,
 )
-from haskpy.functions import curry
 
 
 @immutable(init=False)
@@ -82,8 +82,9 @@ class List(Monad, Monoid, Foldable, Eq):
         # TODO: We could implement also fold_map to make fold_map and fold to
         # use parallelized implementation because they use monoids. Now, the
         # default implementations use foldl/foldr which both are sequential.
+        c = curry(combine)
         return functools.reduce(
-            lambda b, a: curry(combine)(a)(b),
+            lambda b, a: c(a)(b),
             self.__xs[::-1],
             initial,
         )
@@ -99,15 +100,25 @@ class List(Monad, Monoid, Foldable, Eq):
     def sample_value(cls, a):
         return st.lists(a, max_size=10).map(lambda xs: cls(*xs))
 
-    @class_function
-    def sample_monoid_type(cls):
-        t = testing.sample_type()
-        return t.map(cls.sample_value)
+    sample_type = testing.sample_type_from_value(
+        testing.sample_type(),
+    )
 
-    @class_function
-    def sample_eq_type(cls):
-        t = testing.sample_eq_type()
-        return t.map(cls.sample_value)
+    sample_functor_type = testing.sample_type_from_value()
+    sample_applicative_type = sample_functor_type
+    sample_monad_type = sample_functor_type
+
+    sample_semigroup_type = testing.sample_type_from_value(
+        testing.sample_type(),
+    )
+    sample_monoid_type = sample_semigroup_type
+
+    sample_eq_type = testing.sample_type_from_value(
+        testing.sample_eq_type(),
+    )
+
+    sample_foldable_type = testing.sample_type_from_value()
+    sample_foldable_functor_type = sample_foldable_type
 
     def __eq_test__(self, other, data=None):
         return (

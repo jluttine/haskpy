@@ -11,6 +11,7 @@ from haskpy.utils import (
     class_function,
     immutable,
     eq_test,
+    concrete_type,
 )
 
 
@@ -33,12 +34,19 @@ class Sum(Commutative, Monoid, Hashable, Eq):
         return "Sum({})".format(repr(self.number))
 
     @class_function
-    def sample_type(cls):
-        return st.just(st.integers().map(Sum))
+    def sample_value(cls):
+        return st.integers().map(Sum)
+
+    sample_type = testing.sample_type_from_value()
+    sample_eq_type = sample_type
+    sample_semigroup_type = sample_type
+    sample_commutative_type = sample_type
+    sample_monoid_type = sample_type
+    sample_hashable_type = sample_type
 
 
 @immutable
-class And(CommutativeMonoid, Hashable, Eq):
+class And(Commutative, Monoid, Hashable, Eq):
 
     boolean = attr.ib()
 
@@ -56,8 +64,15 @@ class And(CommutativeMonoid, Hashable, Eq):
         return "And({})".format(repr(self.boolean))
 
     @class_function
-    def sample_type(cls):
-        return st.just(st.booleans().map(And))
+    def sample_value(cls):
+        return st.booleans().map(And)
+
+    sample_type = testing.sample_type_from_value()
+    sample_eq_type = sample_type
+    sample_semigroup_type = sample_type
+    sample_commutative_type = sample_type
+    sample_monoid_type = sample_type
+    sample_hashable_type = sample_type
 
 
 @immutable
@@ -79,8 +94,15 @@ class Or(Commutative, Monoid, Hashable, Eq):
         return "Or({})".format(repr(self.boolean))
 
     @class_function
-    def sample_type(cls):
-        return st.just(st.booleans().map(Or))
+    def sample_value(cls):
+        return st.booleans().map(Or)
+
+    sample_type = testing.sample_type_from_value()
+    sample_eq_type = sample_type
+    sample_semigroup_type = sample_type
+    sample_commutative_type = sample_type
+    sample_monoid_type = sample_type
+    sample_hashable_type = sample_type
 
 
 @immutable
@@ -105,8 +127,14 @@ class String(Monoid, Hashable, Eq):
         return "String({})".format(repr(self.string))
 
     @class_function
-    def sample_type(cls):
-        return st.just(st.text().map(lambda s: String(s)))
+    def sample_value(cls):
+        return st.text().map(lambda s: String(s))
+
+    sample_type = testing.sample_type_from_value()
+    sample_eq_type = sample_type
+    sample_semigroup_type = sample_type
+    sample_monoid_type = sample_type
+    sample_hashable_type = sample_type
 
 
 @immutable
@@ -131,7 +159,11 @@ class Endo(Monoid):
         return eq_test(self.app_endo(x), other.app_endo(x), data)
 
     @class_function
-    def sample_type(cls):
-        return testing.sample_hashable_type().map(
-            lambda a: testing.sample_function(a).map(lambda f: Endo(f))
-        )
+    def sample_value(cls, a):
+        return testing.sample_function(a).map(lambda f: Endo(f))
+
+    sample_type = testing.sample_type_from_value(
+        testing.sample_eq_type(),
+    )
+    sample_semigroup_type = sample_type
+    sample_monoid_type = sample_type

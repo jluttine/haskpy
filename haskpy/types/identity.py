@@ -2,6 +2,7 @@ import attr
 
 from haskpy.utils import class_function, immutable, eq_test
 from haskpy.typeclasses import Monad, Eq
+from haskpy import testing
 
 
 @immutable
@@ -24,12 +25,24 @@ class Identity(Monad, Eq):
     def __repr__(self):
         return "Identity({})".format(repr(self.x))
 
+    def __eq_test__(self, other, data):
+        return eq_test(self.x, other.x, data)
+
     @class_function
     def sample_value(cls, a):
         return a.map(Identity)
 
-    def __eq_test__(self, other, data):
-        return eq_test(self.x, other.x, data)
+    sample_type = testing.sample_type_from_value(
+        testing.sample_type(),
+    )
+
+    sample_functor_type = testing.sample_type_from_value()
+    sample_applicative_type = sample_functor_type
+    sample_monad_type = sample_functor_type
+
+    sample_eq_type = testing.sample_type_from_value(
+        testing.sample_eq_type(),
+    )
 
 
 def IdentityT(M):
@@ -91,7 +104,43 @@ def IdentityT(M):
             return eq_test(self.decomposed, other.decomposed, data=data)
 
         @class_function
-        def sample_value(cls, a):
-            return M.sample_value(Identity.sample_value(a)).map(cls)
+        def sample_type(cls):
+            return (
+                Identity.sample_type()
+                .flatmap(M.sample_functor_type)
+                .map(lambda s: s.map(cls))
+            )
+
+        @class_function
+        def sample_functor_type(cls, a):
+            return (
+                Identity.sample_functor_type(a)
+                .flatmap(M.sample_functor_type)
+                .map(lambda s: s.map(cls))
+            )
+
+        @class_function
+        def sample_applicative_type(cls, a):
+            return (
+                Identity.sample_applicative_type(a)
+                .flatmap(M.sample_applicative_type)
+                .map(lambda s: s.map(cls))
+            )
+
+        @class_function
+        def sample_monad_type(cls, a):
+            return (
+                Identity.sample_monad_type(a)
+                .flatmap(M.sample_monad_type)
+                .map(lambda s: s.map(cls))
+            )
+
+        @class_function
+        def sample_eq_type(cls):
+            return (
+                Identity.sample_eq_type()
+                .flatmap(M.sample_monad_type)
+                .map(lambda s: s.map(cls))
+            )
 
     return IdentityM

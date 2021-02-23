@@ -46,7 +46,7 @@ class Cartesian(Profunctor):
     @given(st.data())
     def test_cartesian_identity(cls, data):
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
 
         # Draw values
@@ -74,7 +74,7 @@ class Cartesian(Profunctor):
     def test_cartesian_associativity(cls, data):
         # Draw types
         a = st.tuples(
-            data.draw(testing.sample_hashable_type()),
+            data.draw(testing.sample_eq_type()),
             st.tuples(
                 st.just("foo"),
                 st.just("bar"),
@@ -104,8 +104,8 @@ class Cartesian(Profunctor):
     @given(st.data())
     def test_cartesian_first(cls, data):
         # Draw types
-        a1 = data.draw(testing.sample_hashable_type())
-        a2 = data.draw(testing.sample_hashable_type())
+        a1 = data.draw(testing.sample_eq_type())
+        a2 = data.draw(testing.sample_eq_type())
         a = st.tuples(a1, a2)
         b = data.draw(testing.sample_type())
 
@@ -131,8 +131,8 @@ class Cartesian(Profunctor):
     @given(st.data())
     def test_cartesian_second(cls, data):
         # Draw types
-        a1 = data.draw(testing.sample_hashable_type())
-        a2 = data.draw(testing.sample_hashable_type())
+        a1 = data.draw(testing.sample_eq_type())
+        a2 = data.draw(testing.sample_eq_type())
         a = st.tuples(a1, a2)
         b = data.draw(testing.sample_type())
 

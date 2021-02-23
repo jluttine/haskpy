@@ -3,7 +3,8 @@ import hypothesis.strategies as st
 
 from haskpy.typeclasses import (
     Monad,
-    CommutativeMonoid,
+    Commutative,
+    Monoid,
     Hashable,
     Foldable,
     Eq,
@@ -29,7 +30,8 @@ from haskpy import testing
 
 class Maybe(
         Monad,
-        CommutativeMonoid,
+        Commutative,
+        Monoid,
         Hashable,
         Foldable,
         Eq,
@@ -47,29 +49,41 @@ class Maybe(
     def pure(cls, x):
         return Just(x)
 
+    #
+    # Sampling methods for property tests
+    #
+
     @class_function
     def sample_value(cls, a):
-        return st.one_of(a.map(Just), st.just(Nothing))
+        return st.one_of(st.just(Nothing), a.map(Just))
 
-    @class_function
-    def sample_hashable_type(cls):
-        t = testing.sample_hashable_type()
-        return t.map(cls.sample_value)
+    sample_type = testing.sample_type_from_value(
+        testing.sample_type(),
+    )
 
-    @class_function
-    def sample_monoid_type(cls):
-        t = testing.sample_monoid_type()
-        return t.map(cls.sample_value)
+    sample_functor_type = testing.sample_type_from_value()
+    sample_applicative_type = sample_functor_type
+    sample_monad_type = sample_functor_type
 
-    @class_function
-    def sample_commutative_type(cls):
-        t = testing.sample_commutative_type()
-        return t.map(cls.sample_value)
+    sample_hashable_type = testing.sample_type_from_value(
+        testing.sample_hashable_type(),
+    )
 
-    @class_function
-    def sample_eq_type(cls):
-        t = testing.sample_eq_type()
-        return t.map(cls.sample_value)
+    sample_semigroup_type = testing.sample_type_from_value(
+        testing.sample_semigroup_type(),
+    )
+    sample_monoid_type = sample_semigroup_type
+
+    sample_commutative_type = testing.sample_type_from_value(
+        testing.sample_commutative_type(),
+    )
+
+    sample_eq_type = testing.sample_type_from_value(
+        testing.sample_commutative_type(),
+    )
+
+    sample_foldable_type = testing.sample_type_from_value()
+    sample_foldable_functor_type = sample_foldable_type
 
 
 class Just(Maybe):
@@ -240,5 +254,17 @@ def MaybeT(M):
         @class_function
         def sample_value(cls, a):
             return M.sample_value(Maybe.sample_value(a)).map(cls)
+
+        sample_type = testing.sample_type_from_value(
+            testing.sample_type(),
+        )
+
+        sample_functor_type = testing.sample_type_from_value()
+        sample_applicative_type = sample_functor_type
+        sample_monad_type = sample_functor_type
+
+        sample_eq_type = testing.sample_type_from_value(
+            testing.sample_eq_type(),
+        )
 
     return MaybeM

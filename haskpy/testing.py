@@ -1,7 +1,7 @@
 import hypothesis.strategies as st
 import attr
 
-from haskpy.utils import singleton, immutable
+from haskpy.utils import singleton, immutable, class_function
 
 
 def types():
@@ -9,42 +9,35 @@ def types():
     from haskpy.types import hypothesis
     from haskpy.functions import Function
     # Some example types. The more types you add here, the longer it takes to
-    # run the tests.
+    # run the tests. Also, put simpler non-recursive strategies first:
+    # https://hypothesis.readthedocs.io/en/latest/data.html#hypothesis.strategies.one_of
     return (
-        Function,
-        types.Maybe,
-        types.List,
         types.And,
-        types.String,
         hypothesis.HypothesisInteger,
+        types.String,
+        types.Maybe,
+        # types.List,
+        # Function,
     )
 
 
-@singleton
-class sample_type_of():
+def sample_type_of(f, depth=0):
 
-    def __init__(self):
-        self.__depth = 0
-        return
-
-    def __call__(self, f):
-
-        def try_sample(cls):
-            try:
-                return f(cls)
-            except AttributeError:
-                return None
-
-        if self.__depth > 3:
+    def try_sample(cls):
+        try:
+            return f(cls)
+        except AttributeError:
             return st.nothing()
 
-        self.__depth += 1
-        try:
-            t = st.one_of(*filter(None, map(try_sample, types())))
-        finally:
-            self.__depth -= 1
-
-        return t
+    # NOTE: 1) Use deferring to work with the circular dependency in the type
+    # modules: they import this module and types() function imports them. 2)
+    # First select the type, then apply try_sample to it. If one would apply
+    # try_sample to all types and then select one of the results, it would lead
+    # to infinite recursion as all possible paths are traversed. 3) Use flatmap
+    # instead of map!
+    return st.deferred(
+        lambda: st.sampled_from(types())
+    ).flatmap(try_sample)
 
 
 def sample_type():
@@ -80,6 +73,19 @@ def sample_class(typeclass):
     return st.sampled_from(
         tuple(filter(lambda cls: issubclass(cls, typeclass), types()))
     )
+
+
+def sample_type_from_value(*arg_type_strategies):
+    @class_function
+    def sample(cls, *other_arg_value_strategies):
+        y = st.tuples(*arg_type_strategies).map(
+            lambda arg_value_strategies: cls.sample_value(
+                *arg_value_strategies,
+                *other_arg_value_strategies,
+            )
+        )
+        return y
+    return sample
 
 
 @immutable

@@ -2,7 +2,12 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from .typeclass import Type
-from haskpy.utils import identity, assert_output, class_function
+from haskpy.utils import (
+    identity,
+    assert_output,
+    class_function,
+    abstract_class_function,
+)
 from haskpy import testing
 
 
@@ -27,14 +32,9 @@ class Contravariant(Type):
     # Sampling methods for property tests
     #
 
-    @class_function
-    def sample_type(cls):
-        t = testing.sample_type()
-        return t.map(cls.sample_contravariant_value)
-
-    @class_function
-    def sample_contravariant_value(cls, a):
-        return cls.sample_value(a)
+    @abstract_class_function
+    def sample_contravariant_type(cls, a):
+        pass
 
     #
     # Test typeclass laws
@@ -51,7 +51,7 @@ class Contravariant(Type):
     @class_function
     @given(st.data())
     def test_contravariant_identity(cls, data):
-        t = data.draw(cls.sample_type())
+        t = data.draw(cls.sample_contravariant_type())
         cls.assert_contravariant_identity(
             data.draw(t),
             data=data
@@ -71,8 +71,8 @@ class Contravariant(Type):
     def test_contravariant_composition(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        b = data.draw(testing.sample_hashable_type())
-        c = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_eq_type())
+        c = data.draw(testing.sample_eq_type())
 
         # Draw values
         v = data.draw(cls.sample_contravariant_value(a))
@@ -100,7 +100,7 @@ class Contravariant(Type):
     def test_contravariant_contramap(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        b = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_eq_type())
 
         # Draw values
         v = data.draw(cls.sample_contravariant_value(a))
@@ -124,7 +124,7 @@ class Contravariant(Type):
     def test_contravariant_contrareplace(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        b = data.draw(testing.sample_hashable_type())
+        b = data.draw(testing.sample_eq_type())
 
         # Draw values
         v = data.draw(cls.sample_contravariant_value(a))

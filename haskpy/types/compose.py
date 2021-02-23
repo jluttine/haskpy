@@ -4,6 +4,7 @@ import functools
 from haskpy.typeclasses import Applicative, Eq
 from haskpy.functions import map, apply
 from haskpy.utils import class_function, immutable, eq_test
+from haskpy import testing
 
 
 def Compose(X, Y):
@@ -153,15 +154,27 @@ def Compose(X, Y):
                 repr(self.decomposed),
             )
 
-        @class_function
-        def sample_value(cls, a):
-            return X.sample_value(Y.sample_value(a)).map(cls)
-
         def __eq__(self, other):
             return self.decomposed == other.decomposed
 
         def __eq_test__(self, other, data):
             return eq_test(self.decomposed, other.decomposed, data)
+
+        @class_function
+        def sample_value(cls, a):
+            return X.sample_value(Y.sample_value(a)).map(cls)
+
+        sample_type = testing.sample_type_from_value(
+            testing.sample_type(),
+        )
+
+        sample_functor_type = testing.sample_type_from_value()
+        sample_applicative_type = sample_functor_type
+        sample_monad_type = sample_functor_type
+
+        sample_eq_type = testing.sample_type_from_value(
+            testing.sample_eq_type(),
+        )
 
     return Composed
 

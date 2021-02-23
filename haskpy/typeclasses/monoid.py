@@ -1,7 +1,12 @@
 from hypothesis import given
 import hypothesis.strategies as st
 
-from haskpy.utils import assert_output, class_function, abstract_class_property
+from haskpy.utils import (
+    assert_output,
+    class_function,
+    abstract_class_property,
+    abstract_class_function,
+)
 from .semigroup import Semigroup, Commutative
 
 
@@ -10,30 +15,21 @@ class Monoid(Semigroup):
 
     Minimal complete definition:
 
-    - ``empty`` (as a class method via metaclass)
+    ..
 
-    - ``append``
+        empty & append
+
+    For property tests:
+
+    ..
+
+        sample_monoid_type & sample_semigroup_type
 
     """
 
     @abstract_class_property
     def empty(cls):
         """Identity element for the monoid"""
-
-    #
-    # Sampling methods for property tests
-    #
-
-    @class_function
-    def sample_semigroup_type(cls):
-        return cls.sample_monoid_type()
-
-    @class_function
-    def sample_monoid_type(cls):
-        # By default, assume the class is a concrete type or that the
-        # monoid-property of the type constructor doesn't depend on the
-        # contained type.
-        return cls.sample_type()
 
     #
     # Test Monoid laws
@@ -61,6 +57,9 @@ class Monoid(Semigroup):
             cls.empty.append(x),
         )
 
+    @abstract_class_function
+    def sample_monoid_type(cls):
+        pass
 
 
 # Monoid-related functions are defined in function module because of circular

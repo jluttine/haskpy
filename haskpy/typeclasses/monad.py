@@ -2,7 +2,12 @@ import hypothesis.strategies as st
 from hypothesis import given
 
 from .applicative import Applicative
-from haskpy.utils import identity, assert_output, class_function
+from haskpy.utils import (
+    identity,
+    assert_output,
+    class_function,
+    abstract_class_function,
+)
 from haskpy import testing
 
 
@@ -110,6 +115,14 @@ class Monad(Applicative):
         return self.bind(f)
 
     #
+    # Sampling methods for property tests
+    #
+
+    @abstract_class_function
+    def sample_monad_type(cls, a):
+        pass
+
+    #
     # Test typeclass laws
     #
 
@@ -122,14 +135,15 @@ class Monad(Applicative):
     @given(st.data())
     def test_monad_left_identity(cls, data):
         # Draw types
-        ta = data.draw(testing.sample_hashable_type())
-        tb = data.draw(testing.sample_type())
+        a = data.draw(testing.sample_eq_type())
+        b = data.draw(testing.sample_type())
+        mb = data.draw(cls.sample_monad_type(b))
 
         # Draw values
-        f = data.draw(testing.sample_function(cls.sample_functor_value(tb)))
-        a = data.draw(ta)
+        f = data.draw(testing.sample_function(mb))
+        x = data.draw(a)
 
-        cls.assert_monad_left_identity(f, a, data=data)
+        cls.assert_monad_left_identity(f, x, data=data)
         return
 
     @class_function
@@ -142,9 +156,10 @@ class Monad(Applicative):
     def test_monad_right_identity(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
+        ma = data.draw(cls.sample_monad_type(a))
 
         # Draw values
-        m = data.draw(cls.sample_functor_value(a))
+        m = data.draw(ma)
 
         cls.assert_monad_right_identity(m, data=data)
         return
@@ -160,13 +175,16 @@ class Monad(Applicative):
     @class_function
     @given(st.data())
     def test_monad_associativity(cls, data):
-        a = data.draw(testing.sample_hashable_type())
-        b = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
+        b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_type())
+        ma = data.draw(cls.sample_monad_type(a))
+        mb = data.draw(cls.sample_monad_type(b))
+        mc = data.draw(cls.sample_monad_type(c))
 
-        m = data.draw(cls.sample_functor_value(a))
-        f = data.draw(testing.sample_function(cls.sample_functor_value(b)))
-        g = data.draw(testing.sample_function(cls.sample_functor_value(c)))
+        m = data.draw(ma)
+        f = data.draw(testing.sample_function(mb))
+        g = data.draw(testing.sample_function(mc))
 
         cls.assert_monad_associativity(m, f, g, data=data)
         return
@@ -190,12 +208,14 @@ class Monad(Applicative):
     def test_monad_bind(cls, data):
         """Test consistency of ``bind`` with the default implementation"""
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        ma = data.draw(cls.sample_monad_type(a))
+        mb = data.draw(cls.sample_monad_type(b))
 
         # Draw values
-        u = data.draw(cls.sample_functor_value(a))
-        f = data.draw(testing.sample_function(cls.sample_functor_value(b)))
+        u = data.draw(ma)
+        f = data.draw(testing.sample_function(mb))
 
         cls.assert_monad_bind(u, f, data=data)
         return
@@ -216,9 +236,11 @@ class Monad(Applicative):
         """Test consistency of ``join`` with the default implementation"""
         # Draw types
         b = data.draw(testing.sample_type())
+        mb = data.draw(cls.sample_monad_type(b))
+        mmb = data.draw(cls.sample_monad_type(mb))
 
         # Draw values
-        u = data.draw(cls.sample_functor_value(cls.sample_functor_value(b)))
+        u = data.draw(mmb)
 
         cls.assert_monad_join(u, data=data)
         return
@@ -236,10 +258,11 @@ class Monad(Applicative):
     def test_monad_map(cls, data):
         """Test consistency of ``map`` with the default implementation"""
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        ma = data.draw(cls.sample_monad_type(a))
 
-        u = data.draw(cls.sample_functor_value(a))
+        u = data.draw(ma)
         f = data.draw(testing.sample_function(b))
 
         cls.assert_monad_map(u, f, data=data)
@@ -258,12 +281,14 @@ class Monad(Applicative):
     def test_monad_apply(cls, data):
         """Test consistency ``apply`` with the default implementations"""
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
+        ma = data.draw(cls.sample_monad_type(a))
+        mab = data.draw(cls.sample_monad_type(testing.sample_function(b)))
 
         # Draw values
-        v = data.draw(cls.sample_functor_value(a))
-        u = data.draw(cls.sample_functor_value(testing.sample_function(b)))
+        v = data.draw(ma)
+        u = data.draw(mab)
 
         cls.assert_monad_apply(u, v, data=data)
         return

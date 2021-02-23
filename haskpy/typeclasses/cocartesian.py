@@ -46,7 +46,7 @@ class Cocartesian(Profunctor):
     def test_cocartesian_unit(cls, data):
         from haskpy.types import Left
         # Draw types
-        a = data.draw(testing.sample_hashable_type())
+        a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
 
         # Draw values
@@ -88,7 +88,7 @@ class Cocartesian(Profunctor):
         from haskpy.types.either import Either
         # Draw types
         a = Either.sample_value(
-            data.draw(testing.sample_hashable_type()),
+            data.draw(testing.sample_eq_type()),
             Either.sample_value(
                 st.just("foo"),
                 st.just("bar"),
@@ -119,8 +119,8 @@ class Cocartesian(Profunctor):
     def test_cocartesian_left(cls, data):
         from haskpy.types.either import Either
         # Draw types
-        a1 = data.draw(testing.sample_hashable_type())
-        a2 = data.draw(testing.sample_hashable_type())
+        a1 = data.draw(testing.sample_eq_type())
+        a2 = data.draw(testing.sample_eq_type())
         a = Either.sample_value(a1, a2)
         b = data.draw(testing.sample_type())
 
@@ -147,8 +147,8 @@ class Cocartesian(Profunctor):
     def test_cocartesian_right(cls, data):
         from haskpy.types.either import Either
         # Draw types
-        a1 = data.draw(testing.sample_hashable_type())
-        a2 = data.draw(testing.sample_hashable_type())
+        a1 = data.draw(testing.sample_eq_type())
+        a2 = data.draw(testing.sample_eq_type())
         a = Either.sample_value(a1, a2)
         b = data.draw(testing.sample_type())
 

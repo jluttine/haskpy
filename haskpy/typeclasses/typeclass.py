@@ -1,3 +1,6 @@
+from hypothesis import given
+import hypothesis.strategies as st
+
 from haskpy import utils
 
 
@@ -8,7 +11,20 @@ class MetaType(type):
 
 
 class Type(object, metaclass=MetaType):
-    """Foo"""
+    """Base class for all typeclasses, type constructors and types
+
+    Minimal complete definition for property tests:
+
+    ..
+
+        sample_type
+
+    In HaskPy, typeclasses, type constructors and types are all represented by
+    classes. Typeclasses are abstract base classes. Type constructors and types
+    seemingly similar classes but type constructors just have some implicit
+    type arguments when values are constructed.
+
+    """
 
     def __dir__(self):
         xs = super().__dir__()
@@ -64,3 +80,20 @@ class Type(object, metaclass=MetaType):
             raise AttributeError()
         else:
             return attr
+
+    #
+    # Sampling functions for property tests
+    #
+
+    @utils.abstract_class_function
+    def sample_type(cls):
+        """Provide a type strategy that provides a value strategy"""
+
+    @utils.class_function
+    @given(st.data())
+    def test_type(cls, data):
+        """Test sampling values and that they have the correct type"""
+        t = data.draw(cls.sample_type())
+        x = data.draw(t)
+        assert isinstance(x, cls)
+        return
