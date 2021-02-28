@@ -3,6 +3,7 @@ import functools
 from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Foldable, Eq
+from haskpy.types.either import Left, Right
 from haskpy import testing
 from haskpy.utils import (
     immutable,
@@ -68,11 +69,48 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
 
     match = attr.ib()
 
+    @class_property
+    def empty(cls):
+        return Nil
+
+    @class_function
+    def pure(cls, x):
+        """a -> LinkedList a"""
+        return Cons(x, lambda: Nil)
+
     def map(self, f):
         """List a -> (a -> b) -> List b"""
         return self.match(
             Nil=lambda: Nil,
             Cons=lambda x, xs: Cons(f(x), lambda: xs().map(f)),
+        )
+
+    def bind(self, f):
+        """List a -> (a -> List b) -> List b"""
+
+        def append_lazy(xs, lys):
+            """LinkedList a -> (() -> LinkedList a) -> LinkedList a
+
+            Append two linked lists. This function is "lazy" in its second
+            argument, that is, ``lys`` is a lambda function that returns the
+            linked list.
+
+            """
+            return xs.match(
+                Nil=lambda: lys(),
+                Cons=lambda x, lxs: Cons(x, lambda: append_lazy(lxs(), lys))
+            )
+
+        return self.match(
+            Nil=lambda: Nil,
+            Cons=lambda x, lxs: append_lazy(f(x), lambda: lxs().bind(f)),
+        )
+
+    def append(self, ys):
+        """LinkedList a -> LinkedList a -> LinkedList a"""
+        return self.match(
+            Nil=lambda: ys,
+            Cons=lambda x, lxs: Cons(x, lambda: lxs().append(ys))
         )
 
     def take(self, n):
@@ -109,22 +147,43 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
                 break
         return xs
 
-    @class_function
-    def pure(cls, x):
-        """a -> LinkedList a"""
-        return Cons(x, Nil)
-
     def __eq__(self, other):
         """LinkedList a -> LinkedList a -> bool"""
-        return self.match(
-            Nil=lambda: other.match(
+        # Here's a nice recursive solution:
+        #
+        # return self.match(
+        #     Nil=lambda: other.match(
+        #         Nil=lambda: True,
+        #         Cons=lambda _, __: False,
+        #     ),
+        #     Cons=lambda x, xs: other.match(
+        #         Nil=lambda: False,
+        #         Cons=lambda y, ys: (x == y) and (xs() == ys()),
+        #     ),
+        # )
+        #
+        # However, it doesn't work because of Python has bad recursion support.
+        # So, let's use recurse_tco which converts recursion to a loop:
+        return self.recurse_tco(
+            lambda acc, x: (
+                acc.match(
+                    # self is longer than other
+                    Nil=lambda: Left(False),
+                    Cons=lambda y, lys: (
+                        # Elements don't match
+                        Left(False) if x != y else
+                        # All good thus far, continue
+                        Right(lys())
+                    )
+                )
+            ),
+            lambda acc: acc.match(
+                # Both lists are empty (or end at the same time)
                 Nil=lambda: True,
+                # other is longer than self
                 Cons=lambda _, __: False,
             ),
-            Cons=lambda x, xs: other.match(
-                Nil=lambda: False,
-                Cons=lambda y, ys: (x == y) and (xs() == ys()),
-            ),
+            other,
         )
 
     def to_iter(self):
@@ -137,6 +196,89 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
             if stop:
                 break
             yield x
+
+    def recurse_tco(self, f, g, acc):
+        """Recursion with tail-call optimization
+
+        Type signature:
+
+        ``LinkedList a -> (b -> a -> Either c b) -> (b -> c) -> b -> c``
+
+        where ``a`` is the type of the elements in the linked list, ``b`` is
+        the type of the accumulated value and ``c`` is the type of the result.
+        Quite often, the accumulated value is also the end result, so ``b`` is
+        ``c`` and ``g`` is an identity function.
+
+        As Python supports recursion very badly, some typical recursion
+        patterns are implemented as methods that convert specific recursions to
+        efficients loops. This method implements the following pattern:
+
+        .. code-block:: python
+
+            >>> return self.match(
+            ...     Nil=lambda: g(acc),
+            ...     Cons=lambda x, lxs: f(acc, x).match(
+            ...         Left=lambda y: y,
+            ...         Right=lambda y: lxs().recurse_tco(f, g, y)
+            ...     )
+            ... )
+
+        This recursion method supports short-circuiting and simple tail-call
+        optimization. A value inside ``Left`` stops the recursion and returns
+        the value. A value inside ``Right`` continues the recursion with the
+        updated accumulated value.
+
+        Examples
+        --------
+
+        For instance, the following recursion calculates the sum of the list
+        elements until the sum exceeds one million:
+
+        .. code-block:: python
+
+            >>> from haskpy import Left, Right, iterate
+            >>> xs = iterate(lambda x: x + 1, 1)
+            >>> my_sum = lambda xs, acc: xs.match(
+            ...     Nil=lambda: acc,
+            ...     Cons=lambda y, ys: acc if acc > 1000000 else my_sum(xs, acc + y)
+            ... )
+            >>> my_sum(xs, 0)
+
+        Unfortunately, this recursion exceeds Python maximum recursion depth
+        because 1000000 is a large enough number. Note that this cannot be
+        implemented with ``foldl`` because it doesn't support short-circuiting.
+        Also, ``foldr`` doesn't work because it's right-associative so it
+        cannot short-circuit based on the accumulator. But it can be calculated
+        with this ``recurse_tco`` method which converts the recursion into a
+        loop internally:
+
+        .. code-block:: python
+
+            >>> xs.recurse_tco(
+            ...     lambda acc, x: Left(acc) if acc > 1000000 else Right(acc + x),
+            ...     lambda acc: acc,
+            ...     0
+            ... )
+
+        See also
+        --------
+
+        Other recursion patterns:
+
+        ``foldl``, ``foldr``, ``foldr_lazy``
+
+        """
+        stop = False
+        xs = self
+        while not stop:
+            (stop, acc, xs) = xs.match(
+                Nil=lambda: (True, g(acc), Nil),
+                Cons=lambda y, lys: f(acc, y).match(
+                    Left=lambda z: (True, z, Nil),
+                    Right=lambda z: (False, z, lys())
+                )
+            )
+        return acc
 
     def foldl(self, combine, initial):
         """Foldable t => t a -> (b -> a -> b) -> b -> b
@@ -182,6 +324,14 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
 
         Nonstrict right-associative fold with support for lazy recursion,
         short-circuiting and tail-call optimization.
+
+        HOW ABOUT [a,b,c,d,e,f,g,h,...] -> (a(b(c(d(e))))) UNTIL TOTAL STRING
+        LENGTH IS X?
+
+        Parameters
+        ----------
+
+        combine : curried function
 
         See also
         --------
@@ -252,6 +402,85 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
                 "..." if maxdepth <= 0 else xs().__repr(maxdepth-1),
             ),
         )
+
+    #
+    # Sampling methods for property tests
+    #
+
+    # @class_function
+    # @st.composite
+    # def sample_value(draw, cls, a):
+    #     return draw(
+    #         st.one_of(
+    #             st.just(Nil),
+    #             a.map(
+    #                 lambda x: Cons(
+    #                     x,
+    #                     lambda: draw(cls.sample_value(a))
+    #                 )
+    #             )
+    #         )
+    #     )
+    #     #return st.lists(a, max_size=10).map(lambda xs: cls(*xs))
+
+    @class_function
+    def sample_value(cls, a):
+        # It's not possible to sample linked lists lazily because hypothesis
+        # doesn't support that sampling happens at some later point (the
+        # sampler gets "frozen"). So, we must sample everything at once,
+        # although we then add the "lazy" lambda wrapping to the pre-sampled
+        # values.
+        #
+        # This non-lazy sampling could be implemented recursively as follows:
+        #
+        return st.deferred(
+            lambda: st.one_of(
+                st.just(Nil),
+                a.flatmap(
+                    lambda x: cls.sample_value(a).map(
+                        lambda xs: Cons(x, lambda: xs)
+                    )
+                )
+            )
+        )
+        #
+        # However, this can cause RecursionError in Python, so let's write it
+        # as a loop instead:
+
+    sample_type = testing.sample_type_from_value(
+        testing.sample_type(),
+    )
+
+    sample_functor_type = testing.sample_type_from_value()
+    sample_applicative_type = sample_functor_type
+    sample_monad_type = sample_functor_type
+
+    sample_semigroup_type = testing.sample_type_from_value(
+        testing.sample_type(),
+    )
+    sample_monoid_type = sample_semigroup_type
+
+    sample_eq_type = testing.sample_type_from_value(
+        testing.sample_eq_type(),
+    )
+
+    def __eq_test__(self, other, data=None):
+        return self.match(
+            Nil=lambda: other.match(
+                Nil=lambda: True,
+                Cons=lambda _, __: False,
+            ),
+            Cons=lambda x, lxs: other.match(
+                Nil=lambda: False,
+                Cons=lambda y, lys: (
+                    eq_test(x, y, data) and
+                    eq_test(lxs(), lys(), data)
+                ),
+            ),
+        )
+
+    sample_foldable_type = testing.sample_type_from_value()
+    sample_foldable_functor_type = sample_foldable_type
 
 
 Nil = LinkedList(match=lambda Nil, Cons: Nil())
