@@ -76,7 +76,7 @@ class List(Monad, Monoid, Foldable, Eq):
         # use parallelized implementation because they use monoids. Now, the
         # default implementations use foldl/foldr which both are sequential.
         return functools.reduce(
-            lambda a, b: combine,
+            lambda a, b: combine(a)(b),
             self.__xs,
             initial,
         )

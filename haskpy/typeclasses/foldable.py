@@ -91,7 +91,7 @@ class Foldable(Type):
         #
         # myfoldr const 2 [0..]
         return self.foldl(
-            lambda m, x: m.append(f(x)),
+            lambda m: lambda x: m.append(f(x)),
             monoid.empty,
         )
 
@@ -134,7 +134,7 @@ class Foldable(Type):
         from haskpy.functions import compose
         warn("Using default implementation of foldl", PerformanceWarning)
         return self.foldr(
-            lambda a, f: compose(f, lambda b: combine(b, a)),
+            lambda a: lambda f: compose(f, lambda b: combine(b)(a)),
             identity,
         )(initial)
 
@@ -181,7 +181,7 @@ class Foldable(Type):
         warn("Using default implementation of foldr", PerformanceWarning)
         return self.fold_map(
             Endo,
-            lambda x: Endo(lambda y: combine(x, y)),
+            lambda x: Endo(lambda y: combine(x)(y)),
         ).app_endo(initial)
 
     def fold(self, monoid):
@@ -325,12 +325,9 @@ class Foldable(Type):
         g = data.draw(testing.sample_function(testing.sample_function(b)))
         initial = data.draw(b)
 
-        # Uncurry the function
-        f = lambda x, y: g(x)(y)
-
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_foldr(xs, f, initial, data=data)
+            cls.assert_foldable_foldr(xs, g, initial, data=data)
 
         return
 
@@ -359,12 +356,9 @@ class Foldable(Type):
         initial = data.draw(b)
         g = data.draw(testing.sample_function(testing.sample_function(b)))
 
-        # Uncurry the function
-        f = lambda x, y: g(x)(y)
-
         with catch_warnings():
             filterwarnings("ignore", category=PerformanceWarning)
-            cls.assert_foldable_foldl(xs, f, initial, data=data)
+            cls.assert_foldable_foldl(xs, g, initial, data=data)
 
         return
 

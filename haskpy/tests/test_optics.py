@@ -9,12 +9,12 @@ def test_adapter():
     """Test adapter composition"""
 
     scale = adapter(
-        receive=lambda i: 10 * i,
-        send=lambda i: i // 10,
+        lambda i: 10 * i,
+        lambda i: i // 10,
     )
     int2str = adapter(
-        receive=lambda i: str(i),
-        send=lambda s: int(s),
+        lambda i: str(i),
+        lambda s: int(s),
     )
 
     # 42 -> 420 -> "420" -> "420420" -> 420420 -> 42042
@@ -35,14 +35,14 @@ def test_lens_composition():
 
     # Lens for accessing the first element of a list
     alice = lens(
-        view=lambda xy: xy[0],
-        update=lambda x_xy: [x_xy[0], x_xy[1][1]],
+        lambda xy: xy[0],
+        lambda x_xy: [x_xy[0], x_xy[1][1]],
     )
 
     # Lens for accessing the age of a person
     age = lens(
-        view=lambda p: p.age,
-        update=lambda a_p: Person(name=a_p[1].name, age=a_p[0]),
+        lambda p: p.age,
+        lambda a_p: Person(name=a_p[1].name, age=a_p[0]),
     )
 
     # Compose the lenses and age increment
@@ -61,13 +61,13 @@ def test_prism_composition():
     """Test composition of prisms"""
 
     none = prism(
-        match=lambda x: Left(None) if x is None else Right(x),
-        build=lambda x: x,
+        lambda x: Left(None) if x is None else Right(x),
+        lambda x: x,
     )
 
     maybe_singleton = prism(
-        match=lambda xs: Left(xs) if len(xs) == 0 else Right(xs[0]),
-        build=lambda x: [x],
+        lambda xs: Left(xs) if len(xs) == 0 else Right(xs[0]),
+        lambda x: [x],
     )
 
     p = none(maybe_singleton(none(lambda x: x*10)))
@@ -85,12 +85,12 @@ def test_lens_and_prism_composition():
 
     def element(n):
         check_length = prism(
-            match=lambda xs: Left(xs) if len(xs) <= n else Right(xs),
-            build=lambda xs: xs,
+            lambda xs: Left(xs) if len(xs) <= n else Right(xs),
+            lambda xs: xs,
         )
         pick = lens(
-            view=lambda xs: xs[n],
-            update=lambda x_xs: x_xs[1][:n] + [x_xs[0]] + x_xs[1][n+1:],
+            lambda xs: xs[n],
+            lambda x_xs: x_xs[1][:n] + [x_xs[0]] + x_xs[1][n+1:],
         )
         return lambda f: check_length(pick(f))
 

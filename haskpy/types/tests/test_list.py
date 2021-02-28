@@ -32,7 +32,7 @@ def test_list_foldr():
     # in such solutions, we just don't want those for our List. Also, these
     # test that the default implementations of Foldable are correct.
     assert "(a+(b+(c+x)))" == List("a", "b", "c").foldr(
-        lambda x, acc: "({0}+{1})".format(x, acc),
+        lambda x: lambda acc: "({0}+{1})".format(x, acc),
         "x"
     )
     return
@@ -45,7 +45,7 @@ def test_list_foldl():
     # in such solutions, we just don't want those for our List. Also, these
     # test that the default implementations of Foldable are correct.
     assert "(((x+a)+b)+c)" == List("a", "b", "c").foldl(
-        lambda acc, x: "({0}+{1})".format(acc, x),
+        lambda acc: lambda x: "({0}+{1})".format(acc, x),
         "x"
     )
     return
