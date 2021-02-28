@@ -14,6 +14,12 @@ from haskpy.utils import (
 from haskpy import testing
 
 
+@immutable
+class _Code():
+
+    co_argcount = attr.ib()
+
+
 def FunctionMonoid(monoid):
     """Create a function type that has a Monoid instance"""
 
@@ -160,7 +166,10 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
 
     @property
     def __code__(self):
-        return self.__f.__code__
+        # We use __code__.co_argcount attribute in this Function class, so
+        # let's add this attribute to Function objects too so that we can wrap
+        # Function objects with Function class.
+        return _Code(self.__f.__code__.co_argcount - len(self.__args))
 
     # @property
     # def __annotations__(self):
@@ -234,7 +243,8 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
 
 def function(f):
     """Decorator for currying and transforming functions into monads"""
-    return Function(f)
+    # Don't wrap twice
+    return f if isinstance(f, Function) else Function(f)
 
 
 @function
