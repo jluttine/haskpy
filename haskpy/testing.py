@@ -101,3 +101,7 @@ class memoize():
         y = self.__f(x)
         self.__memory.append((x, y))
         return y
+
+    @property
+    def __code__(self):
+        return self.__f.__code__
