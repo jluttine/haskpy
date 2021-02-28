@@ -21,3 +21,11 @@ def test_function_nesting():
     g2 = Function(f("a"))
     h2 = Function(g2("b"))
     assert h2("c") == "abc"
+
+
+def test_function_composition():
+    assert (
+        Function(lambda x: 10 * x) **
+        Function(lambda x: x + 1) **
+        Function(lambda x: 2 * x)
+    )(3) == 70

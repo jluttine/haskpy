@@ -64,6 +64,9 @@ class Functor(Type):
         """
         return self.map(f)
 
+    def __pow__(self, x):
+        return x.map(self)
+
     #
     # Sampling methods for property tests
     #
