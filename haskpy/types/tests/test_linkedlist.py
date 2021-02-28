@@ -65,5 +65,5 @@ def test_linkedlist_foldr():
 
     """
     xs = Cons(1, lambda: Cons(2, lambda: Nil))
-    res = xs.foldr(lambda x, acc: "({0}+{1})".format(x, acc), 0)
+    res = xs.foldr(lambda x: lambda acc: "({0}+{1})".format(x, acc), 0)
     assert res == "(1+(2+0))"

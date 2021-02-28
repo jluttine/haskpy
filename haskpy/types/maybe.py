@@ -115,10 +115,10 @@ class Just(Maybe):
         return f(self.__x)
 
     def foldl(self, combine, initial):
-        return combine(initial, self.__x)
+        return combine(initial)(self.__x)
 
     def foldr(self, combine, initial):
-        return combine(self.__x, initial)
+        return combine(self.__x)(initial)
 
     def length(self):
         return 1

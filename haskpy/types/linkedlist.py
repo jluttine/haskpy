@@ -297,7 +297,7 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
         # )
         #
         # So, let's use a for-loop based solution instead:
-        return functools.reduce(combine, self, initial)
+        return functools.reduce(lambda a, b: combine(a)(b), self, initial)
 
     def foldr(self, combine, initial):
         """Foldable t => t a -> (a -> b -> b) -> b -> b
@@ -316,7 +316,7 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
         """
         return self.match(
             Nil=lambda: initial,
-            Cons=lambda x, xs: combine(x, xs().foldr(combine, initial))
+            Cons=lambda x, xs: combine(x)(xs().foldr(combine, initial))
         )
 
     def foldr_lazy(self, combine, initial):

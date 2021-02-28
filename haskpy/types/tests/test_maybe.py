@@ -23,7 +23,7 @@ def test_maybe_map():
 
 def test_maybe_foldl():
     """Make sure the folding is done as we expect"""
-    assert Just("foo").foldl(lambda x, y: x + y, "bar") == "barfoo"
+    assert Just("foo").foldl(lambda x: lambda y: x + y, "bar") == "barfoo"
     return
 
 
