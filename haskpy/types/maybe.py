@@ -10,7 +10,6 @@ from haskpy.typeclasses import (
     Eq,
 )
 from haskpy.utils import (
-    singleton,
     immutable,
     class_function,
     class_property,
@@ -20,14 +19,7 @@ from haskpy.utils import (
 from haskpy import testing
 
 
-# Some thoughts on design: One could implement all the methods (except match)
-# in Maybe class by using the match method to choose the implementation. But
-# this would be just clumsy and add overhead. Class inheritance is a Pythonic
-# way of choosing the correct method implementation. Also, Just needs to
-# support equality testing, so that's also easy to achieve by making it a
-# class.
-
-
+@immutable
 class Maybe(
         Monad,
         Commutative,
@@ -38,8 +30,7 @@ class Maybe(
 ):
     """Maybe type for optional values"""
 
-    def match(self, *, Just, Nothing):
-        raise NotImplementedError()
+    match = attr.ib()
 
     @class_property
     def empty(cls):
@@ -48,6 +39,93 @@ class Maybe(
     @class_function
     def pure(cls, x):
         return Just(x)
+
+    def map(self, f):
+        return self.match(
+            Nothing=lambda: Nothing,
+            Just=lambda x: Just(f(x)),
+        )
+
+    def apply_to(self, x):
+        return self.match(
+            Nothing=lambda: Nothing,
+            Just=lambda f: x.map(f),
+        )
+
+    def bind(self, f):
+        return self.match(
+            Nothing=lambda: Nothing,
+            Just=lambda x: f(x),
+        )
+
+    def append(self, m):
+        return self.match(
+            Nothing=lambda: m,
+            Just=lambda x: m.match(
+                Nothing=lambda: self,
+                Just=lambda y: Just(x.append(y)),
+            ),
+        )
+
+    def fold_map(self, monoid, f):
+        return self.match(
+            Nothing=lambda: monoid.empty,
+            Just=lambda x: f(x),
+        )
+
+    def foldl(self, combine, initial):
+        return self.match(
+            Nothing=lambda: initial,
+            Just=lambda x: combine(initial)(x),
+        )
+
+    def foldr(self, combine, initial):
+        return self.match(
+            Nothing=lambda: initial,
+            Just=lambda x: combine(x)(initial),
+        )
+
+    def length(self):
+        return self.match(
+            Nothing=lambda: 0,
+            Just=lambda _: 1,
+        )
+
+    def to_iter(self):
+        yield from self.match(
+            Nothing=lambda: (),
+            Just=lambda x: (x,),
+        )
+
+    def __repr__(self):
+        return self.match(
+            Nothing=lambda: "Nothing",
+            Just=lambda x: "Just({0})".format(repr(x)),
+        )
+
+    def __eq__(self, other):
+        return self.match(
+            Nothing=lambda: other.match(
+                Nothing=lambda: True,
+                Just=lambda _: False,
+            ),
+            Just=lambda x: other.match(
+                Nothing=lambda: False,
+                Just=lambda y: x == y,
+            ),
+        )
+
+    def __eq_test__(self, other, data):
+        return self.match(
+            Nothing=lambda: other.match(
+                Nothing=lambda: True,
+                Just=lambda _: False,
+            ),
+            Just=lambda x: other.match(
+                Nothing=lambda: False,
+                Just=lambda y: eq_test(x, y, data),
+            ),
+        )
 
     #
     # Sampling methods for property tests
@@ -86,104 +164,11 @@ class Maybe(
     sample_foldable_functor_type = sample_foldable_type
 
 
-class Just(Maybe):
-
-    __x = attr.ib()
-
-    def __init__(self, x):
-        self.__x = x
-
-    def match(self, *, Just, Nothing):
-        return Just(self.__x)
-
-    def map(self, f):
-        return Just(f(self.__x))
-
-    def apply_to(self, x):
-        return x.map(self.__x)
-
-    def bind(self, f):
-        return f(self.__x)
-
-    def append(self, m):
-        return m.match(
-            Nothing=lambda: self,
-            Just=lambda x: Just(self.__x.append(x))
-        )
-
-    def fold_map(self, monoid, f):
-        return f(self.__x)
-
-    def foldl(self, combine, initial):
-        return combine(initial)(self.__x)
-
-    def foldr(self, combine, initial):
-        return combine(self.__x)(initial)
-
-    def length(self):
-        return 1
-
-    def to_iter(self):
-        yield from (self.__x,)
-
-    def __repr__(self):
-        return "Just({0})".format(repr(self.__x))
-
-    def __eq__(self, other):
-        return other.match(
-            Just=lambda x: self.__x == x,
-            Nothing=lambda: False,
-        )
-
-    def __eq_test__(self, other, data):
-        return other.match(
-            Just=lambda x: eq_test(self.__x, x, data),
-            Nothing=lambda: False,
-        )
+Nothing = Maybe(lambda *, Nothing, Just: Nothing())
 
 
-@singleton
-@immutable
-class Nothing(Maybe):
-
-    def match(self, *, Just, Nothing):
-        return Nothing()
-
-    def map(self, f):
-        return Nothing
-
-    def apply_to(self, x):
-        return Nothing
-
-    def bind(self, f):
-        return Nothing
-
-    def append(self, m):
-        return m
-
-    def fold_map(self, monoid, f):
-        return monoid.empty
-
-    def foldl(self, combine, initial):
-        return initial
-
-    def foldr(self, combine, initial):
-        return initial
-
-    def length(self):
-        return 0
-
-    def to_iter(self):
-        yield from ()
-
-    def __repr__(self):
-        return "Nothing"
-
-    def __eq__(self, other):
-        return other.match(Just=lambda _: False, Nothing=lambda: True)
-
-    def __eq_test__(self, other, data):
-        return other.match(Just=lambda _: False, Nothing=lambda: True)
+def Just(x):
+    return Maybe(lambda *, Nothing, Just: Just(x))
 
 
 def MaybeT(M):

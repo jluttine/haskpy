@@ -10,12 +10,59 @@ from haskpy import testing
 @immutable
 class Either(Monad, Eq):
 
-    def match(self, *, Left, Right):
-        raise NotImplementedError()
+    match = attr.ib()
 
     @class_function
     def pure(cls, x):
         return Right(x)
+
+    def map(self, f):
+        return self.match(
+            Left=lambda _: self,
+            Right=lambda x: Right(f(x)),
+        )
+
+    def apply_to(self, x):
+        return self.match(
+            Left=lambda _: self,
+            Right=lambda f: x.map(f),
+        )
+
+    def bind(self, f):
+        return self.match(
+            Left=lambda _: self,
+            Right=lambda x: f(x),
+        )
+
+    def __eq__(self, other):
+        return self.match(
+            Left=lambda x: other.match(
+                Left=lambda y: x == y,
+                Right=lambda _: False,
+            ),
+            Right=lambda x: other.match(
+                Left=lambda _: False,
+                Right=lambda y: x == y,
+            ),
+        )
+
+    def __eq_test__(self, other, data):
+        return self.match(
+            Left=lambda x: other.match(
+                Left=lambda y: eq_test(x, y, data=data),
+                Right=lambda _: False,
+            ),
+            Right=lambda x: other.match(
+                Left=lambda _: False,
+                Right=lambda y: eq_test(x, y, data=data),
+            ),
+        )
+
+    def __repr__(self):
+        return self.match(
+            Left=lambda x: "Left({0})".format(repr(x)),
+            Right=lambda x: "Right({0})".format(repr(x)),
+        )
 
     @class_function
     def sample_value(cls, a, b):
@@ -38,67 +85,9 @@ class Either(Monad, Eq):
     )
 
 
-@immutable
-class Left(Either):
-
-    __x = attr.ib()
-
-    def match(self, *, Left, Right):
-        return Left(self.__x)
-
-    def map(self, f):
-        return self
-
-    def apply_to(self, x):
-        return self
-
-    def bind(self, f):
-        return self
-
-    def __eq__(self, other):
-        return other.match(
-            Left=lambda x: self.__x == x,
-            Right=lambda x: False,
-        )
-
-    def __eq_test__(self, other, data):
-        return other.match(
-            Left=lambda x: eq_test(self.__x, x, data=data),
-            Right=lambda x: False,
-        )
-
-    def __repr__(self):
-        return "Left({0})".format(repr(self.__x))
+def Left(x):
+    return Either(lambda *, Left, Right: Left(x))
 
 
-@immutable
-class Right(Either):
-
-    __x = attr.ib()
-
-    def match(self, *, Left, Right):
-        return Right(self.__x)
-
-    def map(self, f):
-        return Right(f(self.__x))
-
-    def apply_to(self, x):
-        return x.map(self.__x)
-
-    def bind(self, f):
-        return f(self.__x)
-
-    def __eq__(self, other):
-        return other.match(
-            Left=lambda x: False,
-            Right=lambda x: self.__x == x,
-        )
-
-    def __eq_test__(self, other, data):
-        return other.match(
-            Left=lambda x: False,
-            Right=lambda x: eq_test(self.__x, x, data=data),
-        )
-
-    def __repr__(self):
-        return "Right({0})".format(repr(self.__x))
+def Right(x):
+    return Either(lambda *, Left, Right: Right(x))
