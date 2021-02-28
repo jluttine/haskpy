@@ -17,8 +17,8 @@ classes and functions inspired by Hask.
 - Types and type constructors: `Identity`, `Maybe`, `Either`, `List`,
   `Function`, `Compose`, `LinkedList`
 
-  - **TODO:** `Constant`, `Validation`, `Dictionary`, `LinkedList`,
-    `State`, `Reader`, `Writer`, `IO`
+  - **TODO:** `Constant`, `Validation`, `Dictionary`, `State`, `Reader`,
+    `Writer`, `IO`
 
 - Monad transformers: `MaybeT`, `IdentityT`
 
