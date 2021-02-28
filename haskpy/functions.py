@@ -5,7 +5,6 @@ from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Cartesian, Cocartesian, Semigroup
 from haskpy.utils import (
-    curry,
     identity,
     immutable,
     class_property,
@@ -36,7 +35,16 @@ def FunctionMonoid(monoid):
 
 @immutable
 class Function(Monad, Cartesian, Cocartesian, Semigroup):
-    """Monad instance for functions
+    """Monad instance for curried functions
+
+    Note the resulting ``Function`` object accepts only positional arguments.
+    The number of those positional arguments is exactly the same as the number
+    of required positional arguments in the underlying function. Any optional
+    positional or keyword arguments become unusable. The reason for this is
+    that it must be unambiguous at which point, for instance, ``map`` is
+    applied. Also, ``f(a)(b)`` should always be equal to ``f(a, b)`` with
+    curried functions. This might not be the case if there are optional
+    arguments.
 
     Use similar wrapping as functools.wraps does for some attributes. See
     CPython: https://github.com/python/cpython/blob/master/Lib/functools.py#L30
@@ -58,11 +66,31 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
     # decorator ``function`` which combines Function and curry.
     __f = attr.ib()
 
+    __args = attr.ib(default=(), converter=tuple)
+
+    @__f.validator
+    def check_f(self, attribute, value):
+        if not callable(value):
+            raise ValueError("The function must a callable")
+        nargs = value.__code__.co_argcount
+        if nargs == 0:
+            raise ValueError(
+                "The function must have at least one required positional "
+                "argument"
+            )
+        return
+
+    @__args.validator
+    def check_args(self, attribute, value):
+        if len(value) >= self.__f.__code__.co_argcount:
+            raise ValueError()
+        return
+
     # TODO: Add __annotations__
 
     @class_function
     def pure(cls, x):
-        return cls(lambda *args, **kwargs: x)
+        return cls(lambda _: x)
 
     def dimap(f, g, h):
         """(b -> c) -> (a -> b) -> (c -> d) -> (a -> d)"""
@@ -78,24 +106,11 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
 
     def apply(f, g):
         """(a -> b) -> (a -> b -> c) -> a -> c"""
-        # TODO: Currying doesn't work nicely here.. Should perhaps compose
-        # uncurried functions and then curry the end result?
-        return Function(
-            lambda *args, **kwargs: g(*args, **kwargs)(
-                f(*args, **kwargs)
-            )
-        )
+        return Function(lambda x: g(x)(f(x)))
 
     def bind(f, g):
         """(a -> b) -> (b -> a -> c) -> a -> c"""
-        # TODO: Currying doesn't work nicely here.. Should perhaps compose
-        # uncurried functions and then curry the end result?
-        return Function(
-            lambda *args, **kwargs: g(f(*args, **kwargs))(
-                *args,
-                **kwargs
-            )
-        )
+        return Function(lambda x: g(f(x))(x))
 
     def first(f):
         """(a -> b) -> (a, c) -> (b, c)"""
@@ -117,15 +132,24 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
         """(a -> b) -> (a -> b) -> (a -> b)"""
         return f.map(lambda x: lambda y: x.append(y)).apply_to(g)
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args):
         # Don't add docstring here because it shows up a bit stupidly in help
         # texts.
-        y = self.__f(*args, **kwargs)
-        return (
-            Function(y)
-            if callable(y) and not isinstance(y, Function) else
-            y
-        )
+
+        args = self.__args + args
+
+        n = self.__f.__code__.co_argcount
+        m = len(args)
+
+        if m < n:
+            # Function partially applied.
+            return attr.evolve(self, Function__args=args)
+        elif m == n:
+            # Function fully applied
+            return self.__f(*args)
+        else:
+            # Function fully applied and some arguments left over
+            return self.__f(*args[:n])(*args[n:])
 
     def __repr__(self):
         return repr(self.__f)
@@ -133,6 +157,10 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
     @property
     def __module__(self):
         return self.__f.__module__
+
+    @property
+    def __code__(self):
+        return self.__f.__code__
 
     # @property
     # def __annotations__(self):
@@ -206,7 +234,7 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
 
 def function(f):
     """Decorator for currying and transforming functions into monads"""
-    return Function(curry(f))
+    return Function(f)
 
 
 @function
@@ -547,11 +575,11 @@ def either(f, g, e):
 # be explicit that all the patterns would be given at the same time. Something
 # like:
 #
-@function
+#@function
 # def match(patterns, x):
 #     return x.match(**patterns)
 #
 # Is it better than:
-@function
+#@function
 def match(**kwargs):
     return lambda x: x.match(**kwargs)

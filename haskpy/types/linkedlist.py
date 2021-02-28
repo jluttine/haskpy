@@ -9,7 +9,6 @@ from haskpy.utils import (
     class_property,
     class_function,
     eq_test,
-    curry,
 )
 from haskpy.functions import function
 
@@ -190,8 +189,6 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
         haskpy.foldr_lazy
 
         """
-
-        combine = curry(combine)
 
         def step(x, lxs):
             """A single recursion step

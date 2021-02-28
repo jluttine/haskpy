@@ -5,12 +5,12 @@ from hypothesis import strategies as st
 from haskpy.typeclasses import Monad, Monoid, Foldable, Eq
 from haskpy import testing
 from haskpy.utils import (
-    curry,
     immutable,
     class_property,
     class_function,
     eq_test,
 )
+from haskpy.functions import function
 
 
 @immutable(init=False)
@@ -67,24 +67,31 @@ class List(Monad, Monoid, Foldable, Eq):
         return e in self.__xs
 
     def foldl(self, combine, initial):
-        """List a -> (b -> a -> b) -> b -> b"""
+        """List a -> (b -> a -> b) -> b -> b
+
+        ``combine`` function is assumed to be curried
+
+        """
         # TODO: We could implement also fold_map to make fold_map and fold to
         # use parallelized implementation because they use monoids. Now, the
         # default implementations use foldl/foldr which both are sequential.
         return functools.reduce(
-            lambda a, b: curry(combine)(a)(b),
+            lambda a, b: combine,
             self.__xs,
             initial,
         )
 
     def foldr(self, combine, initial):
-        """List a -> (a -> b -> b) -> b -> b"""
+        """List a -> (a -> b -> b) -> b -> b
+
+        ``combine`` function is assumed to be curried
+
+        """
         # TODO: We could implement also fold_map to make fold_map and fold to
         # use parallelized implementation because they use monoids. Now, the
         # default implementations use foldl/foldr which both are sequential.
-        c = curry(combine)
         return functools.reduce(
-            lambda b, a: c(a)(b),
+            lambda b, a: combine(a)(b),
             self.__xs[::-1],
             initial,
         )
