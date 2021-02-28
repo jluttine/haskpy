@@ -348,15 +348,8 @@ def sample_sized(e, size=None):
 
 
 def eq_test(x, y, data, **kwargs):
-    try:
-        # Prefer __eq_test__ because it propagates data correctly. If it's not
-        # available, x and y are probably either built-in types or some other
-        # simple types which are always instances of Eq.
-        eq = x.__eq_test__
-    except AttributeError:
-        return x == y
-    else:
-        return eq(y, data, **kwargs)
+    eq = getattr(x, "__eq_test__", lambda v, *_, **__: x == v)
+    return eq(y, data, **kwargs)
 
 
 def assert_output(f):
