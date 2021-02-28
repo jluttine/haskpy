@@ -85,6 +85,11 @@ def prism(match, build):
 
     """
 
+    # Just for easier user interface, wrap the given functions in case the user
+    # didn't do that
+    match = function(match)
+    build = function(build)
+
     from haskpy.types.either import either
 
     @function
