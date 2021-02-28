@@ -565,16 +565,6 @@ def ne(x, y):
 
 
 #
-# Either-specific functions
-#
-
-@function
-def either(f, g, e):
-    """(a -> c) -> (b -> c) -> Either a b -> c"""
-    return e.match(Left=f, Right=g)
-
-
-#
 # Pattern matching related functions
 #
 # NOTE: Currying doesn't work as expected for this function, because this is a
@@ -585,11 +575,5 @@ def either(f, g, e):
 # be explicit that all the patterns would be given at the same time. Something
 # like:
 #
-#@function
-# def match(patterns, x):
-#     return x.match(**patterns)
-#
-# Is it better than:
-#@function
 def match(**kwargs):
     return lambda x: x.match(**kwargs)

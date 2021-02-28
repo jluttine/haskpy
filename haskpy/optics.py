@@ -11,7 +11,7 @@ Resources:
 """
 
 
-from haskpy.functions import function, identity, either
+from haskpy.functions import function, identity
 
 
 @function
@@ -53,6 +53,7 @@ def lens(view, update):
 
     """
 
+    @function
     def run(p):
         """(a -> b) -> s -> t, or more generally, LensP a b s t
 
@@ -84,6 +85,9 @@ def prism(match, build):
 
     """
 
+    from haskpy.types.either import either
+
+    @function
     def run(p):
         """(a -> b) -> s -> t, or more generally, PrismP a b s t
 

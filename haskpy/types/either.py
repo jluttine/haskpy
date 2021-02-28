@@ -3,8 +3,10 @@ import hypothesis.strategies as st
 
 from haskpy.typeclasses import Monad, Eq
 from haskpy.utils import class_function, immutable, eq_test
+from haskpy.optics import prism
 
 from haskpy import testing
+from haskpy.functions import function
 
 
 @immutable
@@ -91,3 +93,64 @@ def Left(x):
 
 def Right(x):
     return Either(lambda *, Left, Right: Right(x))
+
+
+@function
+def either(f, g, e):
+    """(a -> c) -> (b -> c) -> Either a b -> c"""
+    return e.match(Left=f, Right=g)
+
+
+@function
+def is_left(m):
+    return m.match(
+        Left=lambda _: True,
+        Right=lambda _: False,
+    )
+
+
+@function
+def is_right(m):
+    return m.match(
+        Left=lambda _: False,
+        Right=lambda _: True,
+    )
+
+
+@function
+def from_left(x, e):
+    return e.match(
+        Left=lambda y: y,
+        Right=lambda _: x,
+    )
+
+
+@function
+def from_right(x, e):
+    return e.match(
+        Left=lambda _: x,
+        Right=lambda y: y,
+    )
+
+
+#
+# Optics
+#
+
+
+left = prism(
+    lambda m: m.match(
+        Left=lambda x: Right(x),
+        Right=lambda _: Left(m),
+    ),
+    lambda x: Left(x),
+)
+
+
+right = prism(
+    lambda m: m.match(
+        Left=lambda _: Left(m),
+        Right=lambda x: Right(x),
+    ),
+    lambda x: Right(x),
+)
