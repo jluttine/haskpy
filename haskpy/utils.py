@@ -1,3 +1,11 @@
+"""Utilities
+
+.. autosummary::
+   :toctree:
+
+   immutable
+
+"""
 import functools
 import inspect
 import attr
@@ -17,28 +25,6 @@ def immutable(maybe_cls=None, eq=False, repr=False, **kwargs):
     )
 
 
-def concrete_type(cls):
-
-    class ConcreteType(cls):
-        __name__ = cls.__name__
-        __module__ = cls.__module__
-
-    def sample_concrete_type():
-        return st.just(cls.sample_value())
-
-    # Provide implementation for abstract class methods that are used to sample
-    # types
-    for name in dir(cls):
-        if name.startswith("sample_") and name.endswith("_type"):
-            method = getattr(cls, name)
-            if isinstance(method, abstract_function):
-                n_args = len(inspect.signature(method).parameters)
-                if n_args == 0:
-                    setattr(ConcreteType, name, sample_concrete_type)
-
-    return immutable(ConcreteType)
-
-
 def singleton(C):
     return C()
 
@@ -50,7 +36,33 @@ class decorator():
         self.f = f
         self.__doc__ = f.__doc__
         self.__name__ = f.__name__
+        self.__module__ = f.__module__
+        self.__defaults__ = f.__defaults__
+        self.__kwdefaults__ = f.__kwdefaults__
+        self.__annotations__ = f.__annotations__
         return
+
+    def __call__(self, *args, **kwargs):
+        return self.f(*args, **kwargs)
+
+    @property
+    def __code__(self):
+        return self.f.__code__
+
+    @property
+    def __signature__(self):
+        return inspect.signature(self.f)
+
+    # The following properties are needed so that Sphinx recognizes (class)
+    # methods. Note that these properties don't exist for normal functions.
+
+    @property
+    def __self__(self):
+        return self.f.__self__
+
+    @property
+    def __func__(self):
+        return self.f.__func__
 
 
 class class_function(decorator):
@@ -148,6 +160,9 @@ def abstract_class_property(f):
 
 
 def abstract_class_function(f):
+    # Wrap the result gain with class_function so that we can recognize the
+    # result as a class function when building the documentation.. A bit ugly
+    # hack.. Probably there's a better way..
     return abstract_function(class_function(f))
 
 

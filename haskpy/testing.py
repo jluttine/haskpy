@@ -94,6 +94,14 @@ class memoize():
     __f = attr.ib()
     __memory = attr.ib(factory=list, init=False)
 
+    def __attrs_post_init__(self):
+        object.__setattr__(self, "__qualname__", self.__f.__qualname__)
+        object.__setattr__(self, "__name__", self.__f.__name__)
+        object.__setattr__(self, "__annotations__", self.__f.__annotations__)
+        object.__setattr__(self, "__defaults__", None)
+        object.__setattr__(self, "__kwdefaults__", None)
+        return
+
     def __call__(self, x):
         for (key, value) in self.__memory:
             if key == x:

@@ -18,6 +18,7 @@ from haskpy import testing
 class _Code():
 
     co_argcount = attr.ib()
+    co_flags = attr.ib()
 
 
 def FunctionMonoid(monoid):
@@ -73,6 +74,31 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
     __f = attr.ib()
 
     __args = attr.ib(default=(), converter=tuple)
+
+    def __attrs_post_init__(self):
+        object.__setattr__(self, "__qualname__", self.__f.__qualname__)
+        object.__setattr__(self, "__module__", self.__f.__module__)
+        object.__setattr__(self, "__doc__", self.__f.__doc__)
+        object.__setattr__(self, "__name__", self.__f.__name__)
+        object.__setattr__(self, "__annotations__", self.__f.__annotations__)
+        object.__setattr__(self, "__defaults__", None)
+        object.__setattr__(self, "__kwdefaults__", None)
+        return
+
+    @property
+    def __code__(self):
+        # We use __code__.co_argcount attribute in this Function class, so
+        # let's add this attribute to Function objects too so that we can wrap
+        # Function objects with Function class.
+        return _Code(
+            co_argcount=self.__f.__code__.co_argcount - len(self.__args),
+            # co_flags is needed by Sphinx for some reason..
+            co_flags=self.__f.__code__.co_flags,
+        )
+
+    @property
+    def __signature__(self):
+        return inspect.signature(self.__f)
 
     @__f.validator
     def check_f(self, attribute, value):
@@ -160,28 +186,6 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
     def __repr__(self):
         return repr(self.__f)
 
-    @property
-    def __module__(self):
-        return self.__f.__module__
-
-    @property
-    def __code__(self):
-        # We use __code__.co_argcount attribute in this Function class, so
-        # let's add this attribute to Function objects too so that we can wrap
-        # Function objects with Function class.
-        return _Code(self.__f.__code__.co_argcount - len(self.__args))
-
-    # @property
-    # def __annotations__(self):
-    #     return self.__f.__annotations__
-
-    @property
-    def __signature__(self):
-        return inspect.signature(self.__f)
-
-    @property
-    def __doc__(self):
-        return self.__f.__doc__
 
     def __get__(self, obj, objtype):
         """Support instance methods.

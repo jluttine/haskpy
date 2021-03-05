@@ -10,4 +10,6 @@
    :members:
    :special-members:
    :inherited-members:
+   :private-members:
    :undoc-members:
+   :show-inheritance:

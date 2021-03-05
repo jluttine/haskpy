@@ -28,6 +28,7 @@ ps.buildPythonPackage rec {
     toolz
     cytoolz
     importlib-metadata
+    numpydoc
   ];
 
 }

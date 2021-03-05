@@ -1,3 +1,7 @@
+"""Values with two possibilities
+
+"""
+
 import attr
 import hypothesis.strategies as st
 

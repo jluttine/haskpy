@@ -1,5 +1,14 @@
 """Profunctor optics
 
+.. currentmodule:: haskpy.optics
+
+.. autosummary::
+   :toctree:
+
+   adapter
+   lens
+   prism
+
 Resources:
 
 - Profunctor Optics: Modular Data Accessors by Pickering, Gibbons, and Wu

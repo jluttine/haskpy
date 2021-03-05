@@ -51,6 +51,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     "haskpy.autoclass",
+    "numpydoc",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -83,21 +84,36 @@ pygments_style = None
 # Generate autosummary pages automatically (sphinx-autogen)
 autosummary_generate = True
 
-# Whether to show `some.package.function` or just `function`
+# Whether to show `some.package.function` or just `function`. Unfortunately,
+# this doesn't affect the TOCs created by autosummary..
 add_module_names = False
+
+# For numpydoc options, see:
+# https://numpydoc.readthedocs.io/en/latest/install.html
+
+# Numpydoc toctree doesn't work nicely.. It doesn't follow the same filtering
+# as what Sphinx normally uses. So, one cannot remove test_*, assert_*,
+# sample_* methods from it. Also, one cannot add __eq__, __matmul__ and other
+# such methods to it. These can all be controlled for Sphinx itself, but for
+# some reason, numpydoc doesn't follow that. If we want a toctree, maybe create
+# it ourselves?
+numpydoc_class_members_toctree = False
+numpydoc_show_class_members = False
 
 autodoc_default_options = {
     # 'members': 'var1, var2',
-    'member-order': 'groupwise',
+    'member-order': 'alphabetical',
+    #'member-order': 'groupwise',
     #'member-order': 'bysource',
     #'special-members': None, #True, #'__init__',
-    # 'undoc-members': True,
+    'undoc-members': True,
     'exclude-members': ','.join([
-        '__base__',
+        '__attrs_attrs__',
         '__bases__',
         '__basicsize__',
         '__class__',
         '__delattr__',
+        '__doc__',
         '__dict__',
         '__dictoffset__',
         '__dir__',
@@ -123,7 +139,6 @@ autodoc_default_options = {
         '__subclasscheck__',
         '__subclasses__',
         '__subclasshook__',
-        '__test_eq__',
         '__text_signature__',
         '__weakref__',
         '__weakrefoffset__',

@@ -5,6 +5,9 @@
 
    typeclasses
    types
+   functions
+   utils
+   optics
 
 """
 

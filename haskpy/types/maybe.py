@@ -1,3 +1,29 @@
+"""Optional values
+
+Types:
+
+.. autosummary::
+   :toctree:
+
+    Maybe
+
+Data constructors:
+
+.. autosummary::
+   :toctree:
+
+    Nothing
+    Just
+
+Monad transformers:
+
+.. autosummary::
+   :toctree:
+
+    MaybeT
+
+"""
+
 import attr
 import hypothesis.strategies as st
 
@@ -165,9 +191,11 @@ class Maybe(
 
 
 Nothing = Maybe(lambda *, Nothing, Just: Nothing())
+"""Nada"""
 
 
 def Just(x):
+    """Just do it"""
     return Maybe(lambda *, Nothing, Just: Just(x))
 
 
