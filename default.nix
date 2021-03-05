@@ -13,6 +13,9 @@ ps.buildPythonPackage rec {
   name = "haskpy";
   doCheck = false;
   src = ./.;
+  postShellHook = ''
+    export PYTHONPATH=$(pwd):$PYTHONPATH
+  '';
   depsBuildBuild = with ps; [
     ipython
     pytest
