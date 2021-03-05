@@ -1,4 +1,4 @@
-"""A collection of useful simple monoids"""
+"""Simple monoids"""
 
 import attr
 import hypothesis.strategies as st
@@ -11,7 +11,6 @@ from haskpy.utils import (
     class_function,
     immutable,
     eq_test,
-    concrete_type,
 )
 
 
@@ -46,7 +45,7 @@ class Sum(Commutative, Monoid, Hashable, Eq):
 
 
 @immutable
-class And(Commutative, Monoid, Hashable, Eq):
+class All(Commutative, Monoid, Hashable, Eq):
 
     boolean = attr.ib()
 
@@ -55,17 +54,17 @@ class And(Commutative, Monoid, Hashable, Eq):
         return cls(True)
 
     def append(self, x):
-        return And(self.boolean and x.boolean)
+        return All(self.boolean and x.boolean)
 
     def __eq__(self, other):
         return self.boolean == other.boolean
 
     def __repr__(self):
-        return "And({})".format(repr(self.boolean))
+        return "All({})".format(repr(self.boolean))
 
     @class_function
     def sample_value(cls):
-        return st.booleans().map(And)
+        return st.booleans().map(All)
 
     sample_type = testing.sample_type_from_value()
     sample_eq_type = sample_type
@@ -76,7 +75,7 @@ class And(Commutative, Monoid, Hashable, Eq):
 
 
 @immutable
-class Or(Commutative, Monoid, Hashable, Eq):
+class Any(Commutative, Monoid, Hashable, Eq):
 
     boolean = attr.ib()
 
@@ -85,17 +84,17 @@ class Or(Commutative, Monoid, Hashable, Eq):
         return cls(False)
 
     def append(self, x):
-        return Or(self.boolean or x.boolean)
+        return Any(self.boolean or x.boolean)
 
     def __eq__(self, other):
         return self.boolean == other.boolean
 
     def __repr__(self):
-        return "Or({})".format(repr(self.boolean))
+        return "Any({})".format(repr(self.boolean))
 
     @class_function
     def sample_value(cls):
-        return st.booleans().map(Or)
+        return st.booleans().map(Any)
 
     sample_type = testing.sample_type_from_value()
     sample_eq_type = sample_type

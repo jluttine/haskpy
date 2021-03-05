@@ -1,9 +1,15 @@
-"""Types yey!
+"""A collection of types
 
 .. autosummary::
-   :toctree: _autosummary
+   :toctree:
 
-   List
+   maybe
+   either
+   list
+   linkedlist
+   identity
+   compose
+   monoids
 
 """
 from .maybe import Maybe, Just, Nothing, MaybeT
@@ -12,4 +18,4 @@ from .list import List
 from .linkedlist import LinkedList, Cons, Nil, iterate, repeat, replicate
 from .identity import Identity, IdentityT
 from .compose import Compose
-from .monoids import Sum, And, Or, String, Endo
+from .monoids import Sum, All, Any, String, Endo

@@ -2,16 +2,16 @@ from hypothesis import given
 import hypothesis.strategies as st
 
 from haskpy.utils import make_test_class
-from haskpy.types.monoids import Sum, And, Or, String, Endo
+from haskpy.types.monoids import Sum, All, Any, String, Endo
 from haskpy.functions import Function
 from haskpy import testing
 
 
 TestSum = make_test_class(Sum)
 
-TestAnd = make_test_class(And)
+TestAll = make_test_class(All)
 
-TestOr = make_test_class(Or)
+TestAny = make_test_class(Any)
 
 TestString = make_test_class(String)
 
