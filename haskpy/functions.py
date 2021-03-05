@@ -186,6 +186,13 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
     def __repr__(self):
         return repr(self.__f)
 
+    def __pow__(self, x):
+        # We need to implement __pow__ for Function objects because otherwise
+        # composing Function objects wouldn't be possible: If f and g are
+        # Function objects in f ** g, Python will try f.__pow__(g) and if it
+        # fails, it won't try g.__rpow__(f) because it already concluded that
+        # Function object doesn't support pow operation with a Function object.
+        return x.__rpow__(self)
 
     def __get__(self, obj, objtype):
         """Support instance methods.
