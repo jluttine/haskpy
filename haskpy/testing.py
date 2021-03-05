@@ -12,7 +12,7 @@ def types():
     # run the tests. Also, put simpler non-recursive strategies first:
     # https://hypothesis.readthedocs.io/en/latest/data.html#hypothesis.strategies.one_of
     return (
-        types.And,
+        types.All,
         hypothesis.HypothesisInteger,
         types.String,
         types.Maybe,
