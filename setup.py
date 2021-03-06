@@ -26,11 +26,11 @@ if __name__ == "__main__":
         install_requires=[
             "attrs",
             "importlib_metadata",
+            "hypothesis",
         ],
         extras_require={
             "dev": [
                 "pytest",
-                "hypothesis",
             ],
             "doc": [
                 "sphinx",
