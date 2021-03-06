@@ -3,13 +3,10 @@
 Hask is the category of types and functions in Haskell. This package provides
 classes and functions inspired by Hask.
 
-Documentation is available at https://jluttine.github.io/HaskPy/
+Documentation is available at [jluttine.github.io/haskpy](https://jluttine.github.io/haskpy/).
 
-![Test status](https://github.com/jluttine/HaskPy/actions/workflows/test.yml/badge.svg?branch=master)
-
-![Doc status](https://github.com/jluttine/HaskPy/actions/workflows/doc.yml/badge.svg)
-
-![Release](https://img.shields.io/pypi/v/HaskPy.svg)
+[![Test status](https://github.com/jluttine/haskpy/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/jluttine/haskpy/actions/workflows/test.yml)
+[![Release](https://img.shields.io/pypi/v/haskpy.svg)](https://pypi.org/project/haskpy/)
 
 
 ## Overview
