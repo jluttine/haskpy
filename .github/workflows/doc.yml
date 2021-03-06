@@ -30,5 +30,7 @@ jobs:
         cd build/html
         touch .nojekyll
         git add .
+        git config user.email '<>'
+        git config user.name 'GitHub Actions'
         git commit -m "Build GitHub Pages"
         git push
