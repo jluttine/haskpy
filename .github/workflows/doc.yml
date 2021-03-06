@@ -9,8 +9,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Check out the repository
+    - name: Check out the source repository
       uses: actions/checkout@v2
+    - name: Check out the branch for the docs
+      uses: actions/checkout@v2
+      with:
+        ref: 'gh-pages'
+        path: 'doc/build/html'
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -23,3 +28,7 @@ jobs:
         cd doc
         make html
         cd build/html
+        touch .nojekyll
+        git add .
+        git commit -m "Build GitHub Pages"
+        git push
