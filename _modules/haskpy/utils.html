@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.utils &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utilities</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree:</span>
+
+<span class="sd">   immutable</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">import</span> <span class="nn">hypothesis.strategies</span> <span class="k">as</span> <span class="nn">st</span>
+
+
+<div class="viewcode-block" id="immutable"><a class="viewcode-back" href="../../_autosummary/haskpy.utils.immutable.html#haskpy.utils.immutable">[docs]</a><span class="k">def</span> <span class="nf">immutable</span><span class="p">(</span><span class="n">maybe_cls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">attr</span><span class="o">.</span><span class="n">s</span><span class="p">(</span>
+        <span class="n">maybe_cls</span><span class="o">=</span><span class="n">maybe_cls</span><span class="p">,</span>
+        <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">eq</span><span class="o">=</span><span class="n">eq</span><span class="p">,</span>
+        <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="nb">str</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="nb">repr</span><span class="o">=</span><span class="nb">repr</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="n">C</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">C</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">decorator</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Base class for various decorators&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__doc__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__module__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__defaults__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__defaults__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__kwdefaults__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__kwdefaults__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__annotations__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__annotations__</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__code__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__code__</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__signature__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="c1"># The following properties are needed so that Sphinx recognizes (class)</span>
+    <span class="c1"># methods. Note that these properties don&#39;t exist for normal functions.</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__self__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__self__</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__func__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__func__</span>
+
+
+<span class="k">class</span> <span class="nc">class_function</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class method that isn&#39;t a method of the instances&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;</span><span class="si">{0}</span><span class="s2">&#39; object has no attribute &#39;</span><span class="si">{1}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">class_property</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class attribute that isn&#39;t an attribute of the instances</span>
+
+<span class="sd">    To access the docstring, use ``__dict__`` as</span>
+<span class="sd">    ``SomeClass.__dict__[&quot;some_attribute&quot;].__doc__``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;</span><span class="si">{0}</span><span class="s2">&#39; object has no attribute &#39;</span><span class="si">{1}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">abstract_function</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function that has no implementation yet&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;</span><span class="si">{0}</span><span class="s2">&#39; function is abstract&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">abstract_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__code__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__code__</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__signature__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">abstract_property</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Property that has no implementation yet</span>
+
+<span class="sd">    To access the property ``abstract_property`` object without raising</span>
+<span class="sd">    ``NotImplementedError``, use ``__dict__``. For instance, to access the</span>
+<span class="sd">    docstring:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        class Foo():</span>
+
+<span class="sd">            @abstract_property</span>
+<span class="sd">            def bar(self):</span>
+<span class="sd">                &#39;&#39;&#39;My docstring&#39;&#39;&#39;</span>
+
+<span class="sd">        Foo.__dict__[&quot;bar&quot;].__doc__</span>
+<span class="sd">        isinstance(Foo.__dict__[&quot;bar&quot;], abstract_property)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;</span><span class="si">{0}</span><span class="s2">&#39; attribute of type object &#39;</span><span class="si">{1}</span><span class="s2">&#39; is abstract&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
+            <span class="s2">&quot;&#39;</span><span class="si">{0}</span><span class="s2">&#39; attribute of object &#39;</span><span class="si">{1}</span><span class="s2">&#39; is abstract&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">abstract_class_property</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">abstract_property</span><span class="p">(</span><span class="n">class_function</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">abstract_class_function</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="c1"># Wrap the result gain with class_function so that we can recognize the</span>
+    <span class="c1"># result as a class function when building the documentation.. A bit ugly</span>
+    <span class="c1"># hack.. Probably there&#39;s a better way..</span>
+    <span class="k">return</span> <span class="n">abstract_function</span><span class="p">(</span><span class="n">class_function</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+
+<span class="nd">@immutable</span>
+<span class="k">class</span> <span class="nc">nonexisting_function</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Mark method non-existing</span>
+
+<span class="sd">    This is a workaround for Python forcefully creating some methods. One</span>
+<span class="sd">    cannot create objects that don&#39;t have ``__eq__``, ``__ge__``, ``__gt__``</span>
+<span class="sd">    and many other methods. They are there and it&#39;s not possible to delete</span>
+<span class="sd">    them. With this wrapper you can override those methods so that they won&#39;t</span>
+<span class="sd">    show up in ``__dir__`` listing and if accessed in any way,</span>
+<span class="sd">    ``AttributeError`` is raised. Note that it just hides the methods, one can</span>
+<span class="sd">    still access them as ``object.__getattribute__(obj, &quot;__eq__&quot;)``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">method</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
+    <span class="bp">cls</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="c1"># The method doesn&#39;t exist</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;No </span><span class="si">{0}</span><span class="s2"> function&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
+            <span class="s2">&quot;Class </span><span class="si">{0}</span><span class="s2"> has no </span><span class="si">{1}</span><span class="s2"> method&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">objtype</span><span class="p">):</span>
+        <span class="c1"># Bind the method to a class</span>
+        <span class="k">return</span> <span class="n">nonexisting_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">objtype</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">update_argspec</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="c1"># TODO: Instead of running getfullargspec after every partial evaluation,</span>
+    <span class="c1"># it might be faster to use the existing argspec and update that based on</span>
+    <span class="c1"># args and kwargs. However, the speed gains might be quite small and one</span>
+    <span class="c1"># needs to be very careful to implement exactly the same logic that Python</span>
+    <span class="c1"># itself uses. It is possible that this logic changes from one Python</span>
+    <span class="c1"># version to another, so it might become a maintenance nightmare. Still,</span>
+    <span class="c1"># perhaps worth at least checking.</span>
+    <span class="c1">#</span>
+    <span class="c1"># Below is just some sketching.</span>
+
+    <span class="n">no_varargs</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">varargs</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="n">nargs_takes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">nargs_given</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">nargs_remain</span> <span class="o">=</span> <span class="n">nargs_takes</span> <span class="o">-</span> <span class="n">nargs_given</span>
+    <span class="k">if</span> <span class="n">no_varargs</span> <span class="ow">and</span> <span class="n">nargs_remain</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;function takes </span><span class="si">{takes}</span><span class="s2"> positional argument but </span><span class="si">{given}</span><span class="s2"> were given&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">takes</span><span class="o">=</span><span class="n">nargs_takes</span><span class="p">,</span>
+                <span class="n">given</span><span class="o">=</span><span class="n">nargs_given</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">new_args</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">nargs_given</span><span class="p">:]</span>
+    <span class="n">new_defaults</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="o">-</span><span class="n">nargs_remain</span><span class="p">:]</span> <span class="k">if</span> <span class="n">nargs_remain</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="c1"># FIXME:</span>
+    <span class="n">new_kwonlyargs</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">kwonlyargs</span>
+    <span class="n">new_kwonlydefaults</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">kwonlydefaults</span>
+
+    <span class="k">return</span> <span class="n">inspect</span><span class="o">.</span><span class="n">FullArgSpec</span><span class="p">(</span>
+        <span class="n">args</span><span class="o">=</span><span class="n">new_args</span><span class="p">,</span>
+        <span class="n">varargs</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">varargs</span><span class="p">,</span>
+        <span class="n">varkw</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">varkw</span><span class="p">,</span>
+        <span class="n">defaults</span><span class="o">=</span><span class="n">new_defaults</span><span class="p">,</span>
+        <span class="n">kwonlyargs</span><span class="o">=</span><span class="n">new_kwonlyargs</span><span class="p">,</span>
+        <span class="n">kwonlydefaults</span><span class="o">=</span><span class="n">new_kwonlydefaults</span><span class="p">,</span>
+        <span class="c1"># FIXME: What to do with this?</span>
+        <span class="n">annotations</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">annotations</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">count_required_arguments</span><span class="p">(</span><span class="n">argspec</span><span class="p">):</span>
+
+    <span class="c1"># Positional arguments without defaults provided</span>
+    <span class="n">n_args</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">argspec</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span>
+        <span class="mi">0</span> <span class="k">if</span> <span class="n">argspec</span><span class="o">.</span><span class="n">defaults</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">argspec</span><span class="o">.</span><span class="n">defaults</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Positional required arguments may get into required keyword</span>
+    <span class="c1"># argument position if some positional arguments before them are</span>
+    <span class="c1"># given as keyword arguments. For instance:</span>
+    <span class="c1">#</span>
+    <span class="c1">#   curry(lambda x, y: x - y)(x=5)</span>
+    <span class="c1">#</span>
+    <span class="c1"># Now, y becomes a keyword argument but it&#39;s still required as it</span>
+    <span class="c1"># doesn&#39;t have any default value. Handle this by looking at</span>
+    <span class="c1"># kwonlyargs that don&#39;t have a value in kwonlydefaults.</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">set</span><span class="p">()</span> <span class="k">if</span> <span class="n">argspec</span><span class="o">.</span><span class="n">kwonlydefaults</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
+        <span class="nb">set</span><span class="p">(</span><span class="n">argspec</span><span class="o">.</span><span class="n">kwonlydefaults</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="p">)</span>
+    <span class="n">kws</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">argspec</span><span class="o">.</span><span class="n">kwonlyargs</span><span class="p">)</span>
+    <span class="n">n_kw</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">kws</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">defaults</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">n_args</span> <span class="o">+</span> <span class="n">n_kw</span>
+
+
+<span class="nd">@immutable</span>
+<span class="k">class</span> <span class="nc">Wrapped</span><span class="p">():</span>
+
+
+    <span class="sd">&quot;&quot;&quot;Original function that provides metainformation&quot;&quot;&quot;</span>
+    <span class="n">__unwrapped</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
+
+
+    <span class="sd">&quot;&quot;&quot;Wrapped function that is actually called&quot;&quot;&quot;</span>
+    <span class="n">__wrapped</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__module__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unwrapped</span><span class="o">.</span><span class="vm">__module__</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__signature__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__unwrapped</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__doc__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unwrapped</span><span class="o">.</span><span class="vm">__doc__</span>
+
+
+<span class="k">def</span> <span class="nf">wraps</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simple wrapping function similar to functools.wraps</span>
+
+<span class="sd">    Aims to be a bit simpler and faster, but not sure about it. Experimenting</span>
+<span class="sd">    at the moment.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Wrapped</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrap</span>
+
+
+<span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;a -&gt; a&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+
+<span class="k">class</span> <span class="nc">PerformanceWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@st</span><span class="o">.</span><span class="n">composite</span>
+<span class="k">def</span> <span class="nf">draw_args</span><span class="p">(</span><span class="n">draw</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">))</span>
+
+
+<span class="nd">@st</span><span class="o">.</span><span class="n">composite</span>
+<span class="k">def</span> <span class="nf">sample_type</span><span class="p">(</span><span class="n">draw</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">types1</span><span class="o">=</span><span class="p">[],</span> <span class="n">types2</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">types</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide at least one concrete type&quot;</span><span class="p">)</span>
+    <span class="n">arg</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">deferred</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">sample_type</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">types1</span><span class="p">,</span> <span class="n">types2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">draw</span><span class="p">(</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">one_of</span><span class="p">(</span>
+            <span class="c1"># Concrete types</span>
+            <span class="o">*</span><span class="p">[</span><span class="n">st</span><span class="o">.</span><span class="n">just</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">types</span><span class="p">],</span>
+            <span class="c1"># One-argument type constructors</span>
+            <span class="o">*</span><span class="p">[</span>
+                <span class="n">draw_args</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">t1</span> <span class="ow">in</span> <span class="n">types1</span>
+            <span class="p">],</span>
+            <span class="c1"># Two-argument type constructors</span>
+            <span class="o">*</span><span class="p">[</span>
+                <span class="n">draw_args</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">t2</span> <span class="ow">in</span> <span class="n">types2</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">sample_sized</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">e</span> <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">tuples</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="p">[</span><span class="n">e</span><span class="p">]))</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">eq_test</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">eq</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;__eq_test__&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">eq</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">assert_output</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assert that the output pair elements are equal&quot;&quot;&quot;</span>
+
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">assert</span> <span class="n">eq_test</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">return</span> <span class="n">wrapped</span>
+
+
+<span class="nd">@singleton</span>
+<span class="nd">@immutable</span>
+<span class="k">class</span> <span class="nc">universal_set</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Universal set is a set that contains all objects&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">make_test_class</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">typeclasses</span><span class="o">=</span><span class="n">universal_set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a PyTest-compatible test class</span>
+
+<span class="sd">    In order to test only some typeclass laws, give the set of typeclasses as</span>
+<span class="sd">    ``typeclasses`` argument.</span>
+
+<span class="sd">    When PyTest runs tests on a class, it creates an instance of the class and</span>
+<span class="sd">    tests the instance. The class shouldn&#39;t have __init__ method. However, we</span>
+<span class="sd">    want to test class methods, so there&#39;s no need to create an instance in the</span>
+<span class="sd">    first place and it&#39;s ok to have any kind of __init__ method. To work around</span>
+<span class="sd">    this PyTest limitation, we crete a class which doesn&#39;t have __init__ and</span>
+<span class="sd">    when you call it&#39;s constructor, you actually don&#39;t get an instance of that</span>
+<span class="sd">    class but instead the class that we wanted to test in the first place.</span>
+<span class="sd">    PyTest thinks it got an instance of the class but actually we just gave it</span>
+<span class="sd">    a class.</span>
+
+<span class="sd">    So, to run the class method tests for a class SomeClass, add the following</span>
+<span class="sd">    to some ``test_`` prefixed module:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        TestSomeClass = make_test_class(SomeClass)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">classes</span> <span class="o">=</span> <span class="p">{</span><span class="bp">cls</span> <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">C</span><span class="o">.</span><span class="n">mro</span><span class="p">()</span> <span class="k">if</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">typeclasses</span><span class="p">}</span>
+
+    <span class="n">test_methods</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">method</span>
+        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span>
+        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">dct</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">test_methods</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="nc">MetaTestClass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+
+        <span class="vm">__dict__</span> <span class="o">=</span> <span class="n">dct</span>
+
+    <span class="k">class</span> <span class="nc">TestClass</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">MetaTestClass</span><span class="p">):</span>
+
+        <span class="vm">__dict__</span> <span class="o">=</span> <span class="n">dct</span>
+
+        <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">TestClass</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

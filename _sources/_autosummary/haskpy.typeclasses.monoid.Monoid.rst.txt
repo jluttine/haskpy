@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.monoid.Monoid
+   :noindex:
+
+Monoid
+================================
+
+.. currentmodule:: haskpy.typeclasses.monoid
+
+.. autoclass:: Monoid
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

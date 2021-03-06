@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.contravariant.Contravariant
+   :noindex:
+
+Contravariant
+==============================================
+
+.. currentmodule:: haskpy.typeclasses.contravariant
+
+.. autoclass:: Contravariant
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,6 @@
+haskpy.types.linkedlist
+=======================
+
+.. currentmodule:: haskpy.types.linkedlist
+
+.. automodule:: haskpy.types.linkedlist

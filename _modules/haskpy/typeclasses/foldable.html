@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses.foldable &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.typeclasses.foldable</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span><span class="p">,</span> <span class="n">filterwarnings</span><span class="p">,</span> <span class="n">catch_warnings</span>
+<span class="kn">import</span> <span class="nn">hypothesis.strategies</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">given</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">identity</span><span class="p">,</span>
+    <span class="n">PerformanceWarning</span><span class="p">,</span>
+    <span class="n">assert_output</span><span class="p">,</span>
+    <span class="n">class_function</span><span class="p">,</span>
+    <span class="n">abstract_class_function</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+<span class="kn">from</span> <span class="nn">.typeclass</span> <span class="kn">import</span> <span class="n">Type</span>
+
+
+<div class="viewcode-block" id="Foldable"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable">[docs]</a><span class="k">class</span> <span class="nc">Foldable</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Foldable typeclass</span>
+
+<span class="sd">    Strictly minimal complete definition:</span>
+
+<span class="sd">    - ``fold_map`` or ``foldl`` or ``foldr``</span>
+
+<span class="sd">    Recommended minimal complete definition:</span>
+
+<span class="sd">    - ``foldl``</span>
+
+<span class="sd">    - ``foldr``</span>
+
+<span class="sd">    - ``to_iter``</span>
+
+<span class="sd">    - ``length``</span>
+
+<span class="sd">    If default implementation is used for any of those, a performance warning</span>
+<span class="sd">    is raised.</span>
+
+<span class="sd">    It is very strongly recommended to implement both ``foldl`` and ``foldr``</span>
+<span class="sd">    because the default implementations won&#39;t scale up in Python. Also,</span>
+<span class="sd">    ``to_iter`` is strongly recommended as many other methods rely on that and</span>
+<span class="sd">    the default implementation is slow.</span>
+
+<span class="sd">    Note that ``foldl`` and ``foldr`` are sequential, but ``fold_map`` could be</span>
+<span class="sd">    parallelized because it uses monoids. Thus, if parallelized implementation</span>
+<span class="sd">    is needed, then also ``fold_map`` should be implemented.</span>
+
+<span class="sd">    The default implementations are defined in circular fashion so that only</span>
+<span class="sd">    one of ``fold_map``, ``foldl`` and ``foldr`` is strictly needed:</span>
+<span class="sd">    ``fold_map`` uses ``foldl``, which uses ``foldr``, which uses ``fold_map``.</span>
+<span class="sd">    But as said, instance implementations of at least both ``foldl`` and</span>
+<span class="sd">    ``foldr`` are strongly recommended.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    In Haskell, Data.Set is Foldable, but not a Functor</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Foldable.fold_map"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.fold_map">[docs]</a>    <span class="k">def</span> <span class="nf">fold_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Monoid m =&gt; t a -&gt; (a -&gt; m) -&gt; m (ignoring ``monoid`` argument)</span>
+
+<span class="sd">        The default implementation is based on ``foldl`` (or, if not</span>
+<span class="sd">        implemented, recursively on ``foldr``). Thus, all possibilities for</span>
+<span class="sd">        parallelism is lost.</span>
+
+<span class="sd">        ``monoid`` is the monoidic class of the values inside the foldable. It</span>
+<span class="sd">        is only used to determine the identity value.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># In principle, we could just deduce the monoid class from the values</span>
+        <span class="c1"># inside the container. But that doesn&#39;t work when the container is</span>
+        <span class="c1"># empty (although it works in Haskell because of the smart type</span>
+        <span class="c1"># system). Thus, we need to pass the monoid class explicitly. It&#39;s more</span>
+        <span class="c1"># consistent to require it always than just when the container is</span>
+        <span class="c1"># empty. If we had guaranteed non-empty containers, then the class</span>
+        <span class="c1"># could be inferred from the values inside.</span>
+        <span class="c1">#</span>
+        <span class="c1"># NOTE: foldl and foldr are sequential because they cannot assume</span>
+        <span class="c1"># initial is empty. But fold_map can be parallelized. Thus, we cannot</span>
+        <span class="c1"># use foldl nor foldr here.</span>
+
+        <span class="c1"># NOTE: fold_map should also work for infinite lists! This works in</span>
+        <span class="c1"># Haskell:</span>
+        <span class="c1">#</span>
+        <span class="c1"># foldMap id (repeat (Any True))</span>
+
+        <span class="c1"># FIXME: THIS DEFAULT IMPLEMENTATION ISN&#39;T CORRECT BECAUSE IT DOESN&#39;T</span>
+        <span class="c1"># WORK ON INFINITE LISTS. IN HASKELL:</span>
+        <span class="c1">#</span>
+        <span class="c1"># myfoldr combine initial xs = (foldl (\f -&gt; \a -&gt; (f . (\b -&gt; combine a b))) id xs) initial</span>
+        <span class="c1">#</span>
+        <span class="c1"># myfoldr const 2 [0..]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">foldl</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+            <span class="n">monoid</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Foldable.foldl"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.foldl">[docs]</a>    <span class="k">def</span> <span class="nf">foldl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;t a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</span>
+
+<span class="sd">        The default implementation is based on ``foldr`` (or, if not</span>
+<span class="sd">        implemented, recursively on ``fold_map``). Either way, the default</span>
+<span class="sd">        implementation doesn&#39;t scale up well, so an instance implementation is</span>
+<span class="sd">        strongly recommended.</span>
+
+<span class="sd">        Intuition:</span>
+
+<span class="sd">        - equivalent to for-loop on lists</span>
+
+<span class="sd">        - never works on infinite lists (so not possible to implement ``map``</span>
+<span class="sd">          in terms of ``foldl``)</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        `Tony Morris - An Intuition for List Folds</span>
+<span class="sd">        &lt;https://www.youtube.com/watch?v=GPwtT31zKRY&gt;`_</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># NOTE: An intuitive trivial implementation would be as follows, but</span>
+        <span class="c1"># that is incorrect:</span>
+        <span class="c1">#</span>
+        <span class="c1">#   return self.foldr(lambda a, b: combine(b, a), initial)</span>
+        <span class="c1">#</span>
+        <span class="c1"># It&#39;s wrong because it results in reversed order for the values in the</span>
+        <span class="c1"># container:</span>
+        <span class="c1">#</span>
+        <span class="c1"># &gt;&gt;&gt; List(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;).foldl(lambda a, b: &quot;({0}+{1})&quot;.format(a, b), &quot;x&quot;)</span>
+        <span class="c1"># &#39;(((x+c)+b)+a)&#39;</span>
+        <span class="c1">#</span>
+        <span class="c1"># The correct answer is:</span>
+        <span class="c1">#</span>
+        <span class="c1"># &#39;(((x+a)+b)+c)&#39;</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">compose</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Using default implementation of foldl&quot;</span><span class="p">,</span> <span class="n">PerformanceWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">foldr</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">combine</span><span class="p">(</span><span class="n">b</span><span class="p">)(</span><span class="n">a</span><span class="p">)),</span>
+            <span class="n">identity</span><span class="p">,</span>
+        <span class="p">)(</span><span class="n">initial</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Foldable.foldr"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.foldr">[docs]</a>    <span class="k">def</span> <span class="nf">foldr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;t a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            The default is very poor in Python. It is strongly recommended to</span>
+<span class="sd">            provide an instance implementation for this.</span>
+
+<span class="sd">        The default implementation uses ``fold_map`` by utilizing</span>
+<span class="sd">        (endo)function monoid:</span>
+
+<span class="sd">          empty :: b -&gt; b</span>
+
+<span class="sd">          append :: (b -&gt; b) -&gt; (b -&gt; b) -&gt; (b -&gt; b)</span>
+
+<span class="sd">        One can see ``combine`` function as a transformation to this monoid:</span>
+
+<span class="sd">          combine :: a -&gt; (b -&gt; b)</span>
+
+<span class="sd">        Then, just use endofunction monoid to compose all those ``b -&gt; b``</span>
+<span class="sd">        endofunctions into a single endofunction ``b -&gt; b``. Finally, apply</span>
+<span class="sd">        this function to the initial value.</span>
+
+<span class="sd">        Intuition:</span>
+
+<span class="sd">        - performs constructor replacement</span>
+
+<span class="sd">        - may work on infinite lists</span>
+
+<span class="sd">        - doesn&#39;t &quot;calculate from the right&quot; but associates to the right</span>
+<span class="sd">          (otherwise it couldn&#39;t work on infinite lists)</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        `Tony Morris - An Intuition for List Folds</span>
+<span class="sd">        &lt;https://www.youtube.com/watch?v=GPwtT31zKRY&gt;`_</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">haskpy.types.monoids</span> <span class="kn">import</span> <span class="n">Endo</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Using default implementation of foldr&quot;</span><span class="p">,</span> <span class="n">PerformanceWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fold_map</span><span class="p">(</span>
+            <span class="n">Endo</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Endo</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">combine</span><span class="p">(</span><span class="n">x</span><span class="p">)(</span><span class="n">y</span><span class="p">)),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">app_endo</span><span class="p">(</span><span class="n">initial</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Foldable.fold"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.fold">[docs]</a>    <span class="k">def</span> <span class="nf">fold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">monoid</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fold_map</span><span class="p">(</span><span class="n">monoid</span><span class="p">,</span> <span class="n">identity</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Foldable.fold2"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.fold2">[docs]</a>    <span class="k">def</span> <span class="nf">fold2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">monoid</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fold_map</span><span class="p">(</span><span class="n">monoid</span><span class="p">,</span> <span class="n">identity</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Foldable.to_iter"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.to_iter">[docs]</a>    <span class="k">def</span> <span class="nf">to_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;t a -&gt; Iter a</span>
+
+<span class="sd">        Instead of to_list (as in Haskell), let&#39;s provide to_iter. With</span>
+<span class="sd">        iterables, we can write efficient implementations for many other</span>
+<span class="sd">        methods (e.g., sum, elem) even for large or sometimes infinite</span>
+<span class="sd">        foldables.</span>
+
+<span class="sd">        The default implementation isn&#39;t very efficient as it uses folding to</span>
+<span class="sd">        construct the iterator.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Using default implementation of to_iter&quot;</span><span class="p">,</span> <span class="n">PerformanceWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">foldl</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">acc</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,)),</span>
+            <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Foldable.head"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.head">[docs]</a>    <span class="k">def</span> <span class="nf">head</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return head (or default if no head): ``f a -&gt; a -&gt; a``&quot;&quot;&quot;</span>
+        <span class="c1"># FIXME? Or flip const?</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">foldr</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Foldable.length"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;t a -&gt; int</span>
+
+<span class="sd">        The default implementation isn&#39;t very efficient as it traverses through</span>
+<span class="sd">        the iterator.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Using default implementation of length&quot;</span><span class="p">,</span> <span class="n">PerformanceWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_iter</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Foldable.sum"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.sum">[docs]</a>    <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;t a -&gt; number&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_iter</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Foldable.null"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.null">[docs]</a>    <span class="k">def</span> <span class="nf">null</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;t a -&gt; bool&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_iter</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Foldable.elem"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.elem">[docs]</a>    <span class="k">def</span> <span class="nf">elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;t a -&gt; a -&gt; bool&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_iter</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Foldable.__iter__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.__iter__">[docs]</a>    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override to_iter if you want to change the default implementation&quot;&quot;&quot;</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_iter</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Foldable.__len__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.__len__">[docs]</a>    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override length if you want to change the default implementation&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Foldable.__contains__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable.__contains__">[docs]</a>    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override elem if you want to change the default implementation&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">elem</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO:</span>
+    <span class="c1">#</span>
+    <span class="c1"># - maximum</span>
+    <span class="c1"># - minimum</span>
+    <span class="c1"># - product</span>
+    <span class="c1"># - to_list</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Sampling methods for property tests</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@abstract_class_function</span>
+    <span class="k">def</span> <span class="nf">sample_foldable_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstract_class_function</span>
+    <span class="k">def</span> <span class="nf">sample_foldable_functor_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Needed only for subclasses of both Foldable and Functor&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test Foldable laws</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_fold_map</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="c1"># The default implementation defines the law (with respect to other</span>
+        <span class="c1"># methods)</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">fold_map</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Foldable</span><span class="o">.</span><span class="n">fold_map</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">fold_map</span><span class="p">(</span><span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span>
+            <span class="n">fold_map</span><span class="p">(</span><span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">xs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_fold_map</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="kn">from</span> <span class="nn">haskpy.typeclasses</span> <span class="kn">import</span> <span class="n">Monoid</span>
+        <span class="n">monoid</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_class</span><span class="p">(</span><span class="n">Monoid</span><span class="p">))</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">monoid</span><span class="o">.</span><span class="n">sample_monoid_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_fold_map</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_foldr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="c1"># The default implementation defines the law (with respect to other</span>
+        <span class="c1"># methods)</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">foldr</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Foldable</span><span class="o">.</span><span class="n">foldr</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">),</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">foldr</span><span class="p">(</span><span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">),</span>
+            <span class="n">foldr</span><span class="p">(</span><span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">xs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_foldr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">)))</span>
+        <span class="n">initial</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PerformanceWarning</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_foldr</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_foldl</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="c1"># The default implementation defines the law (with respect to other</span>
+        <span class="c1"># methods)</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">foldl</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Foldable</span><span class="o">.</span><span class="n">foldl</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">),</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">foldl</span><span class="p">(</span><span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">),</span>
+            <span class="n">foldl</span><span class="p">(</span><span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">xs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_foldl</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">initial</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">)))</span>
+
+        <span class="k">with</span> <span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PerformanceWarning</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_foldl</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_fold</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">monoid</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">fold</span>
+        <span class="c1"># The default implementation defines the law (with respect to other</span>
+        <span class="c1"># methods)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Foldable</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">monoid</span><span class="p">),</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="n">monoid</span><span class="p">),</span>
+            <span class="n">fold</span><span class="p">(</span><span class="n">monoid</span><span class="p">,</span> <span class="n">xs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_fold</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="kn">from</span> <span class="nn">haskpy.typeclasses</span> <span class="kn">import</span> <span class="n">Monoid</span>
+        <span class="n">monoid</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_class</span><span class="p">(</span><span class="n">Monoid</span><span class="p">))</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">monoid</span><span class="o">.</span><span class="n">sample_monoid_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_fold</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">monoid</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_length</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">):</span>
+        <span class="c1"># The default implementation defines the law (with respect to other</span>
+        <span class="c1"># methods)</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">length</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Foldable</span><span class="o">.</span><span class="n">length</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span>
+            <span class="n">length</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_length</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PerformanceWarning</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_length</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_null</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">):</span>
+        <span class="c1"># The default implementation defines the law (with respect to other</span>
+        <span class="c1"># methods)</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">null</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Foldable</span><span class="o">.</span><span class="n">null</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">null</span><span class="p">(),</span>
+            <span class="n">null</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_null</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PerformanceWarning</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_null</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_sum</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">):</span>
+        <span class="c1"># The default implementation defines the law (with respect to other</span>
+        <span class="c1"># methods)</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="nb">sum</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Foldable</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+            <span class="nb">sum</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_sum</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_type</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">()))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PerformanceWarning</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_sum</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_elem</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="c1"># The default implementation defines the law (with respect to other</span>
+        <span class="c1"># methods)</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">elem</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Foldable</span><span class="o">.</span><span class="n">elem</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span>
+            <span class="n">e</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">,</span>
+            <span class="n">elem</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">xs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_elem</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PerformanceWarning</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_elem</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_foldable_functor</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="c1"># Functor and foldable instances should be consistent</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">fold_map</span><span class="p">(</span><span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="n">monoid</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_foldable_functor</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">.functor</span> <span class="kn">import</span> <span class="n">Functor</span>
+        <span class="kn">import</span> <span class="nn">pytest</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">Functor</span><span class="p">):</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> not Functor&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+        <span class="c1"># Draw types</span>
+        <span class="kn">from</span> <span class="nn">haskpy.typeclasses</span> <span class="kn">import</span> <span class="n">Monoid</span>
+        <span class="n">monoid</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_class</span><span class="p">(</span><span class="n">Monoid</span><span class="p">))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">monoid</span><span class="o">.</span><span class="n">sample_monoid_type</span><span class="p">())</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_foldable_functor_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_foldable_functor</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">monoid</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<span class="c1"># Foldable-related functions are defined in function module because of circular</span>
+<span class="c1"># dependency.</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

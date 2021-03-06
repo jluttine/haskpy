@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.hashable.Hashable
+   :noindex:
+
+Hashable
+====================================
+
+.. currentmodule:: haskpy.typeclasses.hashable
+
+.. autoclass:: Hashable
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

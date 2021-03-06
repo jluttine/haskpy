@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cocartesian &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Semigroup" href="haskpy.typeclasses.semigroup.Semigroup.html" />
+    <link rel="prev" title="Cartesian" href="haskpy.typeclasses.cartesian.Cartesian.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="py data">
+<dt>
+<code class="sig-prename descclassname"><span class="pre">haskpy.typeclasses.cocartesian.</span></code><code class="sig-name descname"><span class="pre">Cocartesian</span></code></dt>
+<dd></dd></dl>
+
+<div class="section" id="cocartesian">
+<h1>Cocartesian<a class="headerlink" href="#cocartesian" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Cocartesian</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/cocartesian.html#Cocartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.profunctor.Profunctor.html#haskpy.typeclasses.profunctor.Profunctor" title="haskpy.typeclasses.profunctor.Profunctor"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.profunctor.Profunctor</span></code></a></p>
+<p>Cocartesian profunctor</p>
+<p>Perhaps better known as Choice in Haskell:</p>
+<p><a class="reference external" href="https://hackage.haskell.org/package/profunctors-5.2/docs/Data-Profunctor-Choice.html">https://hackage.haskell.org/package/profunctors-5.2/docs/Data-Profunctor-Choice.html</a></p>
+<p>I decided to use name Cocartesian because that was used in the profunctor
+optics paper.</p>
+<p>Minimal complete definition: <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">|</span> <span class="pre">right</span></code>.</p>
+<dl class="py method">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian.__rpow__">
+<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian.__rpow__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
+<p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not typically used as often as multiplication or addition so
+less risk of confusion.</p></li>
+<li><p>It’s not commutative operator as isn’t lifting either.</p></li>
+<li><p>The two operands have very different roles. They are not at the same
+“level”.</p></li>
+<li><p>The right operand is “higher”, that is, it’s inside a structure and
+the left operand is kind of “raised to the power” of the second
+operand, where the “power” is the functorial structure.</p></li>
+<li><p>The same operand is also used for function composition because
+function composition is just mapping. Visually the symbol can be
+seen as chaining two stars similarly as function composition chains
+two functions.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian.contramap">
+<code class="sig-name descname"><span class="pre">contramap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian.contramap" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; p b c -&gt; p a c</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian.contrareplace">
+<code class="sig-name descname"><span class="pre">contrareplace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian.contrareplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>f b -&gt; b -&gt; f a</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian.dimap">
+<code class="sig-name descname"><span class="pre">dimap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian.dimap" title="Permalink to this definition">¶</a></dt>
+<dd><p>p b c -&gt; (a -&gt; b) -&gt; (c -&gt; d) -&gt; p a d</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian.left">
+<code class="sig-name descname"><span class="pre">left</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/cocartesian.html#Cocartesian.left"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian.left" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian.map">
+<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>(b -&gt; c) -&gt; p a b -&gt; p a c</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian.replace">
+<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Haskell ($&gt;) operator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.cocartesian.Cocartesian.right">
+<code class="sig-name descname"><span class="pre">right</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/cocartesian.html#Cocartesian.right"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.cocartesian.Cocartesian.right" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.functions.html">haskpy.functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.typeclasses.html">haskpy.typeclasses</a><ul>
+      <li>Previous: <a href="haskpy.typeclasses.cartesian.Cartesian.html" title="previous chapter">Cartesian</a></li>
+      <li>Next: <a href="haskpy.typeclasses.semigroup.Semigroup.html" title="next chapter">Semigroup</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.typeclasses.cocartesian.Cocartesian.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

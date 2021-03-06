@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.monad.Monad
+   :noindex:
+
+Monad
+==============================
+
+.. currentmodule:: haskpy.typeclasses.monad
+
+.. autoclass:: Monad
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

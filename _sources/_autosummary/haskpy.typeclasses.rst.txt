@@ -1,0 +1,6 @@
+﻿haskpy.typeclasses
+==================
+
+.. currentmodule:: haskpy.typeclasses
+
+.. automodule:: haskpy.typeclasses

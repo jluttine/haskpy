@@ -1,0 +1,6 @@
+haskpy.optics.prism
+===================
+
+.. currentmodule:: haskpy.optics
+
+.. autofunction:: prism

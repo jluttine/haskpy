@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.profunctor.Profunctor
+   :noindex:
+
+Profunctor
+========================================
+
+.. currentmodule:: haskpy.typeclasses.profunctor
+
+.. autoclass:: Profunctor
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

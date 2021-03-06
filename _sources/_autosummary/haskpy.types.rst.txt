@@ -1,0 +1,6 @@
+﻿haskpy.types
+============
+
+.. currentmodule:: haskpy.types
+
+.. automodule:: haskpy.types

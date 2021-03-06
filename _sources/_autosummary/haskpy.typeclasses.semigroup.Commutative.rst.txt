@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.semigroup.Commutative
+   :noindex:
+
+Commutative
+========================================
+
+.. currentmodule:: haskpy.typeclasses.semigroup
+
+.. autoclass:: Commutative
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

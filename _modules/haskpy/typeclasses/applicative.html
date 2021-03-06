@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses.applicative &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.typeclasses.applicative</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">given</span>
+<span class="kn">import</span> <span class="nn">hypothesis.strategies</span> <span class="k">as</span> <span class="nn">st</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="n">identity</span><span class="p">,</span> <span class="n">assert_output</span>
+<span class="kn">from</span> <span class="nn">.functor</span> <span class="kn">import</span> <span class="n">Functor</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+<span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">class_function</span><span class="p">,</span>
+    <span class="n">abstract_class_function</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Applicative"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative">[docs]</a><span class="k">class</span> <span class="nc">Applicative</span><span class="p">(</span><span class="n">Functor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Must define at least pure and either apply or apply_to</span>
+
+<span class="sd">    The required Functor methods are given defaults based on the required</span>
+<span class="sd">    Applicative methods.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Applicative.pure"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.pure">[docs]</a>    <span class="nd">@abstract_class_function</span>
+    <span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;a -&gt; m a&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Applicative.apply"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;m a -&gt; m (a -&gt; b) -&gt; m b</span>
+
+<span class="sd">        Default implementation is based on ``apply_to``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Applicative.apply_to"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;f (a -&gt; b) -&gt; f a -&gt; f b</span>
+
+<span class="sd">        Default implementation is based on ``apply``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Applicative.sequence"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.sequence">[docs]</a>    <span class="k">def</span> <span class="nf">sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;f a -&gt; f b -&gt; f b&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="n">identity</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">identity</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Applicative.map"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.map">[docs]</a>    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;m a -&gt; (a -&gt; b) -&gt; m b</span>
+
+<span class="sd">        Default implementation is based on ``apply``:</span>
+
+<span class="sd">        self :: m a</span>
+
+<span class="sd">        f :: a -&gt; b</span>
+
+<span class="sd">        pure f :: m (a -&gt; b)</span>
+
+<span class="sd">        apply :: m a -&gt; m (a -&gt; b) -&gt; m b</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Default implementation for Functor based on Applicative</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">mf</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Applicative.__matmul__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.__matmul__">[docs]</a>    <span class="k">def</span> <span class="fm">__matmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Application operand ``@`` applies similarly as ``&lt;*&gt;`` in Haskell</span>
+
+<span class="sd">        ``f @ x`` translates to ``f.apply_to(x)``, ``x.apply(f)`` and</span>
+<span class="sd">        ``apply(f, x)``.</span>
+
+<span class="sd">        Why ``@`` operator?</span>
+
+<span class="sd">        - It&#39;s not typically used as often as some other more common operators</span>
+<span class="sd">          so less risk for confusion.</span>
+
+<span class="sd">        - The operator is not a commutative as isn&#39;t ``apply`` either.</span>
+
+<span class="sd">        - If we see matrix as some structure, then matrix multiplication takes</span>
+<span class="sd">          both left and right operand inside this structure and gives a result</span>
+<span class="sd">          also inside this structure, similarly as ``apply`` does. So it&#39;s an</span>
+<span class="sd">          operator for two operands having a similar structure.</span>
+
+<span class="sd">        - The operator evaluates the contained function(s) at the contained</span>
+<span class="sd">          value(s). Thus, ``f`` &quot;at&quot; ``x`` makes perfect sense.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Applicative.__rshift__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.__rshift__">[docs]</a>    <span class="k">def</span> <span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sequence with``&gt;&gt;`` similarly as with ``*&gt;`` and ``&gt;&gt;`` in Haskell&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Sampling methods for property tests</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@abstract_class_function</span>
+    <span class="k">def</span> <span class="nf">sample_applicative_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sample an applicative type</span>
+
+<span class="sd">        Note that it would be tempting to define:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            def sample_functor_type(cls, a):</span>
+<span class="sd">                return cls.sample_applicative_type(a)</span>
+
+<span class="sd">        But we can have classes that are applicatives only if some of their</span>
+<span class="sd">        arguments are applicative too. For instance, MaybeT(cls, x) is</span>
+<span class="sd">        functor/applicative/monad only if cls is. So, we need to have a</span>
+<span class="sd">        separate sample_functor_type method.</span>
+
+<span class="sd">        But then, how do we make sure that the sampled applicative type is also</span>
+<span class="sd">        a functor? For instance, a pathological case could be such that</span>
+<span class="sd">        sample_functor_ype returns something completely different type than</span>
+<span class="sd">        sample_applicative_type. I suppose we just have to leave that as a</span>
+<span class="sd">        responsibility for the user that sample methods are implemented</span>
+<span class="sd">        correctly/consistently.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Test typeclass laws</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_applicative_identity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">v</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">identity</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_applicative_identity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_applicative_identity</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_applicative_composition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">compose</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">w</span><span class="p">)),</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">compose</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">w</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_applicative_composition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">)))</span>
+        <span class="n">fbc</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fbc</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_applicative_composition</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_applicative_homomorphism</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_applicative_homomorphism</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_applicative_homomorphism</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_applicative_interchange</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_applicative_interchange</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">)))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_applicative_interchange</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test laws based on default implementations</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_applicative_apply</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">apply</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">u</span><span class="p">),</span>
+            <span class="n">apply</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_applicative_apply</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">)))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_applicative_apply</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_applicative_sequence</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">sequence</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Applicative</span><span class="o">.</span><span class="n">sequence</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">sequence</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="n">sequence</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_applicative_sequence</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="n">fb</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fb</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_applicative_sequence</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_applicative_map</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span>
+            <span class="n">Applicative</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_applicative_map</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test consistency between Applicative and Functor implementations&quot;&quot;&quot;</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_applicative_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_applicative_map</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<span class="c1"># Applicative-related functions are defined in function module because of</span>
+<span class="c1"># circular dependency.</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

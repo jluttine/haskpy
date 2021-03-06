@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.applicative.Applicative
+   :noindex:
+
+Applicative
+==========================================
+
+.. currentmodule:: haskpy.typeclasses.applicative
+
+.. autoclass:: Applicative
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

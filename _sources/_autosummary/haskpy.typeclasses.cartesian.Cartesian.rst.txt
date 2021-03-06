@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.cartesian.Cartesian
+   :noindex:
+
+Cartesian
+======================================
+
+.. currentmodule:: haskpy.typeclasses.cartesian
+
+.. autoclass:: Cartesian
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

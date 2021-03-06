@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.foldable.Foldable
+   :noindex:
+
+Foldable
+====================================
+
+.. currentmodule:: haskpy.typeclasses.foldable
+
+.. autoclass:: Foldable
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

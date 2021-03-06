@@ -1,0 +1,6 @@
+﻿haskpy.functions
+================
+
+.. currentmodule:: haskpy.functions
+
+.. automodule:: haskpy.functions

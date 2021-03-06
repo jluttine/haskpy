@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foldable &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Type" href="haskpy.typeclasses.typeclass.Type.html" />
+    <link rel="prev" title="Monoid" href="haskpy.typeclasses.monoid.Monoid.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="py data">
+<dt>
+<code class="sig-prename descclassname"><span class="pre">haskpy.typeclasses.foldable.</span></code><code class="sig-name descname"><span class="pre">Foldable</span></code></dt>
+<dd></dd></dl>
+
+<div class="section" id="foldable">
+<h1>Foldable<a class="headerlink" href="#foldable" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="haskpy.typeclasses.foldable.Foldable">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Foldable</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.typeclass.Type.html#haskpy.typeclasses.typeclass.Type" title="haskpy.typeclasses.typeclass.Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.typeclass.Type</span></code></a></p>
+<p>Foldable typeclass</p>
+<p>Strictly minimal complete definition:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_map</span></code> or <code class="docutils literal notranslate"><span class="pre">foldl</span></code> or <code class="docutils literal notranslate"><span class="pre">foldr</span></code></p></li>
+</ul>
+<p>Recommended minimal complete definition:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">foldl</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">foldr</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">to_iter</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">length</span></code></p></li>
+</ul>
+<p>If default implementation is used for any of those, a performance warning
+is raised.</p>
+<p>It is very strongly recommended to implement both <code class="docutils literal notranslate"><span class="pre">foldl</span></code> and <code class="docutils literal notranslate"><span class="pre">foldr</span></code>
+because the default implementations won’t scale up in Python. Also,
+<code class="docutils literal notranslate"><span class="pre">to_iter</span></code> is strongly recommended as many other methods rely on that and
+the default implementation is slow.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">foldl</span></code> and <code class="docutils literal notranslate"><span class="pre">foldr</span></code> are sequential, but <code class="docutils literal notranslate"><span class="pre">fold_map</span></code> could be
+parallelized because it uses monoids. Thus, if parallelized implementation
+is needed, then also <code class="docutils literal notranslate"><span class="pre">fold_map</span></code> should be implemented.</p>
+<p>The default implementations are defined in circular fashion so that only
+one of <code class="docutils literal notranslate"><span class="pre">fold_map</span></code>, <code class="docutils literal notranslate"><span class="pre">foldl</span></code> and <code class="docutils literal notranslate"><span class="pre">foldr</span></code> is strictly needed:
+<code class="docutils literal notranslate"><span class="pre">fold_map</span></code> uses <code class="docutils literal notranslate"><span class="pre">foldl</span></code>, which uses <code class="docutils literal notranslate"><span class="pre">foldr</span></code>, which uses <code class="docutils literal notranslate"><span class="pre">fold_map</span></code>.
+But as said, instance implementations of at least both <code class="docutils literal notranslate"><span class="pre">foldl</span></code> and
+<code class="docutils literal notranslate"><span class="pre">foldr</span></code> are strongly recommended.</p>
+<p class="rubric">Examples</p>
+<p>In Haskell, Data.Set is Foldable, but not a Functor</p>
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.__contains__">
+<code class="sig-name descname"><span class="pre">__contains__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.__contains__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override elem if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.__iter__">
+<code class="sig-name descname"><span class="pre">__iter__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to_iter if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.__len__">
+<code class="sig-name descname"><span class="pre">__len__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override length if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.elem">
+<code class="sig-name descname"><span class="pre">elem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.elem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.fold">
+<code class="sig-name descname"><span class="pre">fold</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.fold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.fold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.fold2">
+<code class="sig-name descname"><span class="pre">fold2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.fold2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.fold2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.fold_map">
+<code class="sig-name descname"><span class="pre">fold_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.fold_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.fold_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monoid m =&gt; t a -&gt; (a -&gt; m) -&gt; m (ignoring <code class="docutils literal notranslate"><span class="pre">monoid</span></code> argument)</p>
+<p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">foldl</span></code> (or, if not
+implemented, recursively on <code class="docutils literal notranslate"><span class="pre">foldr</span></code>). Thus, all possibilities for
+parallelism is lost.</p>
+<p><code class="docutils literal notranslate"><span class="pre">monoid</span></code> is the monoidic class of the values inside the foldable. It
+is only used to determine the identity value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.foldl">
+<code class="sig-name descname"><span class="pre">foldl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.foldl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.foldl" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</p>
+<p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">foldr</span></code> (or, if not
+implemented, recursively on <code class="docutils literal notranslate"><span class="pre">fold_map</span></code>). Either way, the default
+implementation doesn’t scale up well, so an instance implementation is
+strongly recommended.</p>
+<p>Intuition:</p>
+<ul class="simple">
+<li><p>equivalent to for-loop on lists</p></li>
+<li><p>never works on infinite lists (so not possible to implement <code class="docutils literal notranslate"><span class="pre">map</span></code>
+in terms of <code class="docutils literal notranslate"><span class="pre">foldl</span></code>)</p></li>
+</ul>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=GPwtT31zKRY">Tony Morris - An Intuition for List Folds</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.foldr">
+<code class="sig-name descname"><span class="pre">foldr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.foldr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.foldr" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The default is very poor in Python. It is strongly recommended to
+provide an instance implementation for this.</p>
+</div>
+<p>The default implementation uses <code class="docutils literal notranslate"><span class="pre">fold_map</span></code> by utilizing
+(endo)function monoid:</p>
+<blockquote>
+<div><p>empty :: b -&gt; b</p>
+<p>append :: (b -&gt; b) -&gt; (b -&gt; b) -&gt; (b -&gt; b)</p>
+</div></blockquote>
+<p>One can see <code class="docutils literal notranslate"><span class="pre">combine</span></code> function as a transformation to this monoid:</p>
+<blockquote>
+<div><p>combine :: a -&gt; (b -&gt; b)</p>
+</div></blockquote>
+<p>Then, just use endofunction monoid to compose all those <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code>
+endofunctions into a single endofunction <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code>. Finally, apply
+this function to the initial value.</p>
+<p>Intuition:</p>
+<ul class="simple">
+<li><p>performs constructor replacement</p></li>
+<li><p>may work on infinite lists</p></li>
+<li><p>doesn’t “calculate from the right” but associates to the right
+(otherwise it couldn’t work on infinite lists)</p></li>
+</ul>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=GPwtT31zKRY">Tony Morris - An Intuition for List Folds</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.head">
+<code class="sig-name descname"><span class="pre">head</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.head"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.head" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return head (or default if no head): <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.length">
+<code class="sig-name descname"><span class="pre">length</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; int</p>
+<p>The default implementation isn’t very efficient as it traverses through
+the iterator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.null">
+<code class="sig-name descname"><span class="pre">null</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.null" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.sum">
+<code class="sig-name descname"><span class="pre">sum</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; number</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.foldable.Foldable.to_iter">
+<code class="sig-name descname"><span class="pre">to_iter</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#Foldable.to_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.Foldable.to_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; Iter a</p>
+<p>Instead of to_list (as in Haskell), let’s provide to_iter. With
+iterables, we can write efficient implementations for many other
+methods (e.g., sum, elem) even for large or sometimes infinite
+foldables.</p>
+<p>The default implementation isn’t very efficient as it uses folding to
+construct the iterator.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.functions.html">haskpy.functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.typeclasses.html">haskpy.typeclasses</a><ul>
+      <li>Previous: <a href="haskpy.typeclasses.monoid.Monoid.html" title="previous chapter">Monoid</a></li>
+      <li>Next: <a href="haskpy.typeclasses.typeclass.Type.html" title="next chapter">Type</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.typeclasses.foldable.Foldable.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

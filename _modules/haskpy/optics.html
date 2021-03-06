@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.optics &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.optics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Profunctor optics</span>
+
+<span class="sd">.. currentmodule:: haskpy.optics</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree:</span>
+
+<span class="sd">   adapter</span>
+<span class="sd">   lens</span>
+<span class="sd">   prism</span>
+
+<span class="sd">Resources:</span>
+
+<span class="sd">- Profunctor Optics: Modular Data Accessors by Pickering, Gibbons, and Wu</span>
+<span class="sd">- Profunctor Optics: The Categorical View by Bartosz Milewski</span>
+<span class="sd">- https://github.com/cmk/profunctor-extras/tree/master/profunctor-optics</span>
+<span class="sd">- https://github.com/hablapps/DontFearTheProfunctorOptics</span>
+<span class="sd">- http://oleg.fi/gists/images/optics-hierarchy.svg</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">function</span><span class="p">,</span> <span class="n">identity</span>
+
+
+<div class="viewcode-block" id="adapter"><a class="viewcode-back" href="../../_autosummary/haskpy.optics.adapter.html#haskpy.optics.adapter">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">adapter</span><span class="p">(</span><span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;(s -&gt; a) -&gt; (b -&gt; t) -&gt; AdapterP a b s t</span>
+
+<span class="sd">    where</span>
+
+<span class="sd">    type AdapterP a b s t = Profunctor p =&gt; p a b -&gt; p s t</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;(a -&gt; b) -&gt; s -&gt; t, or more generally, AdapterP a b s t</span>
+
+<span class="sd">        Profunctor p =&gt; p a b -&gt; p s t</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># For convenience, if we are given a plain Python function, let&#39;s wrap it</span>
+        <span class="c1"># with our function decorator to get all the Profunctor goodies</span>
+        <span class="c1"># automatically without the user needing to add the wrapping explicitly.</span>
+        <span class="c1"># Just a usability improvement.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">42</span><span class="p">)):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">dimap</span><span class="p">(</span><span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">run</span></div>
+
+
+<div class="viewcode-block" id="lens"><a class="viewcode-back" href="../../_autosummary/haskpy.optics.lens.html#haskpy.optics.lens">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">lens</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">update</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;(s -&gt; a) -&gt; ((b, s) -&gt; t) -&gt; LensP a b s t</span>
+
+<span class="sd">    where</span>
+
+<span class="sd">    type LensP a b s t = Cartesian p =&gt; p a b -&gt; p s t</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@function</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;(a -&gt; b) -&gt; s -&gt; t, or more generally, LensP a b s t</span>
+
+<span class="sd">        that is,</span>
+
+<span class="sd">        Cartesian p =&gt; p a b -&gt; p s t</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># For convenience, if we are given a plain Python function, let&#39;s wrap it</span>
+        <span class="c1"># with our function decorator to get all the Profunctor goodies</span>
+        <span class="c1"># automatically without the user needing to add the wrapping explicitly.</span>
+        <span class="c1"># Just a usability improvement.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">42</span><span class="p">)):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">dimap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">),</span> <span class="n">update</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">run</span></div>
+
+
+<div class="viewcode-block" id="prism"><a class="viewcode-back" href="../../_autosummary/haskpy.optics.prism.html#haskpy.optics.prism">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">prism</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;(s -&gt; Either t a) -&gt; (b -&gt; t) -&gt; PrismP a b s t</span>
+
+<span class="sd">    where</span>
+
+<span class="sd">    type PrismP a b s t = Cocartesian p =&gt; p a b -&gt; p s t</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Just for easier user interface, wrap the given functions in case the user</span>
+    <span class="c1"># didn&#39;t do that</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">match</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">build</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">haskpy.types.either</span> <span class="kn">import</span> <span class="n">either</span>
+
+    <span class="nd">@function</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;(a -&gt; b) -&gt; s -&gt; t, or more generally, PrismP a b s t</span>
+
+<span class="sd">        that is,</span>
+
+<span class="sd">        Cocartesian p =&gt; p a b -&gt; p s t</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># For convenience, if we are given a plain Python function, let&#39;s wrap it</span>
+        <span class="c1"># with our function decorator to get all the Profunctor goodies</span>
+        <span class="c1"># automatically without the user needing to add the wrapping explicitly.</span>
+        <span class="c1"># Just a usability improvement.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">42</span><span class="p">)):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">right</span><span class="p">()</span><span class="o">.</span><span class="n">dimap</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="n">either</span><span class="p">(</span><span class="n">identity</span><span class="p">,</span> <span class="n">build</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">run</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

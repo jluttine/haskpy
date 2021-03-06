@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Eq" href="haskpy.typeclasses.eq.Eq.html" />
+    <link rel="prev" title="API" href="../api.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-haskpy.typeclasses">
+<span id="haskpy-typeclasses"></span><h1>haskpy.typeclasses<a class="headerlink" href="#module-haskpy.typeclasses" title="Permalink to this headline">¶</a></h1>
+<p>A collection of typeclasses</p>
+<p>Typeclasses for basic properties:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.eq.Eq.html#haskpy.typeclasses.eq.Eq" title="haskpy.typeclasses.eq.Eq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eq.Eq</span></code></a></p></td>
+<td><p>Equality and inequality comparison</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.hashable.Hashable.html#haskpy.typeclasses.hashable.Hashable" title="haskpy.typeclasses.hashable.Hashable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hashable.Hashable</span></code></a></p></td>
+<td><p>Bar</p></td>
+</tr>
+</tbody>
+</table>
+<p>Container-like typeclasses:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functor.Functor</span></code></a></p></td>
+<td><p>Covariant functor</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative" title="haskpy.typeclasses.applicative.Applicative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applicative.Applicative</span></code></a></p></td>
+<td><p>Must define at least pure and either apply or apply_to</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad" title="haskpy.typeclasses.monad.Monad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monad.Monad</span></code></a></p></td>
+<td><p>Monad typeclass</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.contravariant.Contravariant.html#haskpy.typeclasses.contravariant.Contravariant" title="haskpy.typeclasses.contravariant.Contravariant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contravariant.Contravariant</span></code></a></p></td>
+<td><p>Contravariant functor</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.profunctor.Profunctor.html#haskpy.typeclasses.profunctor.Profunctor" title="haskpy.typeclasses.profunctor.Profunctor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profunctor.Profunctor</span></code></a></p></td>
+<td><p>Minimal complete definition: <code class="docutils literal notranslate"><span class="pre">dimap</span> <span class="pre">|</span> <span class="pre">(contramap</span> <span class="pre">&amp;</span> <span class="pre">map)</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.cartesian.Cartesian.html#haskpy.typeclasses.cartesian.Cartesian" title="haskpy.typeclasses.cartesian.Cartesian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cartesian.Cartesian</span></code></a></p></td>
+<td><p>Cartesian profunctor</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.cocartesian.Cocartesian.html#haskpy.typeclasses.cocartesian.Cocartesian" title="haskpy.typeclasses.cocartesian.Cocartesian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cocartesian.Cocartesian</span></code></a></p></td>
+<td><p>Cocartesian profunctor</p></td>
+</tr>
+</tbody>
+</table>
+<p>Typeclasses for types that can be merged:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.semigroup.Semigroup.html#haskpy.typeclasses.semigroup.Semigroup" title="haskpy.typeclasses.semigroup.Semigroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">semigroup.Semigroup</span></code></a></p></td>
+<td><p>Semigroup typeclass</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.semigroup.Commutative.html#haskpy.typeclasses.semigroup.Commutative" title="haskpy.typeclasses.semigroup.Commutative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">semigroup.Commutative</span></code></a></p></td>
+<td><p>Semigroup following commutativity law</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monoid.Monoid</span></code></a></p></td>
+<td><p>Monoid typeclass</p></td>
+</tr>
+</tbody>
+</table>
+<p>Struture that can be manipulated:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable" title="haskpy.typeclasses.foldable.Foldable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">foldable.Foldable</span></code></a></p></td>
+<td><p>Foldable typeclass</p></td>
+</tr>
+</tbody>
+</table>
+<p>Abstract base class of the typeclasses:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.typeclass.Type.html#haskpy.typeclasses.typeclass.Type" title="haskpy.typeclasses.typeclass.Type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">typeclass.Type</span></code></a></p></td>
+<td><p>Base class for all typeclasses, type constructors and types</p></td>
+</tr>
+</tbody>
+</table>
+<p>Read more at <a class="reference external" href="https://wiki.haskell.org/Typeclassopedia">Typeclassopedia</a>.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.functions.html">haskpy.functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+      <li>Previous: <a href="../api.html" title="previous chapter">API</a></li>
+      <li>Next: <a href="haskpy.typeclasses.eq.Eq.html" title="next chapter">Eq</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.typeclasses.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

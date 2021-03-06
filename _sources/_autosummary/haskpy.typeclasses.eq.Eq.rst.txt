@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.eq.Eq
+   :noindex:
+
+Eq
+========================
+
+.. currentmodule:: haskpy.typeclasses.eq
+
+.. autoclass:: Eq
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

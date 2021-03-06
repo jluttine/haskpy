@@ -1,0 +1,6 @@
+haskpy.types.maybe.Nothing
+==========================
+
+.. currentmodule:: haskpy.types.maybe
+
+.. autodata:: Nothing

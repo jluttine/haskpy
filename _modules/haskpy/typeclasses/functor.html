@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses.functor &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.typeclasses.functor</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">given</span>
+<span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+
+<span class="kn">from</span> <span class="nn">.typeclass</span> <span class="kn">import</span> <span class="n">Type</span>
+<span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="n">identity</span><span class="p">,</span> <span class="n">assert_output</span><span class="p">,</span> <span class="n">abstract_class_function</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">utils</span>
+
+
+<div class="viewcode-block" id="Functor"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor">[docs]</a><span class="k">class</span> <span class="nc">Functor</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Covariant functor</span>
+
+<span class="sd">    Minimal complete definition:</span>
+
+<span class="sd">    ..</span>
+
+<span class="sd">        map</span>
+
+<span class="sd">    For property tests:</span>
+
+<span class="sd">    ..</span>
+
+<span class="sd">        sample_functor_type</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    In Haskell, Map is a Functor, but not Applicative</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Functor.map"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor.map">[docs]</a>    <span class="nd">@utils</span><span class="o">.</span><span class="n">abstract_function</span>
+    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Haskell fmap&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Functor.replace"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor.replace">[docs]</a>    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Haskell ($&gt;) operator&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Functor.__rpow__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor.__rpow__">[docs]</a>    <span class="k">def</span> <span class="fm">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Lifting operator ``**`` lifts similarly as ``&lt;$&gt;`` in Haskell</span>
+
+<span class="sd">        ``f ** x`` translates to ``x.map(f)`` and ``map(f, x)``.</span>
+
+<span class="sd">        Why ``**`` operator?</span>
+
+<span class="sd">        - It&#39;s not typically used as often as multiplication or addition so</span>
+<span class="sd">          less risk of confusion.</span>
+
+<span class="sd">        - It&#39;s not commutative operator as isn&#39;t lifting either.</span>
+
+<span class="sd">        - The two operands have very different roles. They are not at the same</span>
+<span class="sd">          &quot;level&quot;.</span>
+
+<span class="sd">        - The right operand is &quot;higher&quot;, that is, it&#39;s inside a structure and</span>
+<span class="sd">          the left operand is kind of &quot;raised to the power&quot; of the second</span>
+<span class="sd">          operand, where the &quot;power&quot; is the functorial structure.</span>
+
+<span class="sd">        - The same operand is also used for function composition because</span>
+<span class="sd">          function composition is just mapping. Visually the symbol can be</span>
+<span class="sd">          seen as chaining two stars similarly as function composition chains</span>
+<span class="sd">          two functions.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Sampling methods for property tests</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@abstract_class_function</span>
+    <span class="k">def</span> <span class="nf">sample_functor_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test typeclass laws</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_functor_identity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span>
+            <span class="n">v</span><span class="p">,</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">identity</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_functor_identity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_functor_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_functor_identity</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_functor_composition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">g</span><span class="p">),</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">g</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_functor_composition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_functor_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_functor_composition</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test laws based on default implementations</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_functor_map</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="nb">map</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>
+            <span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_functor_map</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_functor_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_functor_map</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_functor_replace</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.functions</span> <span class="kn">import</span> <span class="n">replace</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Functor</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span>
+            <span class="n">replace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_functor_replace</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_functor_type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_functor_replace</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<span class="c1"># Functor-related functions are defined in function module because of circular</span>
+<span class="c1"># dependency.</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

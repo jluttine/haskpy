@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.semigroup.Semigroup
+   :noindex:
+
+Semigroup
+======================================
+
+.. currentmodule:: haskpy.typeclasses.semigroup
+
+.. autoclass:: Semigroup
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

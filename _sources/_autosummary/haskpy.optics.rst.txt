@@ -1,0 +1,6 @@
+﻿haskpy.optics
+=============
+
+.. currentmodule:: haskpy.optics
+
+.. automodule:: haskpy.optics

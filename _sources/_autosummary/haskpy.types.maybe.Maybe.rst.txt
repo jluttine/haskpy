@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.maybe.Maybe
+   :noindex:
+
+Maybe
+========================
+
+.. currentmodule:: haskpy.types.maybe
+
+.. autoclass:: Maybe
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

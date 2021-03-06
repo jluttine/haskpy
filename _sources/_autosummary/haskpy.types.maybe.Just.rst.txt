@@ -1,0 +1,6 @@
+haskpy.types.maybe.Just
+=======================
+
+.. currentmodule:: haskpy.types.maybe
+
+.. autofunction:: Just

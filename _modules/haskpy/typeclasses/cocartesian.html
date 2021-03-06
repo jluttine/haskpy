@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses.cocartesian &#8212; HaskPy 0.1.dev1+g4b2729f documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.typeclasses.cocartesian</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">given</span>
+<span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+
+<span class="kn">from</span> <span class="nn">.profunctor</span> <span class="kn">import</span> <span class="n">Profunctor</span>
+<span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="n">assert_output</span><span class="p">,</span> <span class="n">class_function</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+
+
+<div class="viewcode-block" id="Cocartesian"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.cocartesian.Cocartesian.html#haskpy.typeclasses.cocartesian.Cocartesian">[docs]</a><span class="k">class</span> <span class="nc">Cocartesian</span><span class="p">(</span><span class="n">Profunctor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cocartesian profunctor</span>
+
+<span class="sd">    Perhaps better known as Choice in Haskell:</span>
+
+<span class="sd">    https://hackage.haskell.org/package/profunctors-5.2/docs/Data-Profunctor-Choice.html</span>
+
+<span class="sd">    I decided to use name Cocartesian because that was used in the profunctor</span>
+<span class="sd">    optics paper.</span>
+
+<span class="sd">    Minimal complete definition: ``left | right``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Cocartesian.left"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.cocartesian.Cocartesian.html#haskpy.typeclasses.cocartesian.Cocartesian.left">[docs]</a>    <span class="k">def</span> <span class="nf">left</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">()</span><span class="o">.</span><span class="n">dimap</span><span class="p">(</span><span class="n">_flip_either</span><span class="p">,</span> <span class="n">_flip_either</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Cocartesian.right"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.cocartesian.Cocartesian.html#haskpy.typeclasses.cocartesian.Cocartesian.right">[docs]</a>    <span class="k">def</span> <span class="nf">right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">()</span><span class="o">.</span><span class="n">dimap</span><span class="p">(</span><span class="n">_flip_either</span><span class="p">,</span> <span class="n">_flip_either</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test Cocartesian laws</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_cocartesian_unit</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.types</span> <span class="kn">import</span> <span class="n">Left</span>
+        <span class="n">lzero</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">ea</span><span class="p">:</span> <span class="n">ea</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">rzero</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">h</span><span class="o">.</span><span class="n">dimap</span><span class="p">(</span><span class="n">lzero</span><span class="p">,</span> <span class="n">rzero</span><span class="p">),</span>
+            <span class="n">h</span><span class="o">.</span><span class="n">left</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_cocartesian_unit</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.types</span> <span class="kn">import</span> <span class="n">Left</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_profunctor_type</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_cocartesian_unit</span><span class="p">(</span>
+            <span class="n">h</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">input_strategy</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">Left</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_cocartesian_associativity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.types.either</span> <span class="kn">import</span> <span class="n">Left</span><span class="p">,</span> <span class="n">Right</span>
+        <span class="n">lcoassoc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a_bc</span><span class="p">:</span> <span class="n">a_bc</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">Left</span><span class="p">(</span><span class="n">a</span><span class="p">)),</span>
+            <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">bc</span><span class="p">:</span> <span class="n">bc</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">Right</span><span class="p">(</span><span class="n">b</span><span class="p">)),</span>
+                <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">rcoassoc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">ab_c</span><span class="p">:</span> <span class="n">ab_c</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ab</span><span class="p">:</span> <span class="n">ab</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">a</span><span class="p">),</span>
+                <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">Left</span><span class="p">(</span><span class="n">b</span><span class="p">)),</span>
+            <span class="p">),</span>
+            <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">Right</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">h</span><span class="o">.</span><span class="n">left</span><span class="p">()</span><span class="o">.</span><span class="n">left</span><span class="p">()</span><span class="o">.</span><span class="n">dimap</span><span class="p">(</span><span class="n">lcoassoc</span><span class="p">,</span> <span class="n">rcoassoc</span><span class="p">),</span>
+            <span class="n">h</span><span class="o">.</span><span class="n">left</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_cocartesian_associativity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.types.either</span> <span class="kn">import</span> <span class="n">Either</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Either</span><span class="o">.</span><span class="n">sample_value</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">()),</span>
+            <span class="n">Either</span><span class="o">.</span><span class="n">sample_value</span><span class="p">(</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">just</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">),</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">just</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_profunctor_type</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_cocartesian_associativity</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">input_strategy</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test laws based on default implementations</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_cocartesian_left</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Cocartesian</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">left</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_cocartesian_left</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.types.either</span> <span class="kn">import</span> <span class="n">Either</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Either</span><span class="o">.</span><span class="n">sample_value</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_profunctor_type</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_cocartesian_left</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">input_strategy</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_cocartesian_right</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Cocartesian</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">right</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_cocartesian_right</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">haskpy.types.either</span> <span class="kn">import</span> <span class="n">Either</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Either</span><span class="o">.</span><span class="n">sample_value</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_profunctor_type</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_cocartesian_right</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">input_strategy</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<span class="k">def</span> <span class="nf">_flip_either</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">haskpy.types.either</span> <span class="kn">import</span> <span class="n">Left</span><span class="p">,</span> <span class="n">Right</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">a</span><span class="p">),</span>
+        <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">b</span><span class="p">),</span>
+    <span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
