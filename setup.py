@@ -34,6 +34,7 @@ if __name__ == "__main__":
             ],
             "doc": [
                 "sphinx",
+                "numpydoc",
             ],
         },
         keywords=[
