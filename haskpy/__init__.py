@@ -1,13 +1,13 @@
-"""HaskPy yey!
+"""Haskell and Hask category inspired utilities
 
 .. autosummary::
    :toctree: _autosummary
 
-   typeclasses
    types
-   functions
+   typeclasses
    utils
    optics
+   testing
 
 """
 

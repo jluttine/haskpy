@@ -1,6 +1,5 @@
-from haskpy.typeclasses.typeclass import Type
-from haskpy.functions import Function
-from haskpy.utils import nonexisting_function, decorator
+from haskpy import Function, Type
+from haskpy.internal import nonexisting_function, decorator
 
 
 class AbstractClassProperty():
