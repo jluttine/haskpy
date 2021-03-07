@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Monad &#8212; HaskPy 0.1.dev1+g7815181 documentation</title>
+    <title>Monad &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -41,8 +41,8 @@
 <h1>Monad<a class="headerlink" href="#monad" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="haskpy.typeclasses.monad.Monad">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Monad</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/monad.html#Monad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative" title="haskpy.typeclasses.applicative.Applicative"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.applicative.Applicative</span></code></a></p>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Monad</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/_monad.html#Monad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._applicative.Applicative</span></code></p>
 <p>Monad typeclass</p>
 <p>Minimum required implementations:</p>
 <ul class="simple">
@@ -76,7 +76,7 @@ value(s). Thus, <code class="docutils literal notranslate"><span class="pre">f</
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.monad.Monad.__mod__">
-<code class="sig-name descname"><span class="pre">__mod__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/monad.html#Monad.__mod__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.__mod__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__mod__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_monad.html#Monad.__mod__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.__mod__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use <code class="docutils literal notranslate"><span class="pre">%</span></code> as bind operator similarly as <code class="docutils literal notranslate"><span class="pre">&gt;&gt;=</span></code> in Haskell</p>
 <p>That is, <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">f</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">bind(x,</span> <span class="pre">f)</span></code> and <code class="docutils literal notranslate"><span class="pre">x.bind(f)</span></code>.</p>
 <p>Why <code class="docutils literal notranslate"><span class="pre">%</span></code> operator?</p>
@@ -121,7 +121,7 @@ two functions.</p></li>
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.monad.Monad.apply">
-<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/monad.html#Monad.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.apply" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_monad.html#Monad.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>m a -&gt; m (a -&gt; b) -&gt; m b</p>
 <blockquote>
 <div><p>self :: m a</p>
@@ -151,7 +151,7 @@ use <code class="docutils literal notranslate"><span class="pre">bind</span></co
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.monad.Monad.bind">
-<code class="sig-name descname"><span class="pre">bind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/monad.html#Monad.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.bind" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_monad.html#Monad.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.bind" title="Permalink to this definition">¶</a></dt>
 <dd><p>m a -&gt; (a -&gt; m b) -&gt; m b</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">join</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code>:</p>
 <p>self :: m a</p>
@@ -162,7 +162,7 @@ use <code class="docutils literal notranslate"><span class="pre">bind</span></co
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.monad.Monad.join">
-<code class="sig-name descname"><span class="pre">join</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/monad.html#Monad.join"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.join" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">join</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_monad.html#Monad.join"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.join" title="Permalink to this definition">¶</a></dt>
 <dd><p>m (m a) -&gt; m a</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">bind</span></code>:</p>
 <p>self :: m (m a)</p>
@@ -172,7 +172,7 @@ use <code class="docutils literal notranslate"><span class="pre">bind</span></co
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.monad.Monad.map">
-<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/monad.html#Monad.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.map" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_monad.html#Monad.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.monad.Monad.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>m a -&gt; (a -&gt; b) -&gt; m b</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">bind</span></code> and <code class="docutils literal notranslate"><span class="pre">pure</span></code>. This
 implementation needs to be provided because the default implementation
@@ -219,14 +219,18 @@ the default <code class="docutils literal notranslate"><span class="pre">map</sp
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="haskpy.functions.html">haskpy.functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
 </ul>
 </li>
 </ul>

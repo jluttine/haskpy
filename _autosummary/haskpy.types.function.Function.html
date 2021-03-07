@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Function &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="haskpy.types.function.FunctionMonoid" href="haskpy.types.function.FunctionMonoid.html" />
+    <link rel="prev" title="haskpy.types.function" href="haskpy.types.function.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="py data">
+<dt>
+<code class="sig-prename descclassname"><span class="pre">haskpy.types.function.</span></code><code class="sig-name descname"><span class="pre">Function</span></code></dt>
+<dd></dd></dl>
+
+<div class="section" id="function">
+<h1>Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="haskpy.types.function.Function">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Function</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Function__f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Function__args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._monad.Monad</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._cartesian.Cartesian</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._cocartesian.Cocartesian</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._semigroup.Semigroup</span></code></p>
+<p>Monad instance for curried functions</p>
+<p>Note the resulting <code class="docutils literal notranslate"><span class="pre">Function</span></code> object accepts only positional arguments.
+The number of those positional arguments is exactly the same as the number
+of required positional arguments in the underlying function. Any optional
+positional or keyword arguments become unusable. The reason for this is
+that it must be unambiguous at which point, for instance, <code class="docutils literal notranslate"><span class="pre">map</span></code> is
+applied. Also, <code class="docutils literal notranslate"><span class="pre">f(a)(b)</span></code> should always be equal to <code class="docutils literal notranslate"><span class="pre">f(a,</span> <span class="pre">b)</span></code> with
+curried functions. This might not be the case if there are optional
+arguments.</p>
+<p>Use similar wrapping as functools.wraps does for some attributes. See
+CPython: <a class="reference external" href="https://github.com/python/cpython/blob/master/Lib/functools.py#L30">https://github.com/python/cpython/blob/master/Lib/functools.py#L30</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Monoid instance of Function requires the knowledge of the contained
+monoid type in order to be able to create <code class="docutils literal notranslate"><span class="pre">empty</span></code>. The contained type
+is not known because Function class can be used to create functions of
+any type. This is just convenience and simpler user interface. If you
+need Monoid instance of Function, use FunctionMonoid function to create
+such a class. Note though that the Semigroup instance is available in
+this Function without needing to use FunctionMonoid.</p>
+</div>
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__attrs_post_init__">
+<code class="sig-name descname"><span class="pre">__attrs_post_init__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.__attrs_post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.__attrs_post_init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__call__">
+<code class="sig-name descname"><span class="pre">__call__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call self as a function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__code__">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">__code__</span></code><a class="headerlink" href="#haskpy.types.function.Function.__code__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__eq_test__">
+<code class="sig-name descname"><span class="pre">__eq_test__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">integers()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.__eq_test__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.__eq_test__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__get__">
+<code class="sig-name descname"><span class="pre">__get__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.__get__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.__get__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Support instance methods.</p>
+<p>See: <a class="reference external" href="https://stackoverflow.com/a/3296318">https://stackoverflow.com/a/3296318</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__matmul__">
+<code class="sig-name descname"><span class="pre">__matmul__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.__matmul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Application operand <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> applies similarly as <code class="docutils literal notranslate"><span class="pre">&lt;*&gt;</span></code> in Haskell</p>
+<p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">&#64;</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">f.apply_to(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">x.apply(f)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">apply(f,</span> <span class="pre">x)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not typically used as often as some other more common operators
+so less risk for confusion.</p></li>
+<li><p>The operator is not a commutative as isn’t <code class="docutils literal notranslate"><span class="pre">apply</span></code> either.</p></li>
+<li><p>If we see matrix as some structure, then matrix multiplication takes
+both left and right operand inside this structure and gives a result
+also inside this structure, similarly as <code class="docutils literal notranslate"><span class="pre">apply</span></code> does. So it’s an
+operator for two operands having a similar structure.</p></li>
+<li><p>The operator evaluates the contained function(s) at the contained
+value(s). Thus, <code class="docutils literal notranslate"><span class="pre">f</span></code> “at” <code class="docutils literal notranslate"><span class="pre">x</span></code> makes perfect sense.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__mod__">
+<code class="sig-name descname"><span class="pre">__mod__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.__mod__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use <code class="docutils literal notranslate"><span class="pre">%</span></code> as bind operator similarly as <code class="docutils literal notranslate"><span class="pre">&gt;&gt;=</span></code> in Haskell</p>
+<p>That is, <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">f</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">bind(x,</span> <span class="pre">f)</span></code> and <code class="docutils literal notranslate"><span class="pre">x.bind(f)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">%</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not very often used so less risk for confusion.</p></li>
+<li><p>It’s not commutative as isn’t bind either.</p></li>
+<li><p>It is similar to bind in a sense that the result has the same unit as
+the left operand while the right operand has different unit.</p></li>
+<li><p>The symbol works visually as a line “binds” two circles and on the
+other hand two circles tell about two similar structures on both
+sides but those structures are just on different “level”.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__pow__">
+<code class="sig-name descname"><span class="pre">__pow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.__pow__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.__pow__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__rpow__">
+<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.__rpow__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
+<p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not typically used as often as multiplication or addition so
+less risk of confusion.</p></li>
+<li><p>It’s not commutative operator as isn’t lifting either.</p></li>
+<li><p>The two operands have very different roles. They are not at the same
+“level”.</p></li>
+<li><p>The right operand is “higher”, that is, it’s inside a structure and
+the left operand is kind of “raised to the power” of the second
+operand, where the “power” is the functorial structure.</p></li>
+<li><p>The same operand is also used for function composition because
+function composition is just mapping. Visually the symbol can be
+seen as chaining two stars similarly as function composition chains
+two functions.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__rshift__">
+<code class="sig-name descname"><span class="pre">__rshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.__rshift__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence with``&gt;&gt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.__signature__">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">__signature__</span></code><a class="headerlink" href="#haskpy.types.function.Function.__signature__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.append">
+<code class="sig-name descname"><span class="pre">append</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; (a -&gt; b) -&gt; (a -&gt; b)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.apply">
+<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; (a -&gt; b -&gt; c) -&gt; a -&gt; c</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.apply_to">
+<code class="sig-name descname"><span class="pre">apply_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>f (a -&gt; b) -&gt; f a -&gt; f b</p>
+<p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">apply</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.bind">
+<code class="sig-name descname"><span class="pre">bind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; (b -&gt; a -&gt; c) -&gt; a -&gt; c</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.check_args">
+<code class="sig-name descname"><span class="pre">check_args</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.check_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.check_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.check_f">
+<code class="sig-name descname"><span class="pre">check_f</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.check_f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.check_f" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.contramap">
+<code class="sig-name descname"><span class="pre">contramap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.contramap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.contramap" title="Permalink to this definition">¶</a></dt>
+<dd><p>(b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.contrareplace">
+<code class="sig-name descname"><span class="pre">contrareplace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.contrareplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>f b -&gt; b -&gt; f a</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.dimap">
+<code class="sig-name descname"><span class="pre">dimap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.dimap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.dimap" title="Permalink to this definition">¶</a></dt>
+<dd><p>(b -&gt; c) -&gt; (a -&gt; b) -&gt; (c -&gt; d) -&gt; (a -&gt; d)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.first">
+<code class="sig-name descname"><span class="pre">first</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.first" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; (a, c) -&gt; (b, c)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.join">
+<code class="sig-name descname"><span class="pre">join</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>m (m a) -&gt; m a</p>
+<p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">bind</span></code>:</p>
+<p>self :: m (m a)</p>
+<p>identity :: m a -&gt; m a</p>
+<p>bind :: m (m a) -&gt; (m a -&gt; m a) -&gt; m a</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.left">
+<code class="sig-name descname"><span class="pre">left</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.left"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.left" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; Either a c -&gt; Either b c</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.map">
+<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; (b -&gt; c) -&gt; (a -&gt; c)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.pure">
+<code class="sig-name descname"><span class="pre">pure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.pure" title="Permalink to this definition">¶</a></dt>
+<dd><p>a -&gt; m a</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.replace">
+<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Haskell ($&gt;) operator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.right">
+<code class="sig-name descname"><span class="pre">right</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.right"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.right" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; Either c a -&gt; Either c b</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.second">
+<code class="sig-name descname"><span class="pre">second</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/function.html#Function.second"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.function.Function.second" title="Permalink to this definition">¶</a></dt>
+<dd><p>(a -&gt; b) -&gt; (c, a) -&gt; (c, b)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.function.Function.sequence">
+<code class="sig-name descname"><span class="pre">sequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.function.Function.sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>f a -&gt; f b -&gt; f b</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.types.html">haskpy.types</a><ul>
+  <li><a href="haskpy.types.function.html">haskpy.types.function</a><ul>
+      <li>Previous: <a href="haskpy.types.function.html" title="previous chapter">haskpy.types.function</a></li>
+      <li>Next: <a href="haskpy.types.function.FunctionMonoid.html" title="next chapter">haskpy.types.function.FunctionMonoid</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.types.function.Function.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Functor &#8212; HaskPy 0.1.dev1+g7815181 documentation</title>
+    <title>Functor &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -41,7 +41,7 @@
 <h1>Functor<a class="headerlink" href="#functor" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="haskpy.typeclasses.functor.Functor">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Functor</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/functor.html#Functor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Functor</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/_functor.html#Functor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.typeclass.Type.html#haskpy.typeclasses.typeclass.Type" title="haskpy.typeclasses.typeclass.Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.typeclass.Type</span></code></a></p>
 <p>Covariant functor</p>
 <p>Minimal complete definition:</p>
@@ -56,7 +56,7 @@
 <p>In Haskell, Map is a Functor, but not Applicative</p>
 <dl class="py method">
 <dt id="haskpy.typeclasses.functor.Functor.__rpow__">
-<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/functor.html#Functor.__rpow__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor.__rpow__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_functor.html#Functor.__rpow__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor.__rpow__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
 <p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
 <p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
@@ -78,13 +78,13 @@ two functions.</p></li>
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.functor.Functor.map">
-<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/functor.html#Functor.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor.map" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_functor.html#Functor.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Haskell fmap</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.functor.Functor.replace">
-<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/functor.html#Functor.replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor.replace" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_functor.html#Functor.replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Haskell ($&gt;) operator</p>
 </dd></dl>
 
@@ -109,14 +109,18 @@ two functions.</p></li>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="haskpy.functions.html">haskpy.functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
 </ul>
 </li>
 </ul>

@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.function.Function
+   :noindex:
+
+Function
+==============================
+
+.. currentmodule:: haskpy.types.function
+
+.. autoclass:: Function
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

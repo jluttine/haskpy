@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Changelog &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Property-based testing" href="property-based-testing.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>0.2.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="added">
+<h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">Eq</span></code> typeclass.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">LinkedList</span></code> type.</p></li>
+</ul>
+</div>
+<div class="section" id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Mask out some built-in class methods such as <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> and <code class="docutils literal notranslate"><span class="pre">__hash__</span></code>.
+Python doesn’t allow deleting these methods so we need to do some black magic
+to hide them as if they didn’t exist.</p></li>
+<li><p>Make <code class="docutils literal notranslate"><span class="pre">Function</span></code> objects curried and so that they only accept mandatory
+positional arguments.</p></li>
+</ul>
+</div>
+<div class="section" id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fix the composition operator <code class="docutils literal notranslate"><span class="pre">**</span></code> for <code class="docutils literal notranslate"><span class="pre">Function</span></code> objects.</p></li>
+</ul>
+</div>
+<div class="section" id="removed">
+<h3>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Remove <code class="docutils literal notranslate"><span class="pre">CommutativeMonoid</span></code>.</p></li>
+<li><p>Remove <code class="docutils literal notranslate"><span class="pre">curry</span></code> function.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>0.1.3<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Fixed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fix PyPI releasing on GitHub</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>0.1.2<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>Changed<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Improve operator docstrings.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>0.1.1<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>Changed<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Change bind operator to <code class="docutils literal notranslate"><span class="pre">%</span></code>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>0.1.0<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h3>Added<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Add typeclasses <code class="docutils literal notranslate"><span class="pre">Functor</span></code>, <code class="docutils literal notranslate"><span class="pre">Applicative</span></code>, <code class="docutils literal notranslate"><span class="pre">Monad</span></code>, <code class="docutils literal notranslate"><span class="pre">Semigroup</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Monoid</span></code>, <code class="docutils literal notranslate"><span class="pre">Commutative</span></code>, <code class="docutils literal notranslate"><span class="pre">CommutativeMonoid</span></code>, <code class="docutils literal notranslate"><span class="pre">Foldable</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Contravariant</span></code>, <code class="docutils literal notranslate"><span class="pre">Profunctor</span></code>, <code class="docutils literal notranslate"><span class="pre">Cartesian</span></code>, <code class="docutils literal notranslate"><span class="pre">Cocartesian</span></code>.</p></li>
+<li><p>Add monads <code class="docutils literal notranslate"><span class="pre">Identity</span></code>, <code class="docutils literal notranslate"><span class="pre">Maybe</span></code>, <code class="docutils literal notranslate"><span class="pre">Either</span></code>, <code class="docutils literal notranslate"><span class="pre">List</span></code>, <code class="docutils literal notranslate"><span class="pre">Function</span></code>.</p></li>
+<li><p>Add transformers <code class="docutils literal notranslate"><span class="pre">Compose</span></code>, <code class="docutils literal notranslate"><span class="pre">MaybeT</span></code>, <code class="docutils literal notranslate"><span class="pre">IdentityT</span></code>.</p></li>
+<li><p>Add simple monoids <code class="docutils literal notranslate"><span class="pre">Sum</span></code>, <code class="docutils literal notranslate"><span class="pre">And</span></code>, <code class="docutils literal notranslate"><span class="pre">Or</span></code>, <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Endo</span></code></p></li>
+<li><p>Add profunctor optics <code class="docutils literal notranslate"><span class="pre">adapter</span></code>, <code class="docutils literal notranslate"><span class="pre">lens</span></code>, <code class="docutils literal notranslate"><span class="pre">prism</span></code>.</p></li>
+<li><p>Test typeclass laws with property-based testing.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">curry</span></code>, <code class="docutils literal notranslate"><span class="pre">function</span></code>, <code class="docutils literal notranslate"><span class="pre">singleton</span></code>, <code class="docutils literal notranslate"><span class="pre">const</span></code>, <code class="docutils literal notranslate"><span class="pre">compose</span></code>,
+<code class="docutils literal notranslate"><span class="pre">identity</span></code> utility functions.</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">0.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">0.1.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">0.1.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">0.1.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="property-based-testing.html" title="previous chapter">Property-based testing</a></li>
+      <li>Next: <a href="api.html" title="next chapter">API</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/changelog.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

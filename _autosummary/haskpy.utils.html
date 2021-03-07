@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>haskpy.utils &#8212; HaskPy 0.1.dev1+g7815181 documentation</title>
+    <title>haskpy.utils &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="haskpy.utils.immutable" href="haskpy.utils.immutable.html" />
-    <link rel="prev" title="haskpy.functions" href="haskpy.functions.html" />
+    <link rel="next" title="haskpy.utils.identity" href="haskpy.utils.identity.html" />
+    <link rel="prev" title="Type" href="haskpy.typeclasses.typeclass.Type.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -34,14 +34,20 @@
             
   <div class="section" id="module-haskpy.utils">
 <span id="haskpy-utils"></span><h1>haskpy.utils<a class="headerlink" href="#module-haskpy.utils" title="Permalink to this headline">¶</a></h1>
-<p>Utilities</p>
+<p>Functions</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.utils.immutable.html#haskpy.utils.immutable" title="haskpy.utils.immutable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">immutable</span></code></a>([maybe_cls, eq, repr])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.utils.identity.html#haskpy.utils.identity" title="haskpy.utils.identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></a>(x)</p></td>
+<td><p>a -&gt; a</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.utils.const.html#haskpy.utils.const" title="haskpy.utils.const"><code class="xref py py-obj docutils literal notranslate"><span class="pre">const</span></code></a>(x, y)</p></td>
+<td><p>a -&gt; b -&gt; a</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.utils.match.html#haskpy.utils.match" title="haskpy.utils.match"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match</span></code></a>(**kwargs)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -65,14 +71,18 @@
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="haskpy.functions.html">haskpy.functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">haskpy.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
 </ul>
 </li>
 </ul>
@@ -82,8 +92,8 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="../api.html">API</a><ul>
-      <li>Previous: <a href="haskpy.functions.html" title="previous chapter">haskpy.functions</a></li>
-      <li>Next: <a href="haskpy.utils.immutable.html" title="next chapter">haskpy.utils.immutable</a></li>
+      <li>Previous: <a href="haskpy.typeclasses.typeclass.Type.html" title="previous chapter">Type</a></li>
+      <li>Next: <a href="haskpy.utils.identity.html" title="next chapter">haskpy.utils.identity</a></li>
   </ul></li>
   </ul></li>
 </ul>

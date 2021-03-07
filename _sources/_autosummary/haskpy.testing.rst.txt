@@ -1,0 +1,6 @@
+﻿haskpy.testing
+==============
+
+.. currentmodule:: haskpy.testing
+
+.. automodule:: haskpy.testing

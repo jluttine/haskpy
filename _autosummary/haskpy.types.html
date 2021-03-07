@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>haskpy.types &#8212; HaskPy 0.1.dev1+g7815181 documentation</title>
+    <title>haskpy.types &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="haskpy.types.maybe" href="haskpy.types.maybe.html" />
-    <link rel="prev" title="Type" href="haskpy.typeclasses.typeclass.Type.html" />
+    <link rel="next" title="haskpy.types.function" href="haskpy.types.function.html" />
+    <link rel="prev" title="API" href="../api.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -41,25 +41,28 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.maybe.html#module-haskpy.types.maybe" title="haskpy.types.maybe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maybe</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.function.html#module-haskpy.types.function" title="haskpy.types.function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">function</span></code></a></p></td>
+<td><p>Functions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.maybe.html#module-haskpy.types.maybe" title="haskpy.types.maybe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maybe</span></code></a></p></td>
 <td><p>Optional values</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.either.html#module-haskpy.types.either" title="haskpy.types.either"><code class="xref py py-obj docutils literal notranslate"><span class="pre">either</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.either.html#module-haskpy.types.either" title="haskpy.types.either"><code class="xref py py-obj docutils literal notranslate"><span class="pre">either</span></code></a></p></td>
 <td><p>Values with two possibilities</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.list.html#module-haskpy.types.list" title="haskpy.types.list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.list.html#module-haskpy.types.list" title="haskpy.types.list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.linkedlist.html#module-haskpy.types.linkedlist" title="haskpy.types.linkedlist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linkedlist</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.linkedlist.html#module-haskpy.types.linkedlist" title="haskpy.types.linkedlist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linkedlist</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.identity.html#module-haskpy.types.identity" title="haskpy.types.identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.identity.html#module-haskpy.types.identity" title="haskpy.types.identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.compose.html#module-haskpy.types.compose" title="haskpy.types.compose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compose</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.compose.html#module-haskpy.types.compose" title="haskpy.types.compose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compose</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.monoids.html#module-haskpy.types.monoids" title="haskpy.types.monoids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monoids</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.monoids.html#module-haskpy.types.monoids" title="haskpy.types.monoids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monoids</span></code></a></p></td>
 <td><p>Simple monoids</p></td>
 </tr>
 </tbody>
@@ -83,14 +86,18 @@
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">haskpy.types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="haskpy.functions.html">haskpy.functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
 </ul>
 </li>
 </ul>
@@ -100,8 +107,8 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="../api.html">API</a><ul>
-      <li>Previous: <a href="haskpy.typeclasses.typeclass.Type.html" title="previous chapter">Type</a></li>
-      <li>Next: <a href="haskpy.types.maybe.html" title="next chapter">haskpy.types.maybe</a></li>
+      <li>Previous: <a href="../api.html" title="previous chapter">API</a></li>
+      <li>Next: <a href="haskpy.types.function.html" title="next chapter">haskpy.types.function</a></li>
   </ul></li>
   </ul></li>
 </ul>

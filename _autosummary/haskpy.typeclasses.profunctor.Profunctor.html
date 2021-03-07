@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profunctor &#8212; HaskPy 0.1.dev1+g7815181 documentation</title>
+    <title>Profunctor &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -41,8 +41,8 @@
 <h1>Profunctor<a class="headerlink" href="#profunctor" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="haskpy.typeclasses.profunctor.Profunctor">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Profunctor</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/profunctor.html#Profunctor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.functor.Functor</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.contravariant.Contravariant.html#haskpy.typeclasses.contravariant.Contravariant" title="haskpy.typeclasses.contravariant.Contravariant"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.contravariant.Contravariant</span></code></a></p>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Profunctor</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._functor.Functor</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._contravariant.Contravariant</span></code></p>
 <p>Minimal complete definition: <code class="docutils literal notranslate"><span class="pre">dimap</span> <span class="pre">|</span> <span class="pre">(contramap</span> <span class="pre">&amp;</span> <span class="pre">map)</span></code>.</p>
 <p>Instead of using <code class="docutils literal notranslate"><span class="pre">lmap</span></code> and <code class="docutils literal notranslate"><span class="pre">rmap</span></code> as in Haskell, let’s use the already
 introduced <code class="docutils literal notranslate"><span class="pre">contramap</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code>.</p>
@@ -70,7 +70,7 @@ two functions.</p></li>
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.profunctor.Profunctor.contramap">
-<code class="sig-name descname"><span class="pre">contramap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/profunctor.html#Profunctor.contramap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.contramap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">contramap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.contramap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.contramap" title="Permalink to this definition">¶</a></dt>
 <dd><p>(a -&gt; b) -&gt; p b c -&gt; p a c</p>
 </dd></dl>
 
@@ -82,13 +82,13 @@ two functions.</p></li>
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.profunctor.Profunctor.dimap">
-<code class="sig-name descname"><span class="pre">dimap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/profunctor.html#Profunctor.dimap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.dimap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">dimap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.dimap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.dimap" title="Permalink to this definition">¶</a></dt>
 <dd><p>p b c -&gt; (a -&gt; b) -&gt; (c -&gt; d) -&gt; p a d</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.profunctor.Profunctor.map">
-<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/profunctor.html#Profunctor.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.map" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>(b -&gt; c) -&gt; p a b -&gt; p a c</p>
 </dd></dl>
 
@@ -119,14 +119,18 @@ two functions.</p></li>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="haskpy.functions.html">haskpy.functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
 </ul>
 </li>
 </ul>
