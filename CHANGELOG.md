@@ -1,7 +1,7 @@
 # Change log
 
 
-## Dev
+## 0.2.0
 
 ### Added
 - Add `Eq` typeclass.
