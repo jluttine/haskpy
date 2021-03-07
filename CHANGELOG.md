@@ -5,11 +5,21 @@
 
 ### Added
 - Add `Eq` typeclass.
+- Add `LinkedList` type.
 
 ### Changed
 - Mask out some built-in class methods such as `__eq__` and `__hash__`. Python
   doesn't allow deleting these methods so we need to do some black magic to hide
   them as if they didn't exist.
+- Make `Function` objects curried and so that they only accept mandatory
+  positional arguments.
+
+### Fixed
+- Fix the composition operator `**` for `Function` objects.
+
+### Removed
+- Remove `CommutativeMonoid`.
+- Remove `curry` function.
 
 
 ## 0.1.3
