@@ -11,12 +11,17 @@
 
 """
 
-from .functions import *
-from .utils import *
 from .typeclasses import *
-from .types import *
+from haskpy.types.function import *
+from haskpy.types.maybe import *
+from haskpy.types.either import *
+from haskpy.types.list import *
+from haskpy.types.linkedlist import *
+from haskpy.types.identity import *
+from haskpy.types.compose import *
+from haskpy.types.monoids import *
+from .utils import *
 from .optics import *
-from . import autoclass
 
 try:
     from importlib.metadata import version, PackageNotFoundError

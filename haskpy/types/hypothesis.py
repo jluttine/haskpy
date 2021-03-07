@@ -11,7 +11,7 @@ import hypothesis.strategies as st
 
 from haskpy.typeclasses import Eq, Hashable
 from haskpy import testing
-from haskpy.utils import class_function
+from haskpy.internal import class_function
 
 
 class HypothesisList(Eq, Hashable):

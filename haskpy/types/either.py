@@ -6,11 +6,13 @@ import attr
 import hypothesis.strategies as st
 
 from haskpy.typeclasses import Monad, Eq
-from haskpy.utils import class_function, immutable, eq_test
+from haskpy.internal import class_function, immutable
+
 from haskpy.optics import prism
 
+from haskpy.testing import eq_test
 from haskpy import testing
-from haskpy.functions import function
+from haskpy.types.function import function
 
 
 @immutable

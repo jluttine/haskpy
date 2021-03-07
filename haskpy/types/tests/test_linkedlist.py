@@ -1,5 +1,5 @@
 from haskpy.types.linkedlist import LinkedList, Cons, Nil
-from haskpy.utils import make_test_class
+from haskpy.testing import make_test_class
 
 
 # Test typeclass laws for LinkedList

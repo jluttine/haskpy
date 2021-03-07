@@ -1,13 +1,21 @@
 import pytest
 
 from haskpy import utils
+from haskpy.internal import (
+    class_property,
+    class_function,
+    abstract_property,
+    abstract_function,
+    abstract_class_property,
+    abstract_class_function,
+)
 
 
 def test_class_property():
 
     class A():
 
-        @utils.class_property
+        @class_property
         def foo(cls):
             """Docstring of foo"""
             return 42
@@ -37,7 +45,7 @@ def test_class_function():
 
     class A():
 
-        @utils.class_function
+        @class_function
         def foo(cls, x, y):
             """Docstring of foo"""
             return x + y
@@ -67,7 +75,7 @@ def test_abstract_function():
 
     class A():
 
-        @utils.abstract_function
+        @abstract_function
         def foo(self, x, y):
             """Docstring of foo"""
 
@@ -96,7 +104,7 @@ def test_abstract_property():
 
     class A():
 
-        @utils.abstract_property
+        @abstract_property
         def foo(self):
             """Docstring of foo"""
 
@@ -124,7 +132,7 @@ def test_abstract_class_function():
 
     class A():
 
-        @utils.abstract_class_function
+        @abstract_class_function
         def foo(cls, x, y):
             """Docstring of foo"""
 
@@ -155,7 +163,7 @@ def test_abstract_class_property():
 
     class A():
 
-        @utils.abstract_class_property
+        @abstract_class_property
         def foo(cls):
             """Docstring of foo"""
 

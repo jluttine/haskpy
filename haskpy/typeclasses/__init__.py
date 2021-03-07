@@ -47,16 +47,16 @@ Abstract base class of the typeclasses:
 Read more at `Typeclassopedia <https://wiki.haskell.org/Typeclassopedia>`_.
 
 """
-from .typeclass import Type
-from .functor import Functor
-from .applicative import Applicative
-from .monad import Monad
-from .contravariant import Contravariant
-from .profunctor import Profunctor
-from .cartesian import Cartesian
-from .cocartesian import Cocartesian
-from .semigroup import Semigroup, Commutative
-from .monoid import Monoid
-from .foldable import Foldable
+from .typeclass import *
+from .functor import *
+from .applicative import *
+from .monad import *
+from .contravariant import *
+from .profunctor import *
+from .cartesian import *
+from .cocartesian import *
+from .semigroup import *
+from .monoid import *
+from .foldable import *
 from .hashable import *
-from .eq import Eq
+from .eq import *

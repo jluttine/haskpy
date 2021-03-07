@@ -3,7 +3,7 @@
 """
 
 from haskpy.typeclasses.typeclass import Type
-from haskpy.utils import abstract_class_function
+from haskpy.internal import abstract_class_function
 
 
 class Hashable(Type):

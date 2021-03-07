@@ -1,7 +1,11 @@
 from hypothesis import given
 import hypothesis.strategies as st
 
-from haskpy import utils
+from haskpy.internal import (
+    nonexisting_function,
+    abstract_class_function,
+    class_function,
+)
 
 
 class MetaType(type):
@@ -34,35 +38,35 @@ class Type(object, metaclass=MetaType):
             if hasattr(self, x)
         ]
 
-    @utils.nonexisting_function
+    @nonexisting_function
     def __init__(self):
         pass
 
-    @utils.nonexisting_function
+    @nonexisting_function
     def __eq__(self, other):
         pass
 
-    @utils.nonexisting_function
+    @nonexisting_function
     def __ne__(self, other):
         pass
 
-    @utils.nonexisting_function
+    @nonexisting_function
     def __gt__(self, other):
         pass
 
-    @utils.nonexisting_function
+    @nonexisting_function
     def __ge__(self, other):
         pass
 
-    @utils.nonexisting_function
+    @nonexisting_function
     def __lt__(self, other):
         pass
 
-    @utils.nonexisting_function
+    @nonexisting_function
     def __le__(self, other):
         pass
 
-    @utils.nonexisting_function
+    @nonexisting_function
     def __str__(self):
         pass
 
@@ -70,13 +74,13 @@ class Type(object, metaclass=MetaType):
     # https://github.com/ipython/ipython/issues/12320
     #
     # See the workarounds in that issue or use normal Python REPL.
-    @utils.nonexisting_function
+    @nonexisting_function
     def __hash__(self, other):
         pass
 
     def __getattribute__(self, name):
         attr = super().__getattribute__(name)
-        if isinstance(attr, utils.nonexisting_function):
+        if isinstance(attr, nonexisting_function):
             raise AttributeError()
         else:
             return attr
@@ -85,11 +89,11 @@ class Type(object, metaclass=MetaType):
     # Sampling functions for property tests
     #
 
-    @utils.abstract_class_function
+    @abstract_class_function
     def sample_type(cls):
         """Provide a type strategy that provides a value strategy"""
 
-    @utils.class_function
+    @class_function
     @given(st.data())
     def test_type(cls, data):
         """Test sampling values and that they have the correct type"""

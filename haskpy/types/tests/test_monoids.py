@@ -1,9 +1,8 @@
 from hypothesis import given
 import hypothesis.strategies as st
 
-from haskpy.utils import make_test_class
-from haskpy.types.monoids import Sum, All, Any, String, Endo
-from haskpy.functions import Function
+from haskpy.testing import make_test_class
+from haskpy import Sum, All, Any, String, Endo, Function
 from haskpy import testing
 
 

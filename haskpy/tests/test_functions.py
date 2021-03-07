@@ -1,6 +1,5 @@
-from haskpy.functions import Function, FunctionMonoid
-from haskpy.utils import make_test_class
-from haskpy.types.monoids import Sum
+from haskpy import Function, FunctionMonoid, Sum
+from haskpy.testing import make_test_class
 
 
 TestFunction = make_test_class(Function)

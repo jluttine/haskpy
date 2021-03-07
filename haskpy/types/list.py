@@ -4,13 +4,12 @@ from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Foldable, Eq
 from haskpy import testing
-from haskpy.utils import (
+from haskpy.internal import (
     immutable,
     class_property,
     class_function,
-    eq_test,
 )
-from haskpy.functions import function
+from haskpy.testing import eq_test
 
 
 @immutable(init=False)

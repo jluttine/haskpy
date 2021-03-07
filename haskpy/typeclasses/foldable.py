@@ -1,17 +1,18 @@
 import itertools
+import builtins
 from warnings import warn, filterwarnings, catch_warnings
 import hypothesis.strategies as st
 from hypothesis import given
 
-from haskpy.utils import (
-    identity,
+from haskpy.internal import (
     PerformanceWarning,
-    assert_output,
     class_function,
     abstract_class_function,
 )
+from haskpy.testing import assert_output
 from haskpy import testing
 from .typeclass import Type
+from haskpy.types.function import function
 
 
 class Foldable(Type):
@@ -131,7 +132,8 @@ class Foldable(Type):
         # The correct answer is:
         #
         # '(((x+a)+b)+c)'
-        from haskpy.functions import compose
+        from haskpy.types.function import compose
+        from haskpy.utils import identity
         warn("Using default implementation of foldl", PerformanceWarning)
         return self.foldr(
             lambda a: lambda f: compose(f, lambda b: combine(b)(a)),
@@ -185,9 +187,11 @@ class Foldable(Type):
         ).app_endo(initial)
 
     def fold(self, monoid):
+        from haskpy.utils import identity
         return self.fold_map(monoid, identity)
 
     def fold2(self, monoid):
+        from haskpy.utils import identity
         return self.fold_map(monoid, identity)
 
     def to_iter(self):
@@ -221,19 +225,19 @@ class Foldable(Type):
 
         """
         warn("Using default implementation of length", PerformanceWarning)
-        return sum(1 for _ in self.to_iter())
+        return builtins.sum(1 for _ in self.to_iter())
 
     def sum(self):
         """t a -> number"""
-        return sum(self.to_iter())
+        return builtins.sum(self.to_iter())
 
     def null(self):
         """t a -> bool"""
-        return all(False for _ in self.to_iter())
+        return builtins.all(False for _ in self.to_iter())
 
     def elem(self, x):
         """t a -> a -> bool"""
-        return any(x == y for y in self.to_iter())
+        return builtins.any(x == y for y in self.to_iter())
 
     def __iter__(self):
         """Override to_iter if you want to change the default implementation"""
@@ -276,7 +280,6 @@ class Foldable(Type):
     def assert_foldable_fold_map(cls, xs, monoid, f):
         # The default implementation defines the law (with respect to other
         # methods)
-        from haskpy.functions import fold_map
         return (
             Foldable.fold_map(xs, monoid, f),
             xs.fold_map(monoid, f),
@@ -305,7 +308,6 @@ class Foldable(Type):
     def assert_foldable_foldr(cls, xs, combine, initial):
         # The default implementation defines the law (with respect to other
         # methods)
-        from haskpy.functions import foldr
         return (
             Foldable.foldr(xs, combine, initial),
             xs.foldr(combine, initial),
@@ -336,7 +338,6 @@ class Foldable(Type):
     def assert_foldable_foldl(cls, xs, combine, initial):
         # The default implementation defines the law (with respect to other
         # methods)
-        from haskpy.functions import foldl
         return (
             Foldable.foldl(xs, combine, initial),
             xs.foldl(combine, initial),
@@ -365,7 +366,6 @@ class Foldable(Type):
     @class_function
     @assert_output
     def assert_foldable_fold(cls, xs, monoid):
-        from haskpy.functions import fold
         # The default implementation defines the law (with respect to other
         # methods)
         return (
@@ -394,7 +394,6 @@ class Foldable(Type):
     def assert_foldable_length(cls, xs):
         # The default implementation defines the law (with respect to other
         # methods)
-        from haskpy.functions import length
         return (
             Foldable.length(xs),
             len(xs),
@@ -422,7 +421,6 @@ class Foldable(Type):
     def assert_foldable_null(cls, xs):
         # The default implementation defines the law (with respect to other
         # methods)
-        from haskpy.functions import null
         return (
             Foldable.null(xs),
             xs.null(),
@@ -450,7 +448,6 @@ class Foldable(Type):
     def assert_foldable_sum(cls, xs):
         # The default implementation defines the law (with respect to other
         # methods)
-        from haskpy.functions import sum
         return (
             Foldable.sum(xs),
             xs.sum(),
@@ -477,7 +474,6 @@ class Foldable(Type):
     def assert_foldable_elem(cls, xs, e):
         # The default implementation defines the law (with respect to other
         # methods)
-        from haskpy.functions import elem
         return (
             Foldable.elem(xs, e),
             e in xs,
@@ -534,5 +530,155 @@ class Foldable(Type):
         return
 
 
-# Foldable-related functions are defined in function module because of circular
-# dependency.
+@function
+def fold_map(monoid, f, xs):
+    """(Foldable t, Monoid m) => Monoid -> (a -> m) -> t a -> m
+
+    The first argument is a class of the values inside the foldable structure.
+    It must be given explicitly so empty structures can be handled without
+    errors.
+
+    """
+    return xs.fold_map(monoid, f)
+
+
+@function
+def foldl(combine, initial, xs):
+    """Foldable t => (b -> a -> b) -> b -> t a -> b"""
+    return xs.foldl(combine, initial)
+
+
+@function
+def foldr(combine, initial, xs):
+    """Foldable t => (a -> b -> b) -> b -> t a -> b"""
+    return xs.foldr(combine, initial)
+
+
+@function
+def foldr_lazy(combine, initial, xs):
+    """Foldable t => (a -> (() -> b) -> (() -> b)) -> b -> t a -> b
+
+    Nonstrict right-associative fold.
+
+    This function is similar to ``foldr`` in Haskell, but note that the combine
+    function uses singleton lambda functions to achieve laziness and to enable
+    tail-call optimization.
+
+    Let's have a closer look on the signature of ``combine`` to understand the
+    possibilities a bit better:
+
+    The signature of ``combine`` is ``a -> (() -> b) -> (() -> b)``. You can
+    think of these ``() -> b`` as "lazy" accumulated values. ``() -> b`` is
+    just a lambda function that takes no arguments and returns a value of type
+    ``b``. Let's name the first argument ``x :: a`` and the second argument
+    ``lacc :: () -> b`` (as "lazy accumulator"). Now we can explain how to make
+    use of some powerful features:
+
+    - When ``combine`` doesn't use it's second argument ``lacc``, the recursion
+      stops (i.e., short-circuits). Therefore, infinite lists might be
+      processed in finite time.
+
+    - When ``combine`` returns ``lacc`` as such without modifying it, tail-call
+      optimization triggers. Therefore, very long lists might be processed
+      efficiently without exceeding maximum recursion depth or overflowing the
+      stack.
+
+    - When ``combine`` uses ``lacc`` but the evaluation ``lacc()`` is
+      "post-poned" (e.g., it happens inside yet another lambda function), the
+      recursion becomes "lazy" as it will continue only when ``lacc()``
+      actually gets evaluated. Therefore, infinite lists can be processed
+      lazily.
+
+    Note that Python's built-in ``reduce`` function doesn't support these
+    features.
+
+    Examples
+    --------
+
+    Short-circuiting and tail-call optimization for an infinite list:
+
+    >>> xs = iterate(lambda x: x + 1, 1)
+    >>> my_any = foldr_lazy(lambda x, lacc: (lambda: True) if x else lacc, False)
+    >>> my_any(xs.map(lambda x: x > 100000))
+    True
+
+    Looking at ``(lambda: True) if x else lacc``, we can see that when the left
+    side of the if-expression is evaluated, the fold short-circuits because
+    ``True`` makes no use of ``lacc``. When the right side of the if-expression
+    is evaluated, the fold uses efficient tail-call optimization because
+    ``lacc`` is returned unmodified.
+
+    Lazy evaluation makes it possible to transform infinite structures:
+
+    >>> from haskpy import Cons, Nil
+    >>> my_map = lambda f: foldr_lazy(lambda x, lacc: lambda: Cons(f(x), lacc), Nil)
+    >>> my_map(lambda x: x ** 2)(xs)
+    Cons(1, Cons(4, Cons(9, Cons(16, Cons(25, Cons(36, ...))))))
+
+    The infinite list gets mapped lazily because ``lacc`` isn't called at this
+    time, it is delayed as the linked list will call it only when the next
+    element is requested.
+
+    Note that sometimes you shouldn't use ``foldr_lazy`` because it can cause
+    stack overflow (or rather hit Python's recursion limit) because of too deep
+    recursion. This can happen with a long list when the recursion doesn't
+    short-circuit (early enough), tail-call optimization cannot be used and the
+    recursion doesn't pause for laziness. A simple such example is a summation:
+
+    >>> my_sum = foldr_lazy(lambda x, lacc: lambda: x + lacc(), 0)
+    >>> my_sum(xs.take(100))
+    5050
+    >>> my_sum(xs.take(1000000))
+    Error
+
+    For this kind of folds, you should use ``foldl``.
+
+    As already shown, ``foldr_lazy`` generalizes ``map`` and ``any``. It can
+    also be used to implement many other functions in a may that may seem a bit
+    surprising at first, for instance:
+
+    >>> from haskpy import Just, Nothing
+    >>> my_head = foldr_lazy(lambda x, lacc: lambda: Just(x), Nothing)
+    >>> my_head(xs)
+    Just(1)
+    >>> my_head(Nil)
+    Nothing
+
+    """
+    return xs.foldr_lazy(combine, initial)
+
+
+@function
+def fold(monoid, xs):
+    """(Foldable t, Monoid m) => Monoid -> t a -> m
+
+    The first argument is a class of the values inside the foldable structure.
+    It must be given explicitly so empty structures can be handled without
+    errors.
+
+    """
+    return xs.fold(monoid)
+
+
+@function
+def length(xs):
+    """Foldable t => t a -> int"""
+    return xs.length()
+
+
+@function
+def sum(xs):
+    """(Foldable t, Num a) => t a -> a"""
+    return xs.sum()
+
+
+@function
+def null(xs):
+    """Foldable t => t a -> Bool"""
+    return xs.null()
+
+
+@function
+def elem(e, xs):
+    """(Foldable t, Eq a) => a -> t a -> Bool"""
+    return xs.elem(e)

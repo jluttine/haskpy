@@ -1,23 +1,94 @@
 import hypothesis.strategies as st
 import attr
+import functools
 
-from haskpy.utils import singleton, immutable, class_function
+from haskpy.internal import immutable, class_function, universal_set
+
+
+def eq_test(x, y, data, **kwargs):
+    eq = getattr(x, "__eq_test__", lambda v, *_, **__: x == v)
+    return eq(y, data, **kwargs)
+
+
+def assert_output(f):
+    """Assert that the output pair elements are equal"""
+
+    @functools.wraps(f)
+    def wrapped(*args, **kwargs):
+        xs = f(*args)
+        x0 = xs[0]
+        for xi in xs[1:]:
+            assert eq_test(x0, xi, **kwargs)
+        return
+
+    return wrapped
+
+
+def make_test_class(C, typeclasses=universal_set):
+    """Create a PyTest-compatible test class
+
+    In order to test only some typeclass laws, give the set of typeclasses as
+    ``typeclasses`` argument.
+
+    When PyTest runs tests on a class, it creates an instance of the class and
+    tests the instance. The class shouldn't have __init__ method. However, we
+    want to test class methods, so there's no need to create an instance in the
+    first place and it's ok to have any kind of __init__ method. To work around
+    this PyTest limitation, we crete a class which doesn't have __init__ and
+    when you call it's constructor, you actually don't get an instance of that
+    class but instead the class that we wanted to test in the first place.
+    PyTest thinks it got an instance of the class but actually we just gave it
+    a class.
+
+    So, to run the class method tests for a class SomeClass, add the following
+    to some ``test_`` prefixed module:
+
+    .. code-block:: python
+
+        TestSomeClass = make_test_class(SomeClass)
+
+    """
+
+    classes = {cls for cls in C.mro() if cls in typeclasses}
+
+    test_methods = {
+        method
+        for cls in classes
+        for method in cls.__dict__.keys()
+        if method.startswith("test_")
+    }
+
+    dct = {
+        name: getattr(C, name)
+        for name in dir(C)
+        if name in test_methods
+    }
+
+    class MetaTestClass(type):
+
+        __dict__ = dct
+
+    class TestClass(metaclass=MetaTestClass):
+
+        __dict__ = dct
+
+        def __getattr__(self, name):
+            return getattr(C, name)
+
+    return TestClass
 
 
 def types():
-    from haskpy import types
+    from haskpy import All, String, Maybe
     from haskpy.types import hypothesis
-    from haskpy.functions import Function
     # Some example types. The more types you add here, the longer it takes to
     # run the tests. Also, put simpler non-recursive strategies first:
     # https://hypothesis.readthedocs.io/en/latest/data.html#hypothesis.strategies.one_of
     return (
-        types.All,
+        All,
         hypothesis.HypothesisInteger,
-        types.String,
-        types.Maybe,
-        # types.List,
-        # Function,
+        String,
+        Maybe,
     )
 
 

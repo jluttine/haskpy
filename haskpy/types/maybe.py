@@ -35,13 +35,12 @@ from haskpy.typeclasses import (
     Foldable,
     Eq,
 )
-from haskpy.utils import (
+from haskpy.internal import (
     immutable,
     class_function,
     class_property,
-    eq_test,
 )
-
+from haskpy.testing import eq_test
 from haskpy import testing
 
 

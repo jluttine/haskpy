@@ -1,5 +1,5 @@
-from haskpy.utils import make_test_class
-from haskpy.types import Compose, Maybe, Identity, Just
+from haskpy.testing import make_test_class
+from haskpy import Compose, Maybe, Identity, Just
 
 
 MaybeIdentity = Compose(Maybe, Identity)

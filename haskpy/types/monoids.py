@@ -4,14 +4,14 @@ import attr
 import hypothesis.strategies as st
 
 from haskpy.typeclasses import Monoid, Commutative, Hashable, Eq
-from haskpy import testing
-from haskpy.utils import (
-    identity,
+from haskpy.utils import identity
+from haskpy.internal import (
     class_property,
     class_function,
     immutable,
-    eq_test,
 )
+from haskpy.testing import eq_test
+from haskpy import testing
 
 
 @immutable

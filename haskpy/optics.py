@@ -20,7 +20,8 @@ Resources:
 """
 
 
-from haskpy.functions import function, identity
+from haskpy.types.function import function
+from haskpy.utils import identity
 
 
 @function

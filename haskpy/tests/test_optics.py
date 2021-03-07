@@ -1,8 +1,8 @@
 import attr
 
-from haskpy.types.either import Left, Right
+from haskpy import Left, Right
 from haskpy.optics import adapter, lens, prism
-from haskpy.utils import immutable
+from haskpy.internal import immutable
 
 
 def test_adapter():

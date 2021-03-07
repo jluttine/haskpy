@@ -1,144 +1,29 @@
-from hypothesis import given
-from hypothesis import strategies as st
+"""Contravariant functors
 
-from .typeclass import Type
-from haskpy.utils import (
-    identity,
-    assert_output,
-    class_function,
-    abstract_class_function,
-)
-from haskpy import testing
+.. autosummary::
+   :toctree:
 
+   Contravariant
 
-class Contravariant(Type):
-    """Contravariant functor
+.. autosummary::
+   :toctree:
 
-    Minimal complete definition:
+   contramap
+   contrareplace
 
-    - ``contramap`` method
+"""
 
-    """
-
-    def contramap(self, f):
-        """f b -> (a -> b) -> f a"""
-        raise NotImplementedError()
-
-    def contrareplace(self, x):
-        """f b -> b -> f a"""
-        return self.contramap(lambda _: x)
-
-    #
-    # Sampling methods for property tests
-    #
-
-    @abstract_class_function
-    def sample_contravariant_type(cls, a):
-        pass
-
-    #
-    # Test typeclass laws
-    #
-
-    @class_function
-    @assert_output
-    def assert_contravariant_identity(cls, v):
-        return(
-            v,
-            v.contramap(identity),
-        )
-
-    @class_function
-    @given(st.data())
-    def test_contravariant_identity(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_type())
-        ta = data.draw(cls.sample_contravariant_type(a))
-
-        # Draw values
-        v = data.draw(ta)
-
-        cls.assert_contravariant_identity(v, data=data)
-        return
-
-    @class_function
-    @assert_output
-    def assert_contravariant_composition(cls, v, f, g):
-        return (
-            v.contramap(f).contramap(g),
-            v.contramap(lambda x: f(g(x))),
-        )
-
-    @class_function
-    @given(st.data())
-    def test_contravariant_composition(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_type())
-        b = data.draw(testing.sample_eq_type())
-        c = data.draw(testing.sample_eq_type())
-        ta = data.draw(cls.sample_contravariant_type(a))
-
-        # Draw values
-        v = data.draw(ta)
-        f = data.draw(testing.sample_function(b))
-        g = data.draw(testing.sample_function(c))
-
-        cls.assert_contravariant_composition(v, f, g, data=data)
-        return
-
-    #
-    # Test laws based on default implementations
-    #
-
-    @class_function
-    @assert_output
-    def assert_contravariant_contramap(cls, v, f):
-        from haskpy.functions import contramap
-        return (
-            v.contramap(f),
-            contramap(f, v),
-        )
-
-    @class_function
-    @given(st.data())
-    def test_contravariant_contramap(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_type())
-        b = data.draw(testing.sample_eq_type())
-        ta = data.draw(cls.sample_contravariant_type(a))
-
-        # Draw values
-        v = data.draw(ta)
-        f = data.draw(testing.sample_function(b))
-
-        cls.assert_contravariant_contramap(v, f, data=data)
-        return
-
-    @class_function
-    @assert_output
-    def assert_contravariant_contrareplace(cls, v, x):
-        from haskpy.functions import contrareplace
-        return (
-            Contravariant.contrareplace(v, x),
-            contrareplace(x, v),
-            v.contrareplace(x),
-        )
-
-    @class_function
-    @given(st.data())
-    def test_contravariant_contrareplace(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_type())
-        b = data.draw(testing.sample_eq_type())
-        ta = data.draw(cls.sample_contravariant_type(a))
-
-        # Draw values
-        v = data.draw(ta)
-        x = data.draw(b)
-
-        cls.assert_contravariant_contrareplace(v, x, data=data)
-        return
+from haskpy.types.function import function
+from ._contravariant import Contravariant
 
 
-# Contravariant-related functions are defined in function module because of
-# circular dependency.
+@function
+def contramap(f, x):
+    """(a -> b) -> f b -> f a"""
+    return x.contramap(f)
+
+
+@function
+def contrareplace(b, x):
+    """b -> f b -> f a"""
+    return x.contrareplace(b)

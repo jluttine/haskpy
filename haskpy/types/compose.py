@@ -1,9 +1,9 @@
 import attr
 import functools
 
-from haskpy.typeclasses import Applicative, Eq
-from haskpy.functions import map, apply
-from haskpy.utils import class_function, immutable, eq_test
+from haskpy.typeclasses import Applicative, Eq, map, apply
+from haskpy.internal import class_function, immutable
+from haskpy.testing import eq_test
 from haskpy import testing
 
 

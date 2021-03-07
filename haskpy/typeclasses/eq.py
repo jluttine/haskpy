@@ -2,8 +2,9 @@ import hypothesis.strategies as st
 from hypothesis import given
 
 from .typeclass import Type
-from haskpy.utils import class_function
+from haskpy.internal import class_function
 from haskpy import testing
+from haskpy.types.function import function
 
 
 class Eq(Type):
@@ -155,7 +156,6 @@ class Eq(Type):
 
     @class_function
     def assert_eq_eq(cls, x, y):
-        from haskpy.functions import eq
         assert (x == y) == eq(x, y)
         assert (x == y) == cls.__eq__(x, y)
         return
@@ -184,3 +184,15 @@ class Eq(Type):
         y = data.draw(a)
         cls.assert_eq_eq(x, y)
         return
+
+
+@function
+def eq(x, y):
+    """Equality: ``Eq a => a -> a -> Bool``"""
+    return x == y
+
+
+@function
+def ne(x, y):
+    """Inequality: ``Eq a => a -> a -> Bool``"""
+    return x != y

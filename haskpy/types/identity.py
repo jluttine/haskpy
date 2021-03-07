@@ -1,7 +1,8 @@
 import attr
 
-from haskpy.utils import class_function, immutable, eq_test
+from haskpy.internal import class_function, immutable
 from haskpy.typeclasses import Monad, Eq
+from haskpy.testing import eq_test
 from haskpy import testing
 
 

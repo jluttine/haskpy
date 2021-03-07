@@ -1,7 +1,5 @@
-from haskpy.types.maybe import Maybe, Just, Nothing, MaybeT
-from haskpy.types import List
-from haskpy.utils import make_test_class
-from haskpy.functions import Function
+from haskpy import Maybe, Just, Nothing, MaybeT, List, Function, Compose
+from haskpy.testing import make_test_class
 
 
 # Test typeclass laws for Maybe
@@ -40,7 +38,6 @@ def test_compose_vs_maybet():
     Compose, but rather it's.. well.. a monad transformer.
 
     """
-    from haskpy.types import List, Compose
 
     MaybeList = MaybeT(List)
     xs = MaybeList(List(Nothing))
