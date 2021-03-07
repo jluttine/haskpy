@@ -19,6 +19,7 @@ if __name__ == "__main__":
         description="Utilities inspired by Haskell and Hask category",
         project_urls={
             "Homepage": "https://github.com/jluttine/haskpy",
+            "Download": "https://pypi.org/project/haskpy/",
             "Documentation": "https://jluttine.github.io/haskpy/",
             "Bug reports": "https://github.com/jluttine/haskpy/issues",
             "Contributing": "https://github.com/jluttine/haskpy/pulls",
