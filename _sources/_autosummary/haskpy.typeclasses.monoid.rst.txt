@@ -1,0 +1,6 @@
+haskpy.typeclasses.monoid
+=========================
+
+.. currentmodule:: haskpy.typeclasses.monoid
+
+.. automodule:: haskpy.typeclasses.monoid

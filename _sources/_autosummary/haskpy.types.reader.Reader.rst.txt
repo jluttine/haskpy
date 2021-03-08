@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.reader.Reader
+   :noindex:
+
+Reader
+==========================
+
+.. currentmodule:: haskpy.types.reader
+
+.. autoclass:: Reader
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

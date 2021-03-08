@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>haskpy.types &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
+    <title>haskpy.types &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -34,7 +34,12 @@
             
   <div class="section" id="module-haskpy.types">
 <span id="haskpy-types"></span><h1>haskpy.types<a class="headerlink" href="#module-haskpy.types" title="Permalink to this headline">¶</a></h1>
-<p>A collection of types</p>
+<p>Types define properties that values have</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Type syntax: <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">Maybe</span> <span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">Maybe</span> <span class="pre">a</span> <span class="pre">-&gt;</span>
+<span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">-&gt;</span> <span class="pre">b)</span> <span class="pre">-&gt;</span> <span class="pre">Maybe</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">Maybe</span> <span class="pre">b</span></code>.</p>
+</div>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -50,20 +55,41 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.either.html#module-haskpy.types.either" title="haskpy.types.either"><code class="xref py py-obj docutils literal notranslate"><span class="pre">either</span></code></a></p></td>
 <td><p>Values with two possibilities</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.list.html#module-haskpy.types.list" title="haskpy.types.list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.validation.html#module-haskpy.types.validation" title="haskpy.types.validation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validation</span></code></a></p></td>
+<td><p><strong>TODO</strong></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.linkedlist.html#module-haskpy.types.linkedlist" title="haskpy.types.linkedlist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linkedlist</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.list.html#module-haskpy.types.list" title="haskpy.types.list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a></p></td>
+<td><p>List of values</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.linkedlist.html#module-haskpy.types.linkedlist" title="haskpy.types.linkedlist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linkedlist</span></code></a></p></td>
+<td><p>Linked list of values</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.dictionary.html#module-haskpy.types.dictionary" title="haskpy.types.dictionary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dictionary</span></code></a></p></td>
+<td><p><strong>TODO</strong></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.identity.html#module-haskpy.types.identity" title="haskpy.types.identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.compose.html#module-haskpy.types.compose" title="haskpy.types.compose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compose</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.constant.html#module-haskpy.types.constant" title="haskpy.types.constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constant</span></code></a></p></td>
+<td><p><strong>TODO</strong></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.monoids.html#module-haskpy.types.monoids" title="haskpy.types.monoids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monoids</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.compose.html#module-haskpy.types.compose" title="haskpy.types.compose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compose</span></code></a></p></td>
+<td><p>Compose two applicative functors into one</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.monoids.html#module-haskpy.types.monoids" title="haskpy.types.monoids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monoids</span></code></a></p></td>
 <td><p>Simple monoids</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.state.html#module-haskpy.types.state" title="haskpy.types.state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state</span></code></a></p></td>
+<td><p><strong>TODO</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.reader.html#module-haskpy.types.reader" title="haskpy.types.reader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reader</span></code></a></p></td>
+<td><p><strong>TODO</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.writer.html#module-haskpy.types.writer" title="haskpy.types.writer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writer</span></code></a></p></td>
+<td><p><strong>TODO</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.io.html#module-haskpy.types.io" title="haskpy.types.io"><code class="xref py py-obj docutils literal notranslate"><span class="pre">io</span></code></a></p></td>
+<td><p><strong>TODO</strong></p></td>
 </tr>
 </tbody>
 </table>

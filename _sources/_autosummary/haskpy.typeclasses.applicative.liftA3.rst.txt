@@ -1,0 +1,6 @@
+haskpy.typeclasses.applicative.liftA3
+=====================================
+
+.. currentmodule:: haskpy.typeclasses.applicative
+
+.. autofunction:: liftA3

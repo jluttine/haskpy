@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.types.list &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.types.list</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;List of values</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree:</span>
+
+<span class="sd">   List</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.typeclasses</span> <span class="kn">import</span> <span class="n">Monad</span><span class="p">,</span> <span class="n">Monoid</span><span class="p">,</span> <span class="n">Foldable</span><span class="p">,</span> <span class="n">Eq</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+<span class="kn">from</span> <span class="nn">haskpy.internal</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">immutable</span><span class="p">,</span>
+    <span class="n">class_property</span><span class="p">,</span>
+    <span class="n">class_function</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">haskpy.testing</span> <span class="kn">import</span> <span class="n">eq_test</span>
+
+
+<div class="viewcode-block" id="List"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List">[docs]</a><span class="nd">@immutable</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">List</span><span class="p">(</span><span class="n">Monad</span><span class="p">,</span> <span class="n">Monoid</span><span class="p">,</span> <span class="n">Foldable</span><span class="p">,</span> <span class="n">Eq</span><span class="p">):</span>
+
+    <span class="n">__xs</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">converter</span><span class="o">=</span><span class="nb">tuple</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">xs</span><span class="p">):</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_List__xs&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="List.map"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.map">[docs]</a>    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; (a -&gt; b) -&gt; List b&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">List</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__xs</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="List.pure"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.pure">[docs]</a>    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;a -&gt; List a&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="List.apply"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; List (a -&gt; b) -&gt; List b&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">List</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">y</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fs</span><span class="o">.</span><span class="n">__xs</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">__xs</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="List.bind"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; (a -&gt; List b) -&gt; List b&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">List</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">y</span> <span class="k">for</span> <span class="n">ys</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">__xs</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">ys</span><span class="o">.</span><span class="n">__xs</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="List.__eq__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.__eq__">[docs]</a>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; List a -&gt; bool&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__xs</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">__xs</span></div>
+
+<div class="viewcode-block" id="List.empty"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.empty">[docs]</a>    <span class="nd">@class_property</span>
+    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Empty list, type ``List a``&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="List.append"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; List a -&gt; List a&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">List</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__xs</span><span class="p">,</span> <span class="o">*</span><span class="n">xs</span><span class="o">.</span><span class="n">__xs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="List.to_iter"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.to_iter">[docs]</a>    <span class="k">def</span> <span class="nf">to_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">__xs</span></div>
+
+<div class="viewcode-block" id="List.from_iter"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.from_iter">[docs]</a>    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">from_iter</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Iterable f =&gt; f a -&gt; List a&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">xs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="List.length"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__xs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="List.elem"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.elem">[docs]</a>    <span class="k">def</span> <span class="nf">elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__xs</span></div>
+
+<div class="viewcode-block" id="List.foldl"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.foldl">[docs]</a>    <span class="k">def</span> <span class="nf">foldl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</span>
+
+<span class="sd">        ``combine`` function is assumed to be curried</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: We could implement also fold_map to make fold_map and fold to</span>
+        <span class="c1"># use parallelized implementation because they use monoids. Now, the</span>
+        <span class="c1"># default implementations use foldl/foldr which both are sequential.</span>
+        <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">combine</span><span class="p">(</span><span class="n">a</span><span class="p">)(</span><span class="n">b</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__xs</span><span class="p">,</span>
+            <span class="n">initial</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="List.foldr"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.foldr">[docs]</a>    <span class="k">def</span> <span class="nf">foldr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</span>
+
+<span class="sd">        ``combine`` function is assumed to be curried</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: We could implement also fold_map to make fold_map and fold to</span>
+        <span class="c1"># use parallelized implementation because they use monoids. Now, the</span>
+        <span class="c1"># default implementations use foldl/foldr which both are sequential.</span>
+        <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">combine</span><span class="p">(</span><span class="n">a</span><span class="p">)(</span><span class="n">b</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__xs</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">initial</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;List</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__xs</span><span class="p">))</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Sampling methods for property tests</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">sample_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">xs</span><span class="p">:</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">xs</span><span class="p">))</span>
+
+    <span class="n">sample_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">sample_functor_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">()</span>
+    <span class="n">sample_applicative_type</span> <span class="o">=</span> <span class="n">sample_functor_type</span>
+    <span class="n">sample_monad_type</span> <span class="o">=</span> <span class="n">sample_functor_type</span>
+
+    <span class="n">sample_semigroup_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">sample_monoid_type</span> <span class="o">=</span> <span class="n">sample_semigroup_type</span>
+
+    <span class="n">sample_eq_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">sample_foldable_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">()</span>
+    <span class="n">sample_foldable_functor_type</span> <span class="o">=</span> <span class="n">sample_foldable_type</span>
+
+<div class="viewcode-block" id="List.__eq_test__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.list.List.html#haskpy.types.list.List.__eq_test__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq_test__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="kc">False</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__xs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__xs</span><span class="p">)</span> <span class="k">else</span>
+            <span class="nb">all</span><span class="p">(</span>
+                <span class="n">eq_test</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__xs</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">__xs</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

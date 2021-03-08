@@ -1,0 +1,6 @@
+haskpy.typeclasses.applicative.sequence
+=======================================
+
+.. currentmodule:: haskpy.typeclasses.applicative
+
+.. autofunction:: sequence

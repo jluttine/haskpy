@@ -1,0 +1,6 @@
+haskpy.types.either.is\_left
+============================
+
+.. currentmodule:: haskpy.types.either
+
+.. autofunction:: is_left

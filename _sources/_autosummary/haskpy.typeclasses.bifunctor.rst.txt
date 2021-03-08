@@ -1,0 +1,6 @@
+haskpy.typeclasses.bifunctor
+============================
+
+.. currentmodule:: haskpy.typeclasses.bifunctor
+
+.. automodule:: haskpy.typeclasses.bifunctor

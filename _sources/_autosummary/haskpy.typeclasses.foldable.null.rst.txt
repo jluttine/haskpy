@@ -1,0 +1,6 @@
+haskpy.typeclasses.foldable.null
+================================
+
+.. currentmodule:: haskpy.typeclasses.foldable
+
+.. autofunction:: null

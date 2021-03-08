@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.validation.Validation
+   :noindex:
+
+Validation
+==================================
+
+.. currentmodule:: haskpy.types.validation
+
+.. autoclass:: Validation
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

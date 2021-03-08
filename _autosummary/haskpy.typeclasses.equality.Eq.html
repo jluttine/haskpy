@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eq &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="haskpy.typeclasses.equality.eq" href="haskpy.typeclasses.equality.eq.html" />
+    <link rel="prev" title="haskpy.typeclasses.equality" href="haskpy.typeclasses.equality.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="py data">
+<dt>
+<code class="sig-prename descclassname"><span class="pre">haskpy.typeclasses.equality.</span></code><code class="sig-name descname"><span class="pre">Eq</span></code></dt>
+<dd></dd></dl>
+
+<div class="section" id="eq">
+<h1>Eq<a class="headerlink" href="#eq" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="haskpy.typeclasses.equality.Eq">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Eq</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/equality.html#Eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.equality.Eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.typeclass.Type.html#haskpy.typeclasses.typeclass.Type" title="haskpy.typeclasses.typeclass.Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.typeclass.Type</span></code></a></p>
+<p>Equality and inequality comparison</p>
+<p>Minimal complete definition:</p>
+<blockquote>
+<div><p>(__eq__ | __ne__) &amp; sample_type</p>
+</div></blockquote>
+<p>Minimal complete definition for type constructors:</p>
+<blockquote>
+<div><p>(__eq_generic__ | (__eq_test__ &amp; (__eq__ | __ne__))) &amp; sample_eq_type</p>
+</div></blockquote>
+<dl class="py method">
+<dt id="haskpy.typeclasses.equality.Eq.__eq__">
+<code class="sig-name descname"><span class="pre">__eq__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/equality.html#Eq.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.equality.Eq.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equality comparison: <code class="docutils literal notranslate"><span class="pre">Eq</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code></p>
+<p>Can be used as <code class="docutils literal notranslate"><span class="pre">==</span></code> operator.</p>
+<p>The default implementation uses <code class="docutils literal notranslate"><span class="pre">__ne__</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="haskpy.typeclasses.equality.Eq.__hash__">
+<code class="sig-name descname"><span class="pre">__hash__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#haskpy.typeclasses.equality.Eq.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.equality.Eq.__ne__">
+<code class="sig-name descname"><span class="pre">__ne__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/equality.html#Eq.__ne__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.equality.Eq.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inequality comparison: <code class="docutils literal notranslate"><span class="pre">Eq</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code></p>
+<p>Can be used as <code class="docutils literal notranslate"><span class="pre">!=</span></code> operator.</p>
+<p>The default implementation uses <code class="docutils literal notranslate"><span class="pre">__eq__</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.typeclasses.html">haskpy.typeclasses</a><ul>
+  <li><a href="haskpy.typeclasses.equality.html">haskpy.typeclasses.equality</a><ul>
+      <li>Previous: <a href="haskpy.typeclasses.equality.html" title="previous chapter">haskpy.typeclasses.equality</a></li>
+      <li>Next: <a href="haskpy.typeclasses.equality.eq.html" title="next chapter">haskpy.typeclasses.equality.eq</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.typeclasses.equality.Eq.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

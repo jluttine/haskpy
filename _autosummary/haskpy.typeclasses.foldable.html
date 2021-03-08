@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses.foldable &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Foldable" href="haskpy.typeclasses.foldable.Foldable.html" />
+    <link rel="prev" title="haskpy.typeclasses.monoid.append" href="haskpy.typeclasses.monoid.append.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-haskpy.typeclasses.foldable">
+<span id="haskpy-typeclasses-foldable"></span><h1>haskpy.typeclasses.foldable<a class="headerlink" href="#module-haskpy.typeclasses.foldable" title="Permalink to this headline">¶</a></h1>
+<p>Struture that can be squashed</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable" title="haskpy.typeclasses.foldable.Foldable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Foldable</span></code></a></p></td>
+<td><p>Foldable typeclass</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.fold_map.html#haskpy.typeclasses.foldable.fold_map" title="haskpy.typeclasses.foldable.fold_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fold_map</span></code></a>(monoid, f, xs)</p></td>
+<td><p>(Foldable t, Monoid m) =&gt; Monoid -&gt; (a -&gt; m) -&gt; t a -&gt; m</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.foldl.html#haskpy.typeclasses.foldable.foldl" title="haskpy.typeclasses.foldable.foldl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">foldl</span></code></a>(combine, initial, xs)</p></td>
+<td><p>Foldable t =&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.foldr.html#haskpy.typeclasses.foldable.foldr" title="haskpy.typeclasses.foldable.foldr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">foldr</span></code></a>(combine, initial, xs)</p></td>
+<td><p>Foldable t =&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.foldr_lazy.html#haskpy.typeclasses.foldable.foldr_lazy" title="haskpy.typeclasses.foldable.foldr_lazy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">foldr_lazy</span></code></a>(combine, initial, xs)</p></td>
+<td><p>Foldable t =&gt; (a -&gt; (() -&gt; b) -&gt; (() -&gt; b)) -&gt; b -&gt; t a -&gt; b</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.fold.html#haskpy.typeclasses.foldable.fold" title="haskpy.typeclasses.foldable.fold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fold</span></code></a>(monoid, xs)</p></td>
+<td><p>(Foldable t, Monoid m) =&gt; Monoid -&gt; t a -&gt; m</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.length.html#haskpy.typeclasses.foldable.length" title="haskpy.typeclasses.foldable.length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">length</span></code></a>(xs)</p></td>
+<td><p>Foldable t =&gt; t a -&gt; int</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.sum.html#haskpy.typeclasses.foldable.sum" title="haskpy.typeclasses.foldable.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>(xs)</p></td>
+<td><p>(Foldable t, Num a) =&gt; t a -&gt; a</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.null.html#haskpy.typeclasses.foldable.null" title="haskpy.typeclasses.foldable.null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">null</span></code></a>(xs)</p></td>
+<td><p>Foldable t =&gt; t a -&gt; Bool</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.foldable.elem.html#haskpy.typeclasses.foldable.elem" title="haskpy.typeclasses.foldable.elem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elem</span></code></a>(e, xs)</p></td>
+<td><p>(Foldable t, Eq a) =&gt; a -&gt; t a -&gt; Bool</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.typeclasses.html">haskpy.typeclasses</a><ul>
+      <li>Previous: <a href="haskpy.typeclasses.monoid.append.html" title="previous chapter">haskpy.typeclasses.monoid.append</a></li>
+      <li>Next: <a href="haskpy.typeclasses.foldable.Foldable.html" title="next chapter">Foldable</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.typeclasses.foldable.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

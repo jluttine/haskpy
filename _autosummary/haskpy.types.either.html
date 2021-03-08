@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>haskpy.types.either &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
+    <title>haskpy.types.either &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="haskpy.types.list" href="haskpy.types.list.html" />
+    <link rel="next" title="Either" href="haskpy.types.either.Either.html" />
     <link rel="prev" title="haskpy.types.maybe.MaybeT" href="haskpy.types.maybe.MaybeT.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -35,6 +35,44 @@
   <div class="section" id="module-haskpy.types.either">
 <span id="haskpy-types-either"></span><h1>haskpy.types.either<a class="headerlink" href="#module-haskpy.types.either" title="Permalink to this headline">¶</a></h1>
 <p>Values with two possibilities</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.either.Either.html#haskpy.types.either.Either" title="haskpy.types.either.Either"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Either</span></code></a>(match)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.either.Left.html#haskpy.types.either.Left" title="haskpy.types.either.Left"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Left</span></code></a>(x)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.either.Right.html#haskpy.types.either.Right" title="haskpy.types.either.Right"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Right</span></code></a>(x)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.either.either.html#haskpy.types.either.either" title="haskpy.types.either.either"><code class="xref py py-obj docutils literal notranslate"><span class="pre">either</span></code></a>(f, g, e)</p></td>
+<td><p>(a -&gt; c) -&gt; (b -&gt; c) -&gt; Either a b -&gt; c</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.either.is_left.html#haskpy.types.either.is_left" title="haskpy.types.either.is_left"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_left</span></code></a>(m)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.either.is_right.html#haskpy.types.either.is_right" title="haskpy.types.either.is_right"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_right</span></code></a>(m)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.either.from_left.html#haskpy.types.either.from_left" title="haskpy.types.either.from_left"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_left</span></code></a>(x, e)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.either.from_right.html#haskpy.types.either.from_right" title="haskpy.types.either.from_right"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_right</span></code></a>(x, e)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.types.either.left.html#haskpy.types.either.left" title="haskpy.types.either.left"><code class="xref py py-obj docutils literal notranslate"><span class="pre">left</span></code></a>(p)</p></td>
+<td><p>(a -&gt; b) -&gt; s -&gt; t, or more generally, PrismP a b s t</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.types.either.right.html#haskpy.types.either.right" title="haskpy.types.either.right"><code class="xref py py-obj docutils literal notranslate"><span class="pre">right</span></code></a>(p)</p></td>
+<td><p>(a -&gt; b) -&gt; s -&gt; t, or more generally, PrismP a b s t</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -77,7 +115,7 @@
   <li><a href="../api.html">API</a><ul>
   <li><a href="haskpy.types.html">haskpy.types</a><ul>
       <li>Previous: <a href="haskpy.types.maybe.MaybeT.html" title="previous chapter">haskpy.types.maybe.MaybeT</a></li>
-      <li>Next: <a href="haskpy.types.list.html" title="next chapter">haskpy.types.list</a></li>
+      <li>Next: <a href="haskpy.types.either.Either.html" title="next chapter">Either</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

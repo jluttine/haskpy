@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.linkedlist.LinkedList
+   :noindex:
+
+LinkedList
+==================================
+
+.. currentmodule:: haskpy.types.linkedlist
+
+.. autoclass:: LinkedList
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

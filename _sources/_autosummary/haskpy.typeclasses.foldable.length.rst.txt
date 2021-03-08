@@ -1,0 +1,6 @@
+haskpy.typeclasses.foldable.length
+==================================
+
+.. currentmodule:: haskpy.typeclasses.foldable
+
+.. autofunction:: length

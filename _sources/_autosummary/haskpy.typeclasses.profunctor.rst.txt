@@ -1,0 +1,6 @@
+haskpy.typeclasses.profunctor
+=============================
+
+.. currentmodule:: haskpy.typeclasses.profunctor
+
+.. automodule:: haskpy.typeclasses.profunctor

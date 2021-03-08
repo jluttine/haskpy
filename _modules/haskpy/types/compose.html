@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.types.compose &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.types.compose</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Compose two applicative functors into one</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree:</span>
+
+<span class="sd">   Compose</span>
+<span class="sd">   decompose</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.typeclasses</span> <span class="kn">import</span> <span class="n">Applicative</span><span class="p">,</span> <span class="n">Eq</span><span class="p">,</span> <span class="nb">map</span><span class="p">,</span> <span class="n">apply</span>
+<span class="kn">from</span> <span class="nn">haskpy.internal</span> <span class="kn">import</span> <span class="n">class_function</span><span class="p">,</span> <span class="n">immutable</span>
+<span class="kn">from</span> <span class="nn">haskpy.testing</span> <span class="kn">import</span> <span class="n">eq_test</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+
+
+<div class="viewcode-block" id="Compose"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.compose.Compose.html#haskpy.types.compose.Compose">[docs]</a><span class="k">def</span> <span class="nf">Compose</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compose two type constructors X and Y into a single type constructor</span>
+
+<span class="sd">    Kind:</span>
+
+<span class="sd">    .. code-block::</span>
+
+<span class="sd">        Compose :: (* -&gt; *) -&gt; (* -&gt; *) -&gt; * -&gt; *</span>
+
+<span class="sd">    That is, it takes two type constructors and one concrete type to create a</span>
+<span class="sd">    concrete type. Another way to see it is that it takes two one-argument type</span>
+<span class="sd">    constructors and returns a one-argument type constructor:</span>
+
+<span class="sd">    .. code-block::</span>
+
+<span class="sd">        Compose :: (* -&gt; *) -&gt; (* -&gt; *) -&gt; (* -&gt; *)</span>
+
+<span class="sd">    That&#39;s how we can see it here.</span>
+
+<span class="sd">    Two nested Applicative structures are merged into one layer:</span>
+
+<span class="sd">    .. code-block::</span>
+
+<span class="sd">        Composed :: f1 (f2 a) -&gt; f f1 f2 a</span>
+
+<span class="sd">    Note that ``f`` is a type constructor of three arguments as shown by its</span>
+<span class="sd">    kind above.</span>
+
+<span class="sd">    Some motivation for the current implementation:</span>
+
+<span class="sd">    - Why not just a class that takes a value/object? Why do we need this</span>
+<span class="sd">      function wrapper Compose that takes classes as arguments? Because we need</span>
+<span class="sd">      to be able to implement the class method ``pure``. Also, this solution</span>
+<span class="sd">      would make it possible to decide the parent classes based on the classes</span>
+<span class="sd">      of X and Y, so that composed result isn&#39;t, for instance, Foldable unless</span>
+<span class="sd">      both X and Y are Foldable.</span>
+
+<span class="sd">    - Why the class Composed doesn&#39;t have ``__init__`` that passes ``*args``</span>
+<span class="sd">      and ``**kwargs`` to the outer class constructor? It would make it</span>
+<span class="sd">      slightly more convenient to create values, right? Not really. We want to</span>
+<span class="sd">      be able to transform already existing non-composed values to composed</span>
+<span class="sd">      values. For that we need to just take a value, not the outer class</span>
+<span class="sd">      constructor arguments. Also, this allows us to decompose and compose in</span>
+<span class="sd">      turns without problems. Also, it is more explicit for the user that which</span>
+<span class="sd">      are the underlying types because they need to write those when creating</span>
+<span class="sd">      values.</span>
+
+<span class="sd">    So, in comparison to Haskell, the function ``Compose`` corresponds to</span>
+<span class="sd">    type-level composing and ``Composed`` corresponds to value-level type</span>
+<span class="sd">    converter. We need explicit type-level composing here because we need some</span>
+<span class="sd">    class methods such as ``pure``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">MetaComposed</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Applicative</span><span class="p">)):</span>
+
+        <span class="n">InnerClass</span> <span class="o">=</span> <span class="n">Y</span>
+        <span class="n">OuterClass</span> <span class="o">=</span> <span class="n">X</span>
+
+        <span class="k">def</span> <span class="nf">compress_init</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Create a bit simplified constructor</span>
+
+<span class="sd">            XY = Compose(X, Y)</span>
+
+<span class="sd">            Instead of something like:</span>
+
+<span class="sd">              xy = XY(X(Y(1), Y(2)))</span>
+
+<span class="sd">            You can write use compressed constructor:</span>
+
+<span class="sd">              XYc = XY.compress_init()</span>
+
+<span class="sd">            And then create objects as:</span>
+
+<span class="sd">              xy = XYc(Y(1), Y(2))</span>
+
+<span class="sd">            Note that the constructor of X is now missing.</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">X</span><span class="p">)(</span>
+                <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="bp">cls</span><span class="p">(</span><span class="n">X</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;Compose(</span><span class="si">{0}</span><span class="s2">, </span><span class="si">{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">OuterClass</span><span class="p">),</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">InnerClass</span><span class="p">),</span>
+            <span class="p">)</span>
+
+    <span class="c1"># It&#39;s also Foldable and Traversable if both X and Y are.</span>
+
+    <span class="nd">@immutable</span>
+    <span class="k">class</span> <span class="nc">Composed</span><span class="p">(</span><span class="n">Applicative</span><span class="p">,</span> <span class="n">Eq</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">MetaComposed</span><span class="p">):</span>
+
+        <span class="c1"># The attribute name may sound weird but it makes sense once you</span>
+        <span class="c1"># understand that this indeed is the not-yet-composed variable and if</span>
+        <span class="c1"># you want to decompose a composed variable you get it by x.decomposed.</span>
+        <span class="c1"># Thus, there&#39;s no need to write a simple function to just return this</span>
+        <span class="c1"># attribute, just use this directly.</span>
+        <span class="n">decomposed</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
+
+        <span class="nd">@class_function</span>
+        <span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;a -&gt; f a</span>
+
+<span class="sd">            Without composition, this corresponds to:</span>
+
+<span class="sd">              a -&gt; f1 (f2 a)</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;f a -&gt; f (a -&gt; b) -&gt; f b</span>
+
+<span class="sd">            Without composition, this corresponds to:</span>
+
+<span class="sd">              f1 (f2 a) -&gt; (f1 (f2 (a -&gt; b))) -&gt; f1 (f2 b)</span>
+
+<span class="sd">              f1 a -&gt; f1 (a -&gt; b) -&gt; f1 b</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># TODO: Check this..</span>
+            <span class="k">return</span> <span class="n">attr</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">decomposed</span><span class="o">=</span><span class="p">(</span><span class="n">apply</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">apply</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">decomposed</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">decomposed</span><span class="p">))</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;(a -&gt; b) -&gt; f a -&gt; f b</span>
+
+<span class="sd">            Without composition, this corresponds to:</span>
+
+<span class="sd">              map . map :: (a -&gt; b) -&gt; f1 (f2 a) -&gt; f1 (f2 b)</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># This implementation isn&#39;t necessary because Applicative has a</span>
+            <span class="c1"># default implementation. But let&#39;s just provide this simple</span>
+            <span class="c1"># implementation for efficiency.</span>
+            <span class="k">return</span> <span class="n">attr</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">decomposed</span><span class="o">=</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">))(</span><span class="bp">self</span><span class="o">.</span><span class="n">decomposed</span><span class="p">))</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">decompose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decomposed</span>
+
+        <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">(</span><span class="si">{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">),</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decomposed</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decomposed</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">decomposed</span>
+
+        <span class="k">def</span> <span class="nf">__eq_test__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">eq_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decomposed</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">decomposed</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="nd">@class_function</span>
+        <span class="k">def</span> <span class="nf">sample_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">sample_value</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">sample_value</span><span class="p">(</span><span class="n">a</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+        <span class="n">sample_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+            <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+        <span class="n">sample_functor_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">()</span>
+        <span class="n">sample_applicative_type</span> <span class="o">=</span> <span class="n">sample_functor_type</span>
+        <span class="n">sample_monad_type</span> <span class="o">=</span> <span class="n">sample_functor_type</span>
+
+        <span class="n">sample_eq_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+            <span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Composed</span></div>
+
+
+<div class="viewcode-block" id="decompose"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.compose.decompose.html#haskpy.types.compose.decompose">[docs]</a><span class="k">def</span> <span class="nf">decompose</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">decomposed</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.list.List
+   :noindex:
+
+List
+======================
+
+.. currentmodule:: haskpy.types.list
+
+.. autoclass:: List
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

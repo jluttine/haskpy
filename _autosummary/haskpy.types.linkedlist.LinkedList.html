@@ -1,0 +1,565 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkedList &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="haskpy.types.linkedlist.Cons" href="haskpy.types.linkedlist.Cons.html" />
+    <link rel="prev" title="haskpy.types.linkedlist" href="haskpy.types.linkedlist.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="py data">
+<dt>
+<code class="sig-prename descclassname"><span class="pre">haskpy.types.linkedlist.</span></code><code class="sig-name descname"><span class="pre">LinkedList</span></code></dt>
+<dd></dd></dl>
+
+<div class="section" id="linkedlist">
+<h1>LinkedList<a class="headerlink" href="#linkedlist" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="haskpy.types.linkedlist.LinkedList">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">LinkedList</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">match</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad" title="haskpy.typeclasses.monad.Monad"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monad.Monad</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monoid.Monoid</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable" title="haskpy.typeclasses.foldable.Foldable"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.foldable.Foldable</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.equality.Eq</span></code></a></p>
+<p>Linked-list with “lazy” Cons</p>
+<p>The “lazy” Cons makes it possible to construct infinite lists. For
+instance, an infinite list of a repeated value 42 can be constructed as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">repeat</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="go">Cons(42, Cons(42, Cons(42, Cons(42, Cons(42, Cons(42, ...))))))</span>
+</pre></div>
+</div>
+<p>You can use, for instance, <code class="docutils literal notranslate"><span class="pre">scanl</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code> to create more complex
+infinite lists from a simple one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">scanl</span><span class="p">(</span><span class="k">lambda</span> <span class="n">acc</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">acc</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span>
+<span class="go">Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Cons(6, ...))))))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">Cons(1, Cons(4, Cons(9, Cons(16, Cons(25, Cons(36, ...))))))</span>
+</pre></div>
+</div>
+<p>Note that this works also for very long lists:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="go">Cons(10001, Cons(10002, Cons(10003, Cons(10004, Cons(10005, Cons(10006, ...))))))</span>
+</pre></div>
+</div>
+<p>One can create infinite lists by using a recursive definition:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">Cons</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But beware that this kind of recursive definition doesn’t always work as
+one might expect. For instance, the following construction causes huge
+recursion depths:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">Cons</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span>
+<span class="go">Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="go">RecursionError: maximum recursion depth exceeded while calling a Python object</span>
+</pre></div>
+</div>
+<p>This happens because each value depends recursively on all the previous
+values</p>
+<dl class="py attribute">
+<dt id="haskpy.types.linkedlist.LinkedList.__annotations__">
+<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__contains__">
+<code class="sig-name descname"><span class="pre">__contains__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override elem if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__eq__">
+<code class="sig-name descname"><span class="pre">__eq__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>LinkedList a -&gt; LinkedList a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__eq_test__">
+<code class="sig-name descname"><span class="pre">__eq_test__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.__eq_test__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__eq_test__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="haskpy.types.linkedlist.LinkedList.__hash__">
+<code class="sig-name descname"><span class="pre">__hash__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__iter__">
+<code class="sig-name descname"><span class="pre">__iter__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to_iter if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__len__">
+<code class="sig-name descname"><span class="pre">__len__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override length if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__matmul__">
+<code class="sig-name descname"><span class="pre">__matmul__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__matmul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Application operand <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> applies similarly as <code class="docutils literal notranslate"><span class="pre">&lt;*&gt;</span></code> in Haskell</p>
+<p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">&#64;</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">f.apply_to(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">x.apply(f)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">apply(f,</span> <span class="pre">x)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not typically used as often as some other more common operators
+so less risk for confusion.</p></li>
+<li><p>The operator is not a commutative as isn’t <code class="docutils literal notranslate"><span class="pre">apply</span></code> either.</p></li>
+<li><p>If we see matrix as some structure, then matrix multiplication takes
+both left and right operand inside this structure and gives a result
+also inside this structure, similarly as <code class="docutils literal notranslate"><span class="pre">apply</span></code> does. So it’s an
+operator for two operands having a similar structure.</p></li>
+<li><p>The operator evaluates the contained function(s) at the contained
+value(s). Thus, <code class="docutils literal notranslate"><span class="pre">f</span></code> “at” <code class="docutils literal notranslate"><span class="pre">x</span></code> makes perfect sense.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__mod__">
+<code class="sig-name descname"><span class="pre">__mod__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__mod__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use <code class="docutils literal notranslate"><span class="pre">%</span></code> as bind operator similarly as <code class="docutils literal notranslate"><span class="pre">&gt;&gt;=</span></code> in Haskell</p>
+<p>That is, <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">f</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">bind(x,</span> <span class="pre">f)</span></code> and <code class="docutils literal notranslate"><span class="pre">x.bind(f)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">%</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not very often used so less risk for confusion.</p></li>
+<li><p>It’s not commutative as isn’t bind either.</p></li>
+<li><p>It is similar to bind in a sense that the result has the same unit as
+the left operand while the right operand has different unit.</p></li>
+<li><p>The symbol works visually as a line “binds” two circles and on the
+other hand two circles tell about two similar structures on both
+sides but those structures are just on different “level”.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__ne__">
+<code class="sig-name descname"><span class="pre">__ne__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inequality comparison: <code class="docutils literal notranslate"><span class="pre">Eq</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code></p>
+<p>Can be used as <code class="docutils literal notranslate"><span class="pre">!=</span></code> operator.</p>
+<p>The default implementation uses <code class="docutils literal notranslate"><span class="pre">__eq__</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__repr">
+<code class="sig-name descname"><span class="pre">__repr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxdepth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__repr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__rpow__">
+<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__rpow__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
+<p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not typically used as often as multiplication or addition so
+less risk of confusion.</p></li>
+<li><p>It’s not commutative operator as isn’t lifting either.</p></li>
+<li><p>The two operands have very different roles. They are not at the same
+“level”.</p></li>
+<li><p>The right operand is “higher”, that is, it’s inside a structure and
+the left operand is kind of “raised to the power” of the second
+operand, where the “power” is the functorial structure.</p></li>
+<li><p>The same operand is also used for function composition because
+function composition is just mapping. Visually the symbol can be
+seen as chaining two stars similarly as function composition chains
+two functions.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.__rshift__">
+<code class="sig-name descname"><span class="pre">__rshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__rshift__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence with``&gt;&gt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList._scanl">
+<code class="sig-name descname"><span class="pre">_scanl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList._scanl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList._scanl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.append">
+<code class="sig-name descname"><span class="pre">append</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>LinkedList a -&gt; LinkedList a -&gt; LinkedList a</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.apply">
+<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>m a -&gt; m (a -&gt; b) -&gt; m b</p>
+<blockquote>
+<div><p>self :: m a</p>
+<p>f :: m (a -&gt; b)</p>
+</div></blockquote>
+<p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">bind</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code>. In order to
+use <code class="docutils literal notranslate"><span class="pre">bind</span></code>, let’s write its type as follows:</p>
+<blockquote>
+<div><p>bind :: m (a -&gt; b) -&gt; ((a -&gt; b) -&gt; m b) -&gt; m b</p>
+</div></blockquote>
+<p>Let’s also use a simple helper function:</p>
+<blockquote>
+<div><p>h = g -&gt; map g self :: (a -&gt; b) -&gt; m b</p>
+</div></blockquote>
+<p>Now:</p>
+<blockquote>
+<div><p>bind f h :: m b</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.apply_to">
+<code class="sig-name descname"><span class="pre">apply_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>f (a -&gt; b) -&gt; f a -&gt; f b</p>
+<p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">apply</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.bind">
+<code class="sig-name descname"><span class="pre">bind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>List a -&gt; (a -&gt; List b) -&gt; List b</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.drop">
+<code class="sig-name descname"><span class="pre">drop</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.drop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.drop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.elem">
+<code class="sig-name descname"><span class="pre">elem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="haskpy.types.linkedlist.LinkedList.empty">
+<code class="sig-name descname"><span class="pre">empty</span></code><em class="property"> <span class="pre">=</span> <span class="pre">Nil</span></em><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.fold">
+<code class="sig-name descname"><span class="pre">fold</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.fold2">
+<code class="sig-name descname"><span class="pre">fold2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.fold_map">
+<code class="sig-name descname"><span class="pre">fold_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monoid m =&gt; t a -&gt; (a -&gt; m) -&gt; m (ignoring <code class="docutils literal notranslate"><span class="pre">monoid</span></code> argument)</p>
+<p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">foldl</span></code> (or, if not
+implemented, recursively on <code class="docutils literal notranslate"><span class="pre">foldr</span></code>). Thus, all possibilities for
+parallelism is lost.</p>
+<p><code class="docutils literal notranslate"><span class="pre">monoid</span></code> is the monoidic class of the values inside the foldable. It
+is only used to determine the identity value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.foldl">
+<code class="sig-name descname"><span class="pre">foldl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Foldable t =&gt; t a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</p>
+<p>Strict left-associative fold</p>
+<p>((((a + b) + c) + d) + e)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.foldr">
+<code class="sig-name descname"><span class="pre">foldr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Foldable t =&gt; t a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</p>
+<p>Strict right-associative fold. Note that this doesn’t work for infinite
+lists because it’s strict. You probably want to use <code class="docutils literal notranslate"><span class="pre">foldr_lazy</span></code> or
+<code class="docutils literal notranslate"><span class="pre">foldl</span></code> instead as this function easily exceeds Python maximum
+recursion depth (or the stack overflows).</p>
+<p>..code-block:: python</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">iterate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span><span class="o">.</span><span class="n">foldr</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">ys</span><span class="p">:</span> <span class="n">Cons</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">ys</span><span class="p">),</span> <span class="n">Nil</span><span class="p">)</span>
+<span class="go">RecursionError: maximum recursion depth exceeded while calling a Python object</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.foldr_lazy">
+<code class="sig-name descname"><span class="pre">foldr_lazy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldr_lazy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldr_lazy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Foldable t =&gt; t a -&gt; (a -&gt; (() -&gt; b) -&gt; (() -&gt; b)) -&gt; b -&gt; b</p>
+<p>Nonstrict right-associative fold with support for lazy recursion,
+short-circuiting and tail-call optimization.</p>
+<p>HOW ABOUT [a,b,c,d,e,f,g,h,…] -&gt; (a(b(c(d(e))))) UNTIL TOTAL STRING
+LENGTH IS X?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>combine</strong><span class="classifier">curried function</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="haskpy.typeclasses.foldable.foldr_lazy.html#haskpy.typeclasses.foldable.foldr_lazy" title="haskpy.typeclasses.foldable.foldr_lazy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">haskpy.typeclasses.foldable.foldr_lazy</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.head">
+<code class="sig-name descname"><span class="pre">head</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.head" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return head (or default if no head): <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.join">
+<code class="sig-name descname"><span class="pre">join</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>m (m a) -&gt; m a</p>
+<p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">bind</span></code>:</p>
+<p>self :: m (m a)</p>
+<p>identity :: m a -&gt; m a</p>
+<p>bind :: m (m a) -&gt; (m a -&gt; m a) -&gt; m a</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.length">
+<code class="sig-name descname"><span class="pre">length</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; int</p>
+<p>The default implementation isn’t very efficient as it traverses through
+the iterator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.map">
+<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>List a -&gt; (a -&gt; b) -&gt; List b</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.null">
+<code class="sig-name descname"><span class="pre">null</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.null" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.pure">
+<code class="sig-name descname"><span class="pre">pure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.pure" title="Permalink to this definition">¶</a></dt>
+<dd><p>a -&gt; LinkedList a</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.recurse_tco">
+<code class="sig-name descname"><span class="pre">recurse_tco</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.recurse_tco"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.recurse_tco" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursion with tail-call optimization</p>
+<p>Type signature:</p>
+<p><code class="docutils literal notranslate"><span class="pre">LinkedList</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">(b</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">Either</span> <span class="pre">c</span> <span class="pre">b)</span> <span class="pre">-&gt;</span> <span class="pre">(b</span> <span class="pre">-&gt;</span> <span class="pre">c)</span> <span class="pre">-&gt;</span> <span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">c</span></code></p>
+<p>where <code class="docutils literal notranslate"><span class="pre">a</span></code> is the type of the elements in the linked list, <code class="docutils literal notranslate"><span class="pre">b</span></code> is
+the type of the accumulated value and <code class="docutils literal notranslate"><span class="pre">c</span></code> is the type of the result.
+Quite often, the accumulated value is also the end result, so <code class="docutils literal notranslate"><span class="pre">b</span></code> is
+<code class="docutils literal notranslate"><span class="pre">c</span></code> and <code class="docutils literal notranslate"><span class="pre">g</span></code> is an identity function.</p>
+<p>As Python supports recursion very badly, some typical recursion
+patterns are implemented as methods that convert specific recursions to
+efficients loops. This method implements the following pattern:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">g</span><span class="p">(</span><span class="n">acc</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lxs</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">lxs</span><span class="p">()</span><span class="o">.</span><span class="n">recurse_tco</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This recursion method supports short-circuiting and simple tail-call
+optimization. A value inside <code class="docutils literal notranslate"><span class="pre">Left</span></code> stops the recursion and returns
+the value. A value inside <code class="docutils literal notranslate"><span class="pre">Right</span></code> continues the recursion with the
+updated accumulated value.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#haskpy.types.linkedlist.LinkedList.foldl" title="haskpy.types.linkedlist.LinkedList.foldl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">foldl</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="#haskpy.types.linkedlist.LinkedList.foldr" title="haskpy.types.linkedlist.LinkedList.foldr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">foldr</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="#haskpy.types.linkedlist.LinkedList.foldr_lazy" title="haskpy.types.linkedlist.LinkedList.foldr_lazy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">foldr_lazy</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<p>For instance, the following recursion calculates the sum of the list
+elements until the sum exceeds one million:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">Left</span><span class="p">,</span> <span class="n">Right</span><span class="p">,</span> <span class="n">iterate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">iterate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_sum</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">xs</span><span class="p">,</span> <span class="n">acc</span><span class="p">:</span> <span class="n">xs</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">acc</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">ys</span><span class="p">:</span> <span class="n">acc</span> <span class="k">if</span> <span class="n">acc</span> <span class="o">&gt;</span> <span class="mi">1000000</span> <span class="k">else</span> <span class="n">my_sum</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">acc</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_sum</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Unfortunately, this recursion exceeds Python maximum recursion depth
+because 1000000 is a large enough number. Note that this cannot be
+implemented with <code class="docutils literal notranslate"><span class="pre">foldl</span></code> because it doesn’t support short-circuiting.
+Also, <code class="docutils literal notranslate"><span class="pre">foldr</span></code> doesn’t work because it’s right-associative so it
+cannot short-circuit based on the accumulator. But it can be calculated
+with this <code class="docutils literal notranslate"><span class="pre">recurse_tco</span></code> method which converts the recursion into a
+loop internally:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span><span class="o">.</span><span class="n">recurse_tco</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="k">lambda</span> <span class="n">acc</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span> <span class="k">if</span> <span class="n">acc</span> <span class="o">&gt;</span> <span class="mi">1000000</span> <span class="k">else</span> <span class="n">Right</span><span class="p">(</span><span class="n">acc</span> <span class="o">+</span> <span class="n">x</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="k">lambda</span> <span class="n">acc</span><span class="p">:</span> <span class="n">acc</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="mi">0</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.replace">
+<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Haskell ($&gt;) operator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.scanl">
+<code class="sig-name descname"><span class="pre">scanl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.scanl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.scanl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.sequence">
+<code class="sig-name descname"><span class="pre">sequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>f a -&gt; f b -&gt; f b</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.sum">
+<code class="sig-name descname"><span class="pre">sum</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; number</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.take">
+<code class="sig-name descname"><span class="pre">take</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.take"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.take" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.linkedlist.LinkedList.to_iter">
+<code class="sig-name descname"><span class="pre">to_iter</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.to_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.to_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; Iter a</p>
+<p>Instead of to_list (as in Haskell), let’s provide to_iter. With
+iterables, we can write efficient implementations for many other
+methods (e.g., sum, elem) even for large or sometimes infinite
+foldables.</p>
+<p>The default implementation isn’t very efficient as it uses folding to
+construct the iterator.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.types.html">haskpy.types</a><ul>
+  <li><a href="haskpy.types.linkedlist.html">haskpy.types.linkedlist</a><ul>
+      <li>Previous: <a href="haskpy.types.linkedlist.html" title="previous chapter">haskpy.types.linkedlist</a></li>
+      <li>Next: <a href="haskpy.types.linkedlist.Cons.html" title="next chapter">haskpy.types.linkedlist.Cons</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.types.linkedlist.LinkedList.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

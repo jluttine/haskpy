@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses.foldable.foldr_lazy &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="haskpy.typeclasses.foldable.fold" href="haskpy.typeclasses.foldable.fold.html" />
+    <link rel="prev" title="haskpy.typeclasses.foldable.foldr" href="haskpy.typeclasses.foldable.foldr.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="haskpy-typeclasses-foldable-foldr-lazy">
+<h1>haskpy.typeclasses.foldable.foldr_lazy<a class="headerlink" href="#haskpy-typeclasses-foldable-foldr-lazy" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="haskpy.typeclasses.foldable.foldr_lazy">
+<code class="sig-name descname"><span class="pre">foldr_lazy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/foldable.html#foldr_lazy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.foldable.foldr_lazy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Foldable t =&gt; (a -&gt; (() -&gt; b) -&gt; (() -&gt; b)) -&gt; b -&gt; t a -&gt; b</p>
+<p>Nonstrict right-associative fold.</p>
+<p>This function is similar to <code class="docutils literal notranslate"><span class="pre">foldr</span></code> in Haskell, but note that the combine
+function uses singleton lambda functions to achieve laziness and to enable
+tail-call optimization.</p>
+<p>Let’s have a closer look on the signature of <code class="docutils literal notranslate"><span class="pre">combine</span></code> to understand the
+possibilities a bit better:</p>
+<p>The signature of <code class="docutils literal notranslate"><span class="pre">combine</span></code> is <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">(()</span> <span class="pre">-&gt;</span> <span class="pre">b)</span> <span class="pre">-&gt;</span> <span class="pre">(()</span> <span class="pre">-&gt;</span> <span class="pre">b)</span></code>. You can
+think of these <code class="docutils literal notranslate"><span class="pre">()</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code> as “lazy” accumulated values. <code class="docutils literal notranslate"><span class="pre">()</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code> is
+just a lambda function that takes no arguments and returns a value of type
+<code class="docutils literal notranslate"><span class="pre">b</span></code>. Let’s name the first argument <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">::</span> <span class="pre">a</span></code> and the second argument
+<code class="docutils literal notranslate"><span class="pre">lacc</span> <span class="pre">::</span> <span class="pre">()</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code> (as “lazy accumulator”). Now we can explain how to make
+use of some powerful features:</p>
+<ul class="simple">
+<li><p>When <code class="docutils literal notranslate"><span class="pre">combine</span></code> doesn’t use it’s second argument <code class="docutils literal notranslate"><span class="pre">lacc</span></code>, the recursion
+stops (i.e., short-circuits). Therefore, infinite lists might be
+processed in finite time.</p></li>
+<li><p>When <code class="docutils literal notranslate"><span class="pre">combine</span></code> returns <code class="docutils literal notranslate"><span class="pre">lacc</span></code> as such without modifying it, tail-call
+optimization triggers. Therefore, very long lists might be processed
+efficiently without exceeding maximum recursion depth or overflowing the
+stack.</p></li>
+<li><p>When <code class="docutils literal notranslate"><span class="pre">combine</span></code> uses <code class="docutils literal notranslate"><span class="pre">lacc</span></code> but the evaluation <code class="docutils literal notranslate"><span class="pre">lacc()</span></code> is
+“post-poned” (e.g., it happens inside yet another lambda function), the
+recursion becomes “lazy” as it will continue only when <code class="docutils literal notranslate"><span class="pre">lacc()</span></code>
+actually gets evaluated. Therefore, infinite lists can be processed
+lazily.</p></li>
+</ul>
+<p>Note that Python’s built-in <code class="docutils literal notranslate"><span class="pre">reduce</span></code> function doesn’t support these
+features.</p>
+<p class="rubric">Examples</p>
+<p>Short-circuiting and tail-call optimization for an infinite list:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">iterate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_any</span> <span class="o">=</span> <span class="n">foldr_lazy</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lacc</span><span class="p">:</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="k">else</span> <span class="n">lacc</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_any</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">100000</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Looking at <code class="docutils literal notranslate"><span class="pre">(lambda:</span> <span class="pre">True)</span> <span class="pre">if</span> <span class="pre">x</span> <span class="pre">else</span> <span class="pre">lacc</span></code>, we can see that when the left
+side of the if-expression is evaluated, the fold short-circuits because
+<code class="docutils literal notranslate"><span class="pre">True</span></code> makes no use of <code class="docutils literal notranslate"><span class="pre">lacc</span></code>. When the right side of the if-expression
+is evaluated, the fold uses efficient tail-call optimization because
+<code class="docutils literal notranslate"><span class="pre">lacc</span></code> is returned unmodified.</p>
+<p>Lazy evaluation makes it possible to transform infinite structures:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">Cons</span><span class="p">,</span> <span class="n">Nil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_map</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">foldr_lazy</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lacc</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Cons</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">lacc</span><span class="p">),</span> <span class="n">Nil</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)(</span><span class="n">xs</span><span class="p">)</span>
+<span class="go">Cons(1, Cons(4, Cons(9, Cons(16, Cons(25, Cons(36, ...))))))</span>
+</pre></div>
+</div>
+<p>The infinite list gets mapped lazily because <code class="docutils literal notranslate"><span class="pre">lacc</span></code> isn’t called at this
+time, it is delayed as the linked list will call it only when the next
+element is requested.</p>
+<p>Note that sometimes you shouldn’t use <code class="docutils literal notranslate"><span class="pre">foldr_lazy</span></code> because it can cause
+stack overflow (or rather hit Python’s recursion limit) because of too deep
+recursion. This can happen with a long list when the recursion doesn’t
+short-circuit (early enough), tail-call optimization cannot be used and the
+recursion doesn’t pause for laziness. A simple such example is a summation:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_sum</span> <span class="o">=</span> <span class="n">foldr_lazy</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lacc</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">lacc</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_sum</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="go">5050</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_sum</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1000000</span><span class="p">))</span>
+<span class="go">Error</span>
+</pre></div>
+</div>
+<p>For this kind of folds, you should use <code class="docutils literal notranslate"><span class="pre">foldl</span></code>.</p>
+<p>As already shown, <code class="docutils literal notranslate"><span class="pre">foldr_lazy</span></code> generalizes <code class="docutils literal notranslate"><span class="pre">map</span></code> and <code class="docutils literal notranslate"><span class="pre">any</span></code>. It can
+also be used to implement many other functions in a may that may seem a bit
+surprising at first, for instance:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">Just</span><span class="p">,</span> <span class="n">Nothing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_head</span> <span class="o">=</span> <span class="n">foldr_lazy</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lacc</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Just</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">Nothing</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_head</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+<span class="go">Just(1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_head</span><span class="p">(</span><span class="n">Nil</span><span class="p">)</span>
+<span class="go">Nothing</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.typeclasses.html">haskpy.typeclasses</a><ul>
+  <li><a href="haskpy.typeclasses.foldable.html">haskpy.typeclasses.foldable</a><ul>
+      <li>Previous: <a href="haskpy.typeclasses.foldable.foldr.html" title="previous chapter">haskpy.typeclasses.foldable.foldr</a></li>
+      <li>Next: <a href="haskpy.typeclasses.foldable.fold.html" title="next chapter">haskpy.typeclasses.foldable.fold</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.typeclasses.foldable.foldr_lazy.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

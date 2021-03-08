@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.monoids.Endo
+   :noindex:
+
+Endo
+=========================
+
+.. currentmodule:: haskpy.types.monoids
+
+.. autoclass:: Endo
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

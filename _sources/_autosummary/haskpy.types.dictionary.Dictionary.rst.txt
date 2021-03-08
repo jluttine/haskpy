@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.dictionary.Dictionary
+   :noindex:
+
+Dictionary
+==================================
+
+.. currentmodule:: haskpy.types.dictionary
+
+.. autoclass:: Dictionary
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.either.Either
+   :noindex:
+
+Either
+==========================
+
+.. currentmodule:: haskpy.types.either
+
+.. autoclass:: Either
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

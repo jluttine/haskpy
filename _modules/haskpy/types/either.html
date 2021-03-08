@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.types.either &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.types.either</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Values with two possibilities</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree:</span>
+
+<span class="sd">   Either</span>
+<span class="sd">   Left</span>
+<span class="sd">   Right</span>
+<span class="sd">   either</span>
+<span class="sd">   is_left</span>
+<span class="sd">   is_right</span>
+<span class="sd">   from_left</span>
+<span class="sd">   from_right</span>
+<span class="sd">   left</span>
+<span class="sd">   right</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">import</span> <span class="nn">hypothesis.strategies</span> <span class="k">as</span> <span class="nn">st</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.typeclasses</span> <span class="kn">import</span> <span class="n">Monad</span><span class="p">,</span> <span class="n">Eq</span>
+<span class="kn">from</span> <span class="nn">haskpy.internal</span> <span class="kn">import</span> <span class="n">class_function</span><span class="p">,</span> <span class="n">immutable</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.optics</span> <span class="kn">import</span> <span class="n">prism</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.testing</span> <span class="kn">import</span> <span class="n">eq_test</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+<span class="kn">from</span> <span class="nn">haskpy.types.function</span> <span class="kn">import</span> <span class="n">function</span>
+
+
+<div class="viewcode-block" id="Either"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Either.html#haskpy.types.either.Either">[docs]</a><span class="nd">@immutable</span>
+<span class="k">class</span> <span class="nc">Either</span><span class="p">(</span><span class="n">Monad</span><span class="p">,</span> <span class="n">Eq</span><span class="p">):</span>
+
+    <span class="n">match</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Either.pure"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Either.html#haskpy.types.either.Either.pure">[docs]</a>    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Right</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Either.map"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Either.html#haskpy.types.either.Either.map">[docs]</a>    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span>
+            <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Either.apply_to"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Either.html#haskpy.types.either.Either.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span>
+            <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Either.bind"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Either.html#haskpy.types.either.Either.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span>
+            <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Either.__eq__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Either.html#haskpy.types.either.Either.__eq__">[docs]</a>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">other</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span>
+                <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">other</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Either.__eq_test__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Either.html#haskpy.types.either.Either.__eq_test__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq_test__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">other</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">eq_test</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">),</span>
+                <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">other</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">eq_test</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;Left(</span><span class="si">{0}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+            <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;Right(</span><span class="si">{0}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">sample_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">one_of</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">Left</span><span class="p">),</span> <span class="n">b</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">Right</span><span class="p">))</span>
+
+    <span class="n">sample_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">sample_functor_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">sample_applicative_type</span> <span class="o">=</span> <span class="n">sample_functor_type</span>
+    <span class="n">sample_monad_type</span> <span class="o">=</span> <span class="n">sample_functor_type</span>
+
+    <span class="n">sample_eq_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">(),</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">(),</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Left"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Left.html#haskpy.types.either.Left">[docs]</a><span class="k">def</span> <span class="nf">Left</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Either</span><span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="p">,</span> <span class="n">Left</span><span class="p">,</span> <span class="n">Right</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Right"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.Right.html#haskpy.types.either.Right">[docs]</a><span class="k">def</span> <span class="nf">Right</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Either</span><span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="p">,</span> <span class="n">Left</span><span class="p">,</span> <span class="n">Right</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="either"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.either.html#haskpy.types.either.either">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">either</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;(a -&gt; c) -&gt; (b -&gt; c) -&gt; Either a b -&gt; c&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">Left</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">Right</span><span class="o">=</span><span class="n">g</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_left"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.is_left.html#haskpy.types.either.is_left">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">is_left</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_right"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.is_right.html#haskpy.types.either.is_right">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">is_right</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="from_left"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.from_left.html#haskpy.types.either.from_left">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">from_left</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="from_right"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.either.from_right.html#haskpy.types.either.from_right">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">from_right</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># Optics</span>
+<span class="c1">#</span>
+
+
+<span class="n">left</span> <span class="o">=</span> <span class="n">prism</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+        <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">m</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="n">right</span> <span class="o">=</span> <span class="n">prism</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="n">m</span><span class="p">),</span>
+        <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Right</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,6 @@
+haskpy.types.linkedlist.iterate
+===============================
+
+.. currentmodule:: haskpy.types.linkedlist
+
+.. autofunction:: iterate

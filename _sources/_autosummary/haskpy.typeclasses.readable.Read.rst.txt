@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.readable.Read
+   :noindex:
+
+Read
+================================
+
+.. currentmodule:: haskpy.typeclasses.readable
+
+.. autoclass:: Read
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

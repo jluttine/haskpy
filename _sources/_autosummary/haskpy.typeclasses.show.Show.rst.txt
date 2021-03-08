@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.show.Show
+   :noindex:
+
+Show
+============================
+
+.. currentmodule:: haskpy.typeclasses.show
+
+.. autoclass:: Show
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

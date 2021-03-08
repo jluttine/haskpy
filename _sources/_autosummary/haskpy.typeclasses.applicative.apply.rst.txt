@@ -1,0 +1,6 @@
+haskpy.typeclasses.applicative.apply
+====================================
+
+.. currentmodule:: haskpy.typeclasses.applicative
+
+.. autofunction:: apply

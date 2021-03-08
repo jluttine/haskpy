@@ -1,0 +1,6 @@
+haskpy.typeclasses.contravariant
+================================
+
+.. currentmodule:: haskpy.typeclasses.contravariant
+
+.. automodule:: haskpy.typeclasses.contravariant

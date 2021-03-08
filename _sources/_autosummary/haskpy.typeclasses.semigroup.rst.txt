@@ -1,0 +1,6 @@
+haskpy.typeclasses.semigroup
+============================
+
+.. currentmodule:: haskpy.typeclasses.semigroup
+
+.. automodule:: haskpy.typeclasses.semigroup

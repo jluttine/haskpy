@@ -1,0 +1,6 @@
+haskpy.types.writer
+===================
+
+.. currentmodule:: haskpy.types.writer
+
+.. automodule:: haskpy.types.writer

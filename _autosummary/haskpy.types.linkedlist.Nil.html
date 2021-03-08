@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.types.linkedlist.Nil &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="haskpy.types.linkedlist.iterate" href="haskpy.types.linkedlist.iterate.html" />
+    <link rel="prev" title="haskpy.types.linkedlist.Cons" href="haskpy.types.linkedlist.Cons.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="haskpy-types-linkedlist-nil">
+<h1>haskpy.types.linkedlist.Nil<a class="headerlink" href="#haskpy-types-linkedlist-nil" title="Permalink to this headline">¶</a></h1>
+<dl class="py data">
+<dt id="haskpy.types.linkedlist.Nil">
+<code class="sig-name descname"><span class="pre">Nil</span></code><em class="property"> <span class="pre">=</span> <span class="pre">Nil</span></em><a class="headerlink" href="#haskpy.types.linkedlist.Nil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linked-list with “lazy” Cons</p>
+<p>The “lazy” Cons makes it possible to construct infinite lists. For
+instance, an infinite list of a repeated value 42 can be constructed as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">repeat</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="go">Cons(42, Cons(42, Cons(42, Cons(42, Cons(42, Cons(42, ...))))))</span>
+</pre></div>
+</div>
+<p>You can use, for instance, <code class="docutils literal notranslate"><span class="pre">scanl</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code> to create more complex
+infinite lists from a simple one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">scanl</span><span class="p">(</span><span class="k">lambda</span> <span class="n">acc</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">acc</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span>
+<span class="go">Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Cons(6, ...))))))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">Cons(1, Cons(4, Cons(9, Cons(16, Cons(25, Cons(36, ...))))))</span>
+</pre></div>
+</div>
+<p>Note that this works also for very long lists:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="go">Cons(10001, Cons(10002, Cons(10003, Cons(10004, Cons(10005, Cons(10006, ...))))))</span>
+</pre></div>
+</div>
+<p>One can create infinite lists by using a recursive definition:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">Cons</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But beware that this kind of recursive definition doesn’t always work as
+one might expect. For instance, the following construction causes huge
+recursion depths:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">Cons</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span>
+<span class="go">Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="go">RecursionError: maximum recursion depth exceeded while calling a Python object</span>
+</pre></div>
+</div>
+<p>This happens because each value depends recursively on all the previous
+values</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.types.html">haskpy.types</a><ul>
+  <li><a href="haskpy.types.linkedlist.html">haskpy.types.linkedlist</a><ul>
+      <li>Previous: <a href="haskpy.types.linkedlist.Cons.html" title="previous chapter">haskpy.types.linkedlist.Cons</a></li>
+      <li>Next: <a href="haskpy.types.linkedlist.iterate.html" title="next chapter">haskpy.types.linkedlist.iterate</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.types.linkedlist.Nil.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.traversable.Traversable
+   :noindex:
+
+Traversable
+==========================================
+
+.. currentmodule:: haskpy.typeclasses.traversable
+
+.. autoclass:: Traversable
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

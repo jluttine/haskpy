@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.writer.Writer
+   :noindex:
+
+Writer
+==========================
+
+.. currentmodule:: haskpy.types.writer
+
+.. autoclass:: Writer
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

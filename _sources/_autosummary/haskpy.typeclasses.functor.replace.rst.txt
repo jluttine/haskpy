@@ -1,0 +1,6 @@
+haskpy.typeclasses.functor.replace
+==================================
+
+.. currentmodule:: haskpy.typeclasses.functor
+
+.. autofunction:: replace

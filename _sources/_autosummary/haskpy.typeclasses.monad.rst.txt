@@ -1,0 +1,6 @@
+haskpy.typeclasses.monad
+========================
+
+.. currentmodule:: haskpy.typeclasses.monad
+
+.. automodule:: haskpy.typeclasses.monad

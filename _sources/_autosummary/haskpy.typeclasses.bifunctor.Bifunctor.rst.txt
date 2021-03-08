@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.bifunctor.Bifunctor
+   :noindex:
+
+Bifunctor
+======================================
+
+.. currentmodule:: haskpy.typeclasses.bifunctor
+
+.. autoclass:: Bifunctor
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

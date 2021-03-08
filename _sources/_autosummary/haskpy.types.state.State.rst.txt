@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.state.State
+   :noindex:
+
+State
+========================
+
+.. currentmodule:: haskpy.types.state
+
+.. autoclass:: State
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

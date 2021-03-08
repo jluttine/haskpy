@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.io.IO
+   :noindex:
+
+IO
+==================
+
+.. currentmodule:: haskpy.types.io
+
+.. autoclass:: IO
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.ord.Ord
+   :noindex:
+
+Ord
+==========================
+
+.. currentmodule:: haskpy.typeclasses.ord
+
+.. autoclass:: Ord
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

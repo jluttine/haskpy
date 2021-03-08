@@ -1,0 +1,6 @@
+haskpy.types.compose.Compose
+============================
+
+.. currentmodule:: haskpy.types.compose
+
+.. autofunction:: Compose

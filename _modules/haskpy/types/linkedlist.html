@@ -1,0 +1,629 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.types.linkedlist &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.types.linkedlist</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Linked list of values</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree:</span>
+
+<span class="sd">   LinkedList</span>
+<span class="sd">   Cons</span>
+<span class="sd">   Nil</span>
+<span class="sd">   iterate</span>
+<span class="sd">   repeat</span>
+<span class="sd">   replicate</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.typeclasses</span> <span class="kn">import</span> <span class="n">Monad</span><span class="p">,</span> <span class="n">Monoid</span><span class="p">,</span> <span class="n">Foldable</span><span class="p">,</span> <span class="n">Eq</span>
+<span class="kn">from</span> <span class="nn">haskpy.types.either</span> <span class="kn">import</span> <span class="n">Left</span><span class="p">,</span> <span class="n">Right</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+<span class="kn">from</span> <span class="nn">haskpy.internal</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">immutable</span><span class="p">,</span>
+    <span class="n">class_property</span><span class="p">,</span>
+    <span class="n">class_function</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">haskpy.testing</span> <span class="kn">import</span> <span class="n">eq_test</span>
+<span class="kn">from</span> <span class="nn">haskpy.types.function</span> <span class="kn">import</span> <span class="n">function</span>
+
+
+<div class="viewcode-block" id="LinkedList"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList">[docs]</a><span class="nd">@immutable</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">LinkedList</span><span class="p">(</span><span class="n">Monad</span><span class="p">,</span> <span class="n">Monoid</span><span class="p">,</span> <span class="n">Foldable</span><span class="p">,</span> <span class="n">Eq</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Linked-list with &quot;lazy&quot; Cons</span>
+
+<span class="sd">    The &quot;lazy&quot; Cons makes it possible to construct infinite lists. For</span>
+<span class="sd">    instance, an infinite list of a repeated value 42 can be constructed as:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; repeat(42)</span>
+<span class="sd">        Cons(42, Cons(42, Cons(42, Cons(42, Cons(42, Cons(42, ...))))))</span>
+
+<span class="sd">    You can use, for instance, ``scanl`` and ``map`` to create more complex</span>
+<span class="sd">    infinite lists from a simple one:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; xs = repeat(1).scanl(lambda acc, x: acc + x)</span>
+<span class="sd">        &gt;&gt;&gt; xs</span>
+<span class="sd">        Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Cons(6, ...))))))</span>
+<span class="sd">        &gt;&gt;&gt; xs.map(lambda x: x ** 2)</span>
+<span class="sd">        Cons(1, Cons(4, Cons(9, Cons(16, Cons(25, Cons(36, ...))))))</span>
+
+<span class="sd">    Note that this works also for very long lists:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; xs.drop(10000)</span>
+<span class="sd">        Cons(10001, Cons(10002, Cons(10003, Cons(10004, Cons(10005, Cons(10006, ...))))))</span>
+
+<span class="sd">    One can create infinite lists by using a recursive definition:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; xs = Cons(42, lambda: xs)</span>
+
+<span class="sd">    But beware that this kind of recursive definition doesn&#39;t always work as</span>
+<span class="sd">    one might expect. For instance, the following construction causes huge</span>
+<span class="sd">    recursion depths:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; xs = Cons(1, lambda: xs.map(lambda y: y + 1))</span>
+<span class="sd">        &gt;&gt;&gt; xs</span>
+<span class="sd">        Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))</span>
+<span class="sd">        &gt;&gt;&gt; xs.drop(10000)</span>
+<span class="sd">        RecursionError: maximum recursion depth exceeded while calling a Python object</span>
+
+<span class="sd">    This happens because each value depends recursively on all the previous</span>
+<span class="sd">    values</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">match</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LinkedList.empty"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.empty">[docs]</a>    <span class="nd">@class_property</span>
+    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Nil</span></div>
+
+<div class="viewcode-block" id="LinkedList.pure"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.pure">[docs]</a>    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;a -&gt; LinkedList a&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Nil</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.map"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.map">[docs]</a>    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; (a -&gt; b) -&gt; List b&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Nil</span><span class="p">,</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="n">Cons</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.bind"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List a -&gt; (a -&gt; List b) -&gt; List b&quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">append_lazy</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">lys</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;LinkedList a -&gt; (() -&gt; LinkedList a) -&gt; LinkedList a</span>
+
+<span class="sd">            Append two linked lists. This function is &quot;lazy&quot; in its second</span>
+<span class="sd">            argument, that is, ``lys`` is a lambda function that returns the</span>
+<span class="sd">            linked list.</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">xs</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">lys</span><span class="p">(),</span>
+                <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lxs</span><span class="p">:</span> <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">append_lazy</span><span class="p">(</span><span class="n">lxs</span><span class="p">(),</span> <span class="n">lys</span><span class="p">))</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Nil</span><span class="p">,</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lxs</span><span class="p">:</span> <span class="n">append_lazy</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">lxs</span><span class="p">()</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">f</span><span class="p">)),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.append"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ys</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;LinkedList a -&gt; LinkedList a -&gt; LinkedList a&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">ys</span><span class="p">,</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lxs</span><span class="p">:</span> <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">lxs</span><span class="p">()</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ys</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.take"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.take">[docs]</a>    <span class="k">def</span> <span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="c1"># Note that here we can use a recursive definition because the</span>
+        <span class="c1"># recursion stops at lambda, so the list is consumed lazily.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Nil</span><span class="p">,</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="p">(</span>
+                <span class="n">Nil</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">else</span>
+                <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="p">()</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.drop"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.drop">[docs]</a>    <span class="k">def</span> <span class="nf">drop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="c1"># This is the trivial recursive implementation:</span>
+        <span class="c1">#</span>
+        <span class="c1"># return self.match(</span>
+        <span class="c1">#     Nil=lambda: Nil,</span>
+        <span class="c1">#     Cons=lambda x, xs: (</span>
+        <span class="c1">#         Cons(x, xs) if n &lt;= 0 else</span>
+        <span class="c1">#         xs().drop(n-1)</span>
+        <span class="c1">#     ),</span>
+        <span class="c1"># )</span>
+        <span class="c1">#</span>
+        <span class="c1"># However, recursion causes stack overflow for long lists with large n.</span>
+        <span class="c1"># So, let&#39;s use a loop:</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">exit</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span> <span class="o">=</span> <span class="n">xs</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">Nil</span><span class="p">),</span>
+                <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">z</span><span class="p">,</span> <span class="n">zs</span><span class="p">:</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">zs</span><span class="p">())</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">exit</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">xs</span></div>
+
+<div class="viewcode-block" id="LinkedList.__eq__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.__eq__">[docs]</a>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;LinkedList a -&gt; LinkedList a -&gt; bool&quot;&quot;&quot;</span>
+        <span class="c1"># Here&#39;s a nice recursive solution:</span>
+        <span class="c1">#</span>
+        <span class="c1"># return self.match(</span>
+        <span class="c1">#     Nil=lambda: other.match(</span>
+        <span class="c1">#         Nil=lambda: True,</span>
+        <span class="c1">#         Cons=lambda _, __: False,</span>
+        <span class="c1">#     ),</span>
+        <span class="c1">#     Cons=lambda x, xs: other.match(</span>
+        <span class="c1">#         Nil=lambda: False,</span>
+        <span class="c1">#         Cons=lambda y, ys: (x == y) and (xs() == ys()),</span>
+        <span class="c1">#     ),</span>
+        <span class="c1"># )</span>
+        <span class="c1">#</span>
+        <span class="c1"># However, it doesn&#39;t work because of Python has bad recursion support.</span>
+        <span class="c1"># So, let&#39;s use recurse_tco which converts recursion to a loop:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">recurse_tco</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">acc</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+                <span class="n">acc</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                    <span class="c1"># self is longer than other</span>
+                    <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Left</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">lys</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="c1"># Elements don&#39;t match</span>
+                        <span class="n">Left</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">y</span> <span class="k">else</span>
+                        <span class="c1"># All good thus far, continue</span>
+                        <span class="n">Right</span><span class="p">(</span><span class="n">lys</span><span class="p">())</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="k">lambda</span> <span class="n">acc</span><span class="p">:</span> <span class="n">acc</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="c1"># Both lists are empty (or end at the same time)</span>
+                <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="c1"># other is longer than self</span>
+                <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">__</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">other</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.to_iter"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.to_iter">[docs]</a>    <span class="k">def</span> <span class="nf">to_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">lxs</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">stop</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lxs</span><span class="p">)</span> <span class="o">=</span> <span class="n">lxs</span><span class="p">()</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">z</span><span class="p">,</span> <span class="n">lzs</span><span class="p">:</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">lzs</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">stop</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">yield</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="LinkedList.recurse_tco"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.recurse_tco">[docs]</a>    <span class="k">def</span> <span class="nf">recurse_tco</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">acc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Recursion with tail-call optimization</span>
+
+<span class="sd">        Type signature:</span>
+
+<span class="sd">        ``LinkedList a -&gt; (b -&gt; a -&gt; Either c b) -&gt; (b -&gt; c) -&gt; b -&gt; c``</span>
+
+<span class="sd">        where ``a`` is the type of the elements in the linked list, ``b`` is</span>
+<span class="sd">        the type of the accumulated value and ``c`` is the type of the result.</span>
+<span class="sd">        Quite often, the accumulated value is also the end result, so ``b`` is</span>
+<span class="sd">        ``c`` and ``g`` is an identity function.</span>
+
+<span class="sd">        As Python supports recursion very badly, some typical recursion</span>
+<span class="sd">        patterns are implemented as methods that convert specific recursions to</span>
+<span class="sd">        efficients loops. This method implements the following pattern:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            &gt;&gt;&gt; return self.match(</span>
+<span class="sd">            ...     Nil=lambda: g(acc),</span>
+<span class="sd">            ...     Cons=lambda x, lxs: f(acc, x).match(</span>
+<span class="sd">            ...         Left=lambda y: y,</span>
+<span class="sd">            ...         Right=lambda y: lxs().recurse_tco(f, g, y)</span>
+<span class="sd">            ...     )</span>
+<span class="sd">            ... )</span>
+
+<span class="sd">        This recursion method supports short-circuiting and simple tail-call</span>
+<span class="sd">        optimization. A value inside ``Left`` stops the recursion and returns</span>
+<span class="sd">        the value. A value inside ``Right`` continues the recursion with the</span>
+<span class="sd">        updated accumulated value.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        For instance, the following recursion calculates the sum of the list</span>
+<span class="sd">        elements until the sum exceeds one million:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            &gt;&gt;&gt; from haskpy import Left, Right, iterate</span>
+<span class="sd">            &gt;&gt;&gt; xs = iterate(lambda x: x + 1, 1)</span>
+<span class="sd">            &gt;&gt;&gt; my_sum = lambda xs, acc: xs.match(</span>
+<span class="sd">            ...     Nil=lambda: acc,</span>
+<span class="sd">            ...     Cons=lambda y, ys: acc if acc &gt; 1000000 else my_sum(xs, acc + y)</span>
+<span class="sd">            ... )</span>
+<span class="sd">            &gt;&gt;&gt; my_sum(xs, 0)</span>
+
+<span class="sd">        Unfortunately, this recursion exceeds Python maximum recursion depth</span>
+<span class="sd">        because 1000000 is a large enough number. Note that this cannot be</span>
+<span class="sd">        implemented with ``foldl`` because it doesn&#39;t support short-circuiting.</span>
+<span class="sd">        Also, ``foldr`` doesn&#39;t work because it&#39;s right-associative so it</span>
+<span class="sd">        cannot short-circuit based on the accumulator. But it can be calculated</span>
+<span class="sd">        with this ``recurse_tco`` method which converts the recursion into a</span>
+<span class="sd">        loop internally:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            &gt;&gt;&gt; xs.recurse_tco(</span>
+<span class="sd">            ...     lambda acc, x: Left(acc) if acc &gt; 1000000 else Right(acc + x),</span>
+<span class="sd">            ...     lambda acc: acc,</span>
+<span class="sd">            ...     0</span>
+<span class="sd">            ... )</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        foldl</span>
+<span class="sd">        foldr</span>
+<span class="sd">        foldr_lazy</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">stop</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">stop</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span> <span class="o">=</span> <span class="n">xs</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">g</span><span class="p">(</span><span class="n">acc</span><span class="p">),</span> <span class="n">Nil</span><span class="p">),</span>
+                <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">lys</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                    <span class="n">Left</span><span class="o">=</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">Nil</span><span class="p">),</span>
+                    <span class="n">Right</span><span class="o">=</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">lys</span><span class="p">())</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">acc</span></div>
+
+<div class="viewcode-block" id="LinkedList.foldl"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.foldl">[docs]</a>    <span class="k">def</span> <span class="nf">foldl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Foldable t =&gt; t a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</span>
+
+<span class="sd">        Strict left-associative fold</span>
+
+<span class="sd">        ((((a + b) + c) + d) + e)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># NOTE: The following simple recursive implementation doesn&#39;t work</span>
+        <span class="c1"># because it can exceed Python maximum recursion depth:</span>
+        <span class="c1">#</span>
+        <span class="c1"># return self.match(</span>
+        <span class="c1">#     Nil=lambda: initial,</span>
+        <span class="c1">#     Cons=lambda x, xs: xs().foldl(combine, combine(initial, x)),</span>
+        <span class="c1"># )</span>
+        <span class="c1">#</span>
+        <span class="c1"># So, let&#39;s use a for-loop based solution instead:</span>
+        <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">combine</span><span class="p">(</span><span class="n">a</span><span class="p">)(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">,</span> <span class="n">initial</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.foldr"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.foldr">[docs]</a>    <span class="k">def</span> <span class="nf">foldr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Foldable t =&gt; t a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</span>
+
+<span class="sd">        Strict right-associative fold. Note that this doesn&#39;t work for infinite</span>
+<span class="sd">        lists because it&#39;s strict. You probably want to use ``foldr_lazy`` or</span>
+<span class="sd">        ``foldl`` instead as this function easily exceeds Python maximum</span>
+<span class="sd">        recursion depth (or the stack overflows).</span>
+
+<span class="sd">        ..code-block:: python</span>
+
+<span class="sd">            &gt;&gt;&gt; xs = iterate(lambda x: x + 1, 1)</span>
+<span class="sd">            &gt;&gt;&gt; xs.foldr(lambda y, ys: Cons(2 * y, lambda: ys), Nil)</span>
+<span class="sd">            RecursionError: maximum recursion depth exceeded while calling a Python object</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">initial</span><span class="p">,</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="n">combine</span><span class="p">(</span><span class="n">x</span><span class="p">)(</span><span class="n">xs</span><span class="p">()</span><span class="o">.</span><span class="n">foldr</span><span class="p">(</span><span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.foldr_lazy"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.foldr_lazy">[docs]</a>    <span class="k">def</span> <span class="nf">foldr_lazy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combine</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Foldable t =&gt; t a -&gt; (a -&gt; (() -&gt; b) -&gt; (() -&gt; b)) -&gt; b -&gt; b</span>
+
+<span class="sd">        Nonstrict right-associative fold with support for lazy recursion,</span>
+<span class="sd">        short-circuiting and tail-call optimization.</span>
+
+<span class="sd">        HOW ABOUT [a,b,c,d,e,f,g,h,...] -&gt; (a(b(c(d(e))))) UNTIL TOTAL STRING</span>
+<span class="sd">        LENGTH IS X?</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        combine : curried function</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        haskpy.typeclasses.foldable.foldr_lazy</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lxs</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;A single recursion step</span>
+
+<span class="sd">            Utilizes tail-call optimization if used.</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">lacc_prev</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">run</span><span class="p">(</span><span class="n">lxs</span><span class="p">())</span>
+            <span class="n">lacc_next</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">x</span><span class="p">)(</span><span class="n">lacc_prev</span><span class="p">)</span>
+
+            <span class="c1"># Special case: Tail call optimization! If the lazy accumulator</span>
+            <span class="c1"># stays unmodified, we can just iterate as long as it&#39;s not</span>
+            <span class="c1"># modified.</span>
+            <span class="k">while</span> <span class="n">lacc_next</span> <span class="ow">is</span> <span class="n">lacc_prev</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">lxs</span><span class="p">,</span> <span class="n">lacc_next</span><span class="p">)</span> <span class="o">=</span> <span class="n">lxs</span><span class="p">()</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                    <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">Nil</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">initial</span><span class="p">),</span>
+                    <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">z</span><span class="p">,</span> <span class="n">lzs</span><span class="p">:</span> <span class="p">(</span><span class="n">lzs</span><span class="p">,</span> <span class="n">combine</span><span class="p">(</span><span class="n">z</span><span class="p">)(</span><span class="n">lacc_next</span><span class="p">)),</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Just return and let the normal recursion roll</span>
+            <span class="k">return</span> <span class="n">lacc_next</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Run the recursion</span>
+
+<span class="sd">            This wouldn&#39;t need to be wrapped in a separate function as we could</span>
+<span class="sd">            call foldr_lazy recursively. However, as we explicitly curry</span>
+<span class="sd">            combine-function, let&#39;s avoid doing that at every step.</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">xs</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">initial</span><span class="p">,</span>
+                <span class="n">Cons</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList.scanl"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.scanl">[docs]</a>    <span class="k">def</span> <span class="nf">scanl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Nil</span><span class="p">,</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="p">()</span><span class="o">.</span><span class="n">_scanl</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">)),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinkedList._scanl"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList._scanl">[docs]</a>    <span class="k">def</span> <span class="nf">_scanl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">acc</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">create_cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">):</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Cons</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="p">()</span><span class="o">.</span><span class="n">_scanl</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Nil</span><span class="p">,</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="n">create_cons</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxdepth</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;Nil&quot;</span><span class="p">,</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="s2">&quot;Cons(</span><span class="si">{0}</span><span class="s2">, </span><span class="si">{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                <span class="s2">&quot;...&quot;</span> <span class="k">if</span> <span class="n">maxdepth</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">xs</span><span class="p">()</span><span class="o">.</span><span class="n">__repr</span><span class="p">(</span><span class="n">maxdepth</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Sampling methods for property tests</span>
+    <span class="c1">#</span>
+
+    <span class="c1"># @class_function</span>
+    <span class="c1"># @st.composite</span>
+    <span class="c1"># def sample_value(draw, cls, a):</span>
+    <span class="c1">#     return draw(</span>
+    <span class="c1">#         st.one_of(</span>
+    <span class="c1">#             st.just(Nil),</span>
+    <span class="c1">#             a.map(</span>
+    <span class="c1">#                 lambda x: Cons(</span>
+    <span class="c1">#                     x,</span>
+    <span class="c1">#                     lambda: draw(cls.sample_value(a))</span>
+    <span class="c1">#                 )</span>
+    <span class="c1">#             )</span>
+    <span class="c1">#         )</span>
+    <span class="c1">#     )</span>
+    <span class="c1">#     #return st.lists(a, max_size=10).map(lambda xs: cls(*xs))</span>
+
+    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">sample_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="c1"># It&#39;s not possible to sample linked lists lazily because hypothesis</span>
+        <span class="c1"># doesn&#39;t support that sampling happens at some later point (the</span>
+        <span class="c1"># sampler gets &quot;frozen&quot;). So, we must sample everything at once,</span>
+        <span class="c1"># although we then add the &quot;lazy&quot; lambda wrapping to the pre-sampled</span>
+        <span class="c1"># values.</span>
+        <span class="c1">#</span>
+        <span class="c1"># This non-lazy sampling could be implemented recursively as follows:</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">deferred</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">one_of</span><span class="p">(</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">just</span><span class="p">(</span><span class="n">Nil</span><span class="p">),</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">flatmap</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">sample_value</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                        <span class="k">lambda</span> <span class="n">xs</span><span class="p">:</span> <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># However, this can cause RecursionError in Python, so let&#39;s write it</span>
+        <span class="c1"># as a loop instead:</span>
+
+    <span class="n">sample_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">sample_functor_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">()</span>
+    <span class="n">sample_applicative_type</span> <span class="o">=</span> <span class="n">sample_functor_type</span>
+    <span class="n">sample_monad_type</span> <span class="o">=</span> <span class="n">sample_functor_type</span>
+
+    <span class="n">sample_semigroup_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">sample_monoid_type</span> <span class="o">=</span> <span class="n">sample_semigroup_type</span>
+
+    <span class="n">sample_eq_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="LinkedList.__eq_test__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.LinkedList.html#haskpy.types.linkedlist.LinkedList.__eq_test__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq_test__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">other</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">__</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">lxs</span><span class="p">:</span> <span class="n">other</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="n">Nil</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">Cons</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">lys</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="n">eq_test</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="n">eq_test</span><span class="p">(</span><span class="n">lxs</span><span class="p">(),</span> <span class="n">lys</span><span class="p">(),</span> <span class="n">data</span><span class="p">)</span>
+                <span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+    <span class="n">sample_foldable_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_type_from_value</span><span class="p">()</span>
+    <span class="n">sample_foldable_functor_type</span> <span class="o">=</span> <span class="n">sample_foldable_type</span></div>
+
+
+<span class="n">Nil</span> <span class="o">=</span> <span class="n">LinkedList</span><span class="p">(</span><span class="n">match</span><span class="o">=</span><span class="k">lambda</span> <span class="n">Nil</span><span class="p">,</span> <span class="n">Cons</span><span class="p">:</span> <span class="n">Nil</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="Cons"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.Cons.html#haskpy.types.linkedlist.Cons">[docs]</a><span class="k">def</span> <span class="nf">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;xs is a lambda function&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">LinkedList</span><span class="p">(</span><span class="n">match</span><span class="o">=</span><span class="k">lambda</span> <span class="n">Nil</span><span class="p">,</span> <span class="n">Cons</span><span class="p">:</span> <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="iterate"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.iterate.html#haskpy.types.linkedlist.iterate">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">iterate</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">iterate</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="repeat"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.repeat.html#haskpy.types.linkedlist.repeat">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">xs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xs</span></div>
+
+
+<div class="viewcode-block" id="replicate"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.linkedlist.replicate.html#haskpy.types.linkedlist.replicate">[docs]</a><span class="nd">@function</span>
+<span class="k">def</span> <span class="nf">replicate</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">Nil</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">else</span>
+        <span class="n">Cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">replicate</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../property-based-testing.html">Property-based testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

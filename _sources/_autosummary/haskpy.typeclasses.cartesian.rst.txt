@@ -1,0 +1,6 @@
+haskpy.typeclasses.cartesian
+============================
+
+.. currentmodule:: haskpy.typeclasses.cartesian
+
+.. automodule:: haskpy.typeclasses.cartesian

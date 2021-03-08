@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.constant.Constant
+   :noindex:
+
+Constant
+==============================
+
+.. currentmodule:: haskpy.types.constant
+
+.. autoclass:: Constant
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

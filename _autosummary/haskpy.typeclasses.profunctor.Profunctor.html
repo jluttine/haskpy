@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profunctor &#8212; HaskPy 0.1.dev1+g45ff2db documentation</title>
+    <title>Profunctor &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Cartesian" href="haskpy.typeclasses.cartesian.Cartesian.html" />
-    <link rel="prev" title="Contravariant" href="haskpy.typeclasses.contravariant.Contravariant.html" />
+    <link rel="next" title="haskpy.typeclasses.profunctor.dimap" href="haskpy.typeclasses.profunctor.dimap.html" />
+    <link rel="prev" title="haskpy.typeclasses.profunctor" href="haskpy.typeclasses.profunctor.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -41,8 +41,8 @@
 <h1>Profunctor<a class="headerlink" href="#profunctor" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="haskpy.typeclasses.profunctor.Profunctor">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Profunctor</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._functor.Functor</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses._contravariant.Contravariant</span></code></p>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Profunctor</span></code><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.functor.Functor</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.contravariant.Contravariant.html#haskpy.typeclasses.contravariant.Contravariant" title="haskpy.typeclasses.contravariant.Contravariant"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.contravariant.Contravariant</span></code></a></p>
 <p>Minimal complete definition: <code class="docutils literal notranslate"><span class="pre">dimap</span> <span class="pre">|</span> <span class="pre">(contramap</span> <span class="pre">&amp;</span> <span class="pre">map)</span></code>.</p>
 <p>Instead of using <code class="docutils literal notranslate"><span class="pre">lmap</span></code> and <code class="docutils literal notranslate"><span class="pre">rmap</span></code> as in Haskell, let’s use the already
 introduced <code class="docutils literal notranslate"><span class="pre">contramap</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code>.</p>
@@ -141,8 +141,10 @@ two functions.</p></li>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="../api.html">API</a><ul>
   <li><a href="haskpy.typeclasses.html">haskpy.typeclasses</a><ul>
-      <li>Previous: <a href="haskpy.typeclasses.contravariant.Contravariant.html" title="previous chapter">Contravariant</a></li>
-      <li>Next: <a href="haskpy.typeclasses.cartesian.Cartesian.html" title="next chapter">Cartesian</a></li>
+  <li><a href="haskpy.typeclasses.profunctor.html">haskpy.typeclasses.profunctor</a><ul>
+      <li>Previous: <a href="haskpy.typeclasses.profunctor.html" title="previous chapter">haskpy.typeclasses.profunctor</a></li>
+      <li>Next: <a href="haskpy.typeclasses.profunctor.dimap.html" title="next chapter">haskpy.typeclasses.profunctor.dimap</a></li>
+  </ul></li>
   </ul></li>
   </ul></li>
   </ul></li>
