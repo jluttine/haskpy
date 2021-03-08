@@ -1,3 +1,17 @@
+"""Linked list of values
+
+.. autosummary::
+   :toctree:
+
+   LinkedList
+   Cons
+   Nil
+   iterate
+   repeat
+   replicate
+
+"""
+
 import attr
 import functools
 from hypothesis import strategies as st
@@ -263,9 +277,9 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
         See also
         --------
 
-        Other recursion patterns:
-
-        ``foldl``, ``foldr``, ``foldr_lazy``
+        foldl
+        foldr
+        foldr_lazy
 
         """
         stop = False
@@ -336,7 +350,7 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
         See also
         --------
 
-        haskpy.foldr_lazy
+        haskpy.typeclasses.foldable.foldr_lazy
 
         """
 

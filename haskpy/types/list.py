@@ -1,3 +1,12 @@
+"""List of values
+
+.. autosummary::
+   :toctree:
+
+   List
+
+"""
+
 import attr
 import functools
 from hypothesis import strategies as st

@@ -11,10 +11,17 @@
    function
    maybe
    either
+   validation
    list
    linkedlist
+   dictionary
    identity
+   constant
    compose
    monoids
+   state
+   reader
+   writer
+   io
 
 """

@@ -1,5 +1,19 @@
 """Values with two possibilities
 
+.. autosummary::
+   :toctree:
+
+   Either
+   Left
+   Right
+   either
+   is_left
+   is_right
+   from_left
+   from_right
+   left
+   right
+
 """
 
 import attr

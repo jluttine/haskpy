@@ -1,4 +1,19 @@
-"""Simple monoids"""
+"""Simple monoids
+
+.. autosummary::
+   :toctree:
+
+   Sum
+   All
+   Any
+   String
+   Endo
+
+.. todo::
+
+   ``Product``
+
+"""
 
 import attr
 import hypothesis.strategies as st
@@ -16,6 +31,7 @@ from haskpy import testing
 
 @immutable
 class Sum(Commutative, Monoid, Hashable, Eq):
+    """Sum monoid"""
 
     number = attr.ib()
 
@@ -46,6 +62,7 @@ class Sum(Commutative, Monoid, Hashable, Eq):
 
 @immutable
 class All(Commutative, Monoid, Hashable, Eq):
+    """All monoid"""
 
     boolean = attr.ib()
 
@@ -76,6 +93,7 @@ class All(Commutative, Monoid, Hashable, Eq):
 
 @immutable
 class Any(Commutative, Monoid, Hashable, Eq):
+    """Any monoid"""
 
     boolean = attr.ib()
 
@@ -106,6 +124,7 @@ class Any(Commutative, Monoid, Hashable, Eq):
 
 @immutable
 class String(Monoid, Hashable, Eq):
+    """String monoid"""
 
     string = attr.ib(converter=str)
 

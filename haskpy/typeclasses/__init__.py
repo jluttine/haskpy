@@ -51,7 +51,10 @@ Typeclasses for basic properties:
    :toctree:
 
    equality
+   ord
    hashable
+   show
+   readable
 
 Container-like typeclasses:
 
@@ -65,6 +68,7 @@ Container-like typeclasses:
    profunctor
    cartesian
    cocartesian
+   bifunctor
 
 Typeclasses for types that can be merged:
 
@@ -74,12 +78,13 @@ Typeclasses for types that can be merged:
    semigroup
    monoid
 
-Struture that can be manipulated:
+Struture that can be manipulated or traversed:
 
 .. autosummary::
    :toctree:
 
    foldable
+   traversable
 
 Abstract base class of the typeclasses:
 

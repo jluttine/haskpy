@@ -1,3 +1,13 @@
+"""Compose two applicative functors into one
+
+.. autosummary::
+   :toctree:
+
+   Compose
+   decompose
+
+"""
+
 import attr
 import functools
 
@@ -12,19 +22,25 @@ def Compose(X, Y):
 
     Kind:
 
-      Compose :: (* -> *) -> (* -> *) -> * -> *
+    .. code-block::
+
+        Compose :: (* -> *) -> (* -> *) -> * -> *
 
     That is, it takes two type constructors and one concrete type to create a
     concrete type. Another way to see it is that it takes two one-argument type
     constructors and returns a one-argument type constructor:
 
-      Compose :: (* -> *) -> (* -> *) -> (* -> *)
+    .. code-block::
+
+        Compose :: (* -> *) -> (* -> *) -> (* -> *)
 
     That's how we can see it here.
 
     Two nested Applicative structures are merged into one layer:
 
-      Composed :: f1 (f2 a) -> f f1 f2 a
+    .. code-block::
+
+        Composed :: f1 (f2 a) -> f f1 f2 a
 
     Note that ``f`` is a type constructor of three arguments as shown by its
     kind above.

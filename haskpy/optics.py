@@ -9,6 +9,13 @@
    lens
    prism
 
+.. todo::
+
+   traversal
+   grate
+   affine
+   setter
+
 Resources:
 
 - Profunctor Optics: Modular Data Accessors by Pickering, Gibbons, and Wu
