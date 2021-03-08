@@ -1,3 +1,21 @@
+"""Struture that can be squashed
+
+.. autosummary::
+   :toctree:
+
+    Foldable
+    fold_map
+    foldl
+    foldr
+    foldr_lazy
+    fold
+    length
+    sum
+    null
+    elem
+
+"""
+
 import itertools
 import builtins
 from warnings import warn, filterwarnings, catch_warnings

@@ -1,3 +1,12 @@
+"""Basis for typeclasses
+
+.. autosummary::
+   :toctree:
+
+   Type
+
+"""
+
 from hypothesis import given
 import hypothesis.strategies as st
 

@@ -1,3 +1,14 @@
+"""Equality and inequality for types
+
+.. autosummary::
+   :toctree:
+
+   Eq
+   eq
+   ne
+
+"""
+
 import hypothesis.strategies as st
 from hypothesis import given
 
@@ -188,7 +199,19 @@ class Eq(Type):
 
 @function
 def eq(x, y):
-    """Equality: ``Eq a => a -> a -> Bool``"""
+    """Equality: ``Eq a => a -> a -> Bool``
+
+    Note that one can use `==` operator instead of this function. But operators
+    cannot be partially applied in Python, so for that usecase this function
+    can be useful.
+
+    .. code-block:: python
+
+       >>> from haskpy import List, map
+       >>> map(eq(42), List(1, 2, 42, 666, 42)
+       List(False, False, True, False, True)
+
+    """
     return x == y
 
 

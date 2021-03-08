@@ -1,4 +1,9 @@
-"""A collection of types
+"""Types define properties that values have
+
+.. todo::
+
+    Type syntax: ``a``, ``Maybe a``, ``a -> a``, ``a -> b -> a``, ``Maybe a ->
+    a -> a``, ``(a -> b) -> Maybe a -> Maybe b``.
 
 .. autosummary::
    :toctree:

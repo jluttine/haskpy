@@ -1,4 +1,9 @@
-"""Foo
+"""Hashability for types
+
+.. autosummary::
+   :toctree:
+
+   Hashable
 
 """
 
