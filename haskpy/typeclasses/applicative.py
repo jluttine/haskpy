@@ -26,12 +26,12 @@ Applicative.__module__ = __name__
 
 @function
 def liftA2(f, x, y):
-    return x.map(f).apply(y)
+    return x.map(f).apply_to(y)
 
 
 @function
 def liftA3(f, x, y, z):
-    return liftA2(f, x, y).apply(z)
+    return liftA2(f, x, y).apply_to(z)
 
 
 @function

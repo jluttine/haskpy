@@ -9,6 +9,10 @@ Added
 -----
 - Add ``+`` operator for ``Semigroup`` (and ``Monoid``) instances.
 
+Fixed
+-----
+- Fix ``liftA2`` and ``liftA3``.
+
 
 0.2.0
 *****
