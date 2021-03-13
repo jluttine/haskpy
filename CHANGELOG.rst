@@ -23,6 +23,7 @@ Changed
 Fixed
 -----
 - Fix ``liftA2`` and ``liftA3``.
+- Complete ``Hashable`` typeclass.
 
 
 0.2.0

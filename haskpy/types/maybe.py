@@ -220,6 +220,13 @@ class Maybe(
             Just=lambda x: "Just({0})".format(repr(x)),
         )
 
+    def __hash__(self):
+        return self.match(
+            # Use some random strings in hashing
+            Nothing=lambda: hash("hfauwovnohuwehrofasdlnvlspwfoij"),
+            Just=lambda x: hash(("fwaoivaoiejfaowiefijafsduhasdo", x))
+        )
+
     def __eq__(self, other):
         return self.match(
             Nothing=lambda: other.match(

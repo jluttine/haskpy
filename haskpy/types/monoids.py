@@ -45,6 +45,9 @@ class Sum(Commutative, Monoid, Hashable, Eq):
     def __eq__(self, other):
         return self.number == other.number
 
+    def __hash__(self):
+        return hash(self.number)
+
     def __repr__(self):
         return "Sum({})".format(repr(self.number))
 
@@ -75,6 +78,9 @@ class All(Commutative, Monoid, Hashable, Eq):
 
     def __eq__(self, other):
         return self.boolean == other.boolean
+
+    def __hash__(self):
+        return hash(self.boolean)
 
     def __repr__(self):
         return "All({})".format(repr(self.boolean))
@@ -107,6 +113,9 @@ class Any(Commutative, Monoid, Hashable, Eq):
     def __eq__(self, other):
         return self.boolean == other.boolean
 
+    def __hash__(self):
+        return hash(self.boolean)
+
     def __repr__(self):
         return "Any({})".format(repr(self.boolean))
 
@@ -137,6 +146,9 @@ class String(Monoid, Hashable, Eq):
 
     def __eq__(self, other):
         return self.string == other.string
+
+    def __hash__(self):
+        return hash(self.string)
 
     def __str__(self):
         return self.string
