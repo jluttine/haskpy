@@ -61,19 +61,63 @@ def FunctionMonoid(monoid):
 
 @immutable
 class Function(Monad, Cartesian, Cocartesian, Semigroup):
-    """Monad instance for curried functions
+    """Monad instance for curried functions ``:: a -> b``
 
-    Note the resulting ``Function`` object accepts only positional arguments.
-    The number of those positional arguments is exactly the same as the number
-    of required positional arguments in the underlying function. Any optional
-    positional or keyword arguments become unusable. The reason for this is
-    that it must be unambiguous at which point, for instance, ``map`` is
-    applied. Also, ``f(a)(b)`` should always be equal to ``f(a, b)`` with
-    curried functions. This might not be the case if there are optional
-    arguments.
+    The function is curried in such a way that the function can be applied one
+    argument at a time, all arguments at the same time or the arguments divided
+    arbitrarily among multiple calls. To illustrate this, consider the
+    following two-argument function that returns another two-argument function:
 
-    Use similar wrapping as functools.wraps does for some attributes. See
-    CPython: https://github.com/python/cpython/blob/master/Lib/functools.py#L30
+    .. code-block:: python
+
+        @function
+        def foo(a, b):
+
+            @function
+            def bar(c, d):
+                return a + b + c + d
+
+            return bar
+
+    This is effectively a four-argument function for which any of the following
+    examples is a valid way of calling it:
+
+    .. code-block:: python
+
+        >>> foo("a")("b")("c")("d")
+        'abcd'
+        >>> foo("a", "b", "c", "d")
+        'abcd'
+        >>> foo("a")("b", "c")("d")
+        'abcd'
+
+    Function composition is equivalent to functorial mapping over a function.
+    Therefore, functions can be composed at least in any of the following three
+    ways:
+
+    .. code-block:: python
+
+        >>> import haskpy as hp
+        >>> f = hp.function(lambda x: x + 3)
+        >>> g = lambda x: 2 * x
+        >>> h = lambda x: x ** 2
+        >>> (h ** g ** f)(2)
+        100
+        >>> hp.map(h, hp.map(g, f))(2)
+        100
+        >>> f.map(g).map(h)(2)
+        100
+
+    Here, ``**`` for functions (or functors) means composing (or functorial
+    mapping).
+
+    Note that ``Function`` objects accept only positional arguments. The number
+    of those positional arguments is exactly the same as the number of required
+    positional arguments in the underlying function. Any optional positional or
+    keyword arguments become unusable. The reason for this is that it must be
+    unambiguous at which point, for instance, ``map`` is applied. Also,
+    ``f(a)(b)`` should always be equal to ``f(a, b)`` with curried functions.
+    This might not be the case if there are optional arguments.
 
     .. note::
 
