@@ -7,7 +7,18 @@ Dev
 
 Added
 -----
+- Add ``Apply`` typeclass. In the typeclass hierarchy, it's between ``Functor``
+  and ``Applicative``.
 - Add ``+`` operator for ``Semigroup`` (and ``Monoid``) instances.
+- Add ``<<`` operator for ``Apply`` (and ``Applicative``) instances.
+- Add ``apply_first`` method to ``Apply``.
+- Add ``lift4`` and ``lift5`` functions.
+
+Changed
+-------
+- Rename ``sequence`` to ``apply_second``.
+- Rename ``liftA2`` to ``lift2``.
+- Rename ``liftA3`` to ``lift3``.
 
 Fixed
 -----

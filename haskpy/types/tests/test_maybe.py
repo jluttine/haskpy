@@ -40,13 +40,13 @@ def test_compose_vs_maybet():
     """
 
     MaybeList = MaybeT(List)
-    xs = MaybeList(List(Nothing))
+    xs = MaybeList(List(Nothing, Just(42)))
     ys = MaybeList(List(Just(1), Just(2)))
-    assert xs.sequence(ys) == MaybeList(List(Nothing))
+    assert xs.apply_second(ys) == MaybeList(List(Nothing, Just(1), Just(2)))
 
     MaybeList2 = Compose(List, Maybe)
-    xs2 = MaybeList2(List(Nothing))
+    xs2 = MaybeList2(List(Nothing, Just(42)))
     ys2 = MaybeList2(List(Just(1), Just(2)))
-    assert xs2.sequence(ys2) == MaybeList2(List(Nothing, Nothing))
+    assert xs2.apply_second(ys2) == MaybeList2(List(Nothing, Nothing, Just(1), Just(2)))
 
     return

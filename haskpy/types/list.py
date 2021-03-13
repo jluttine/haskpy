@@ -120,6 +120,7 @@ class List(Monad, Monoid, Foldable, Eq):
     )
 
     sample_functor_type = testing.sample_type_from_value()
+    sample_apply_type = sample_functor_type
     sample_applicative_type = sample_functor_type
     sample_monad_type = sample_functor_type
 

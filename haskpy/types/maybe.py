@@ -257,6 +257,7 @@ class Maybe(
     )
 
     sample_functor_type = testing.sample_type_from_value()
+    sample_apply_type = sample_functor_type
     sample_applicative_type = sample_functor_type
     sample_monad_type = sample_functor_type
 
@@ -274,7 +275,7 @@ class Maybe(
     )
 
     sample_eq_type = testing.sample_type_from_value(
-        testing.sample_commutative_type(),
+        testing.sample_eq_type(),
     )
 
     sample_foldable_type = testing.sample_type_from_value()
@@ -364,6 +365,7 @@ def MaybeT(M):
         )
 
         sample_functor_type = testing.sample_type_from_value()
+        sample_apply_type = sample_functor_type
         sample_applicative_type = sample_functor_type
         sample_monad_type = sample_functor_type
 

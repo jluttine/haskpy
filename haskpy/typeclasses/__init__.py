@@ -62,6 +62,7 @@ Container-like typeclasses:
    :toctree:
 
    functor
+   apply_
    applicative
    monad
    contravariant
@@ -98,6 +99,7 @@ Read more at `Typeclassopedia <https://wiki.haskell.org/Typeclassopedia>`_.
 """
 from .typeclass import *
 from .functor import *
+from .apply_ import *
 from .applicative import *
 from .monad import *
 from .contravariant import *

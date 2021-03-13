@@ -307,6 +307,7 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
     sample_functor_type = testing.sample_type_from_value(
         testing.sample_hashable_type(),
     )
+    sample_apply_type = sample_functor_type
     sample_applicative_type = sample_functor_type
     sample_monad_type = sample_functor_type
 

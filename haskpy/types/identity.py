@@ -38,6 +38,7 @@ class Identity(Monad, Eq):
     )
 
     sample_functor_type = testing.sample_type_from_value()
+    sample_apply_type = sample_functor_type
     sample_applicative_type = sample_functor_type
     sample_monad_type = sample_functor_type
 
@@ -117,6 +118,14 @@ def IdentityT(M):
             return (
                 Identity.sample_functor_type(a)
                 .flatmap(M.sample_functor_type)
+                .map(lambda s: s.map(cls))
+            )
+
+        @class_function
+        def sample_apply_type(cls, a):
+            return (
+                Identity.sample_apply_type(a)
+                .flatmap(M.sample_apply_type)
                 .map(lambda s: s.map(cls))
             )
 
