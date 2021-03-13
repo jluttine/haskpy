@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overview &#8212; HaskPy 0.1.dev1+g4514a52 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Motivation" href="motivation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="overview">
+<span id="id1"></span><h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing">
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
+<p>HaskPy can be installed, for instance, from PyPI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install haskpy
+</pre></div>
+</div>
+<p>Development version is available at <a class="reference external" href="https://github.com/jluttine/haskpy">GitHub</a>.</p>
+<p>The main contribution of HaskPy is to provide powerful types and typeclasses
+inspired by Haskell. This section gives just a quick glimpse on some simple
+usage, so refer to the API documentation for more detailed explanations.</p>
+<p>If you just would like to know:</p>
+<p><em>Make duck typing much more powerful by using sound and powerful interfaces.</em></p>
+<p><em>Make Python more pythonic with powerful base classes.</em></p>
+<p>This means that we can write code that is more generic and polymorphic.</p>
+<p>To get started, import HaskPy:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">haskpy</span> <span class="k">as</span> <span class="nn">hp</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="types">
+<h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
+<p>For a full list of available types, refer to <a class="reference internal" href="_autosummary/haskpy.types.html#module-haskpy.types" title="haskpy.types"><code class="xref py py-mod docutils literal notranslate"><span class="pre">haskpy.types</span></code></a> module. This
+section highlights a few of the most important ones.</p>
+<div class="section" id="maybe">
+<h3>Maybe<a class="headerlink" href="#maybe" title="Permalink to this headline">¶</a></h3>
+<p>It is very common in programming to handle variables that might have a value or
+not. In Python, this is typically done by using <code class="docutils literal notranslate"><span class="pre">None</span></code> to represent “no
+value”. With HaskPy, this can be represented by <a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> type with
+<a class="reference internal" href="_autosummary/haskpy.types.maybe.Just.html#haskpy.types.maybe.Just" title="haskpy.types.maybe.Just"><code class="xref py py-func docutils literal notranslate"><span class="pre">Just()</span></code></a> constructor for values and <a class="reference internal" href="_autosummary/haskpy.types.maybe.Nothing.html#haskpy.types.maybe.Nothing" title="haskpy.types.maybe.Nothing"><code class="xref py py-data docutils literal notranslate"><span class="pre">Nothing</span></code></a> for “no value”.
+This way you don’t need to write if-else but you can treat the object similarly
+regardless of whether it actually contains a value or not:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span>
+<span class="go">Just(43)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">Nothing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span>
+<span class="go">Nothing</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> also helps you to avoid a common mistake that in some part of
+the code you forget to take into account that a variable can be <code class="docutils literal notranslate"><span class="pre">None</span></code> too.
+See <a class="reference internal" href="_autosummary/haskpy.types.maybe.html#module-haskpy.types.maybe" title="haskpy.types.maybe"><code class="xref py py-mod docutils literal notranslate"><span class="pre">maybe</span></code></a> for more details and examples.</p>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<p>HaskPy provides decorator <a class="reference internal" href="_autosummary/haskpy.types.function.function.html#haskpy.types.function.function" title="haskpy.types.function.function"><code class="xref py py-func docutils literal notranslate"><span class="pre">function()</span></code></a> to make functions more powerful.
+The decorator converts the function into <a class="reference internal" href="_autosummary/haskpy.types.function.Function.html#haskpy.types.function.Function" title="haskpy.types.function.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a> object which has
+a lot more features than just being callable. For instance, it’s a monad. In
+addition, the function is curried in such a way that it can be called with any
+number of arguments and it stays partially applied until all arguments have been
+passed:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">)</span>
+<span class="go">&quot;abc&quot;</span>
+</pre></div>
+</div>
+<p>Many of the methods (i.e., functions bound to objects) in HaskPy have
+corresponding function counterparts. This is sometimes useful because functions
+are easier to pass as arguments and only the functions have been decorated with
+<a class="reference internal" href="_autosummary/haskpy.types.function.function.html#haskpy.types.function.function" title="haskpy.types.function.function"><code class="xref py py-func docutils literal notranslate"><span class="pre">function()</span></code></a>. For instance, the example above could have been written
+with <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.map.html#haskpy.typeclasses.functor.map" title="haskpy.typeclasses.functor.map"><code class="xref py py-func docutils literal notranslate"><span class="pre">map()</span></code></a> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">inc</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">Just(43)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">inc</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="go">Nothing</span>
+</pre></div>
+</div>
+<p>To apply a two-argument function to values that are both inside
+<a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> structure, one can use <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.liftA2.html#haskpy.typeclasses.applicative.liftA2" title="haskpy.typeclasses.applicative.liftA2"><code class="xref py py-func docutils literal notranslate"><span class="pre">liftA2()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">add</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">liftA2</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">Just(84)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">liftA2</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="go">Nothing</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="_autosummary/haskpy.types.function.Function.html#haskpy.types.function.Function" title="haskpy.types.function.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a> for more details and examples on HaskPy function type.
+See <a class="reference internal" href="_autosummary/haskpy.utils.html#module-haskpy.utils" title="haskpy.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">utils</span></code></a> for a small collection of simple functions. Most functions
+in the entire HaskPy package are imported so that they are available directly
+under <code class="docutils literal notranslate"><span class="pre">haskpy</span></code> package as shown above with <code class="docutils literal notranslate"><span class="pre">hp.map</span></code> and <code class="docutils literal notranslate"><span class="pre">hp.liftA2</span></code>.</p>
+</div>
+<div class="section" id="list">
+<h3>List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code> is another basic type in HaskPy. Lists can be, for instance,
+mapped:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">inc</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span>
+<span class="go">List(11, 21, 31)</span>
+</pre></div>
+</div>
+<p>and concatenated:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+<span class="go">List(10, 20, 30, 40, 50)</span>
+</pre></div>
+</div>
+<p>For more details, see <a class="reference internal" href="_autosummary/haskpy.types.list.html#module-haskpy.types.list" title="haskpy.types.list"><code class="xref py py-mod docutils literal notranslate"><span class="pre">list</span></code></a>.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Dictionary</p>
+</div>
+</div>
+</div>
+<div class="section" id="type-signature">
+<h2>Type signature<a class="headerlink" href="#type-signature" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="typeclasses">
+<h2>Typeclasses<a class="headerlink" href="#typeclasses" title="Permalink to this headline">¶</a></h2>
+<p>For a full list of typeclasses, see <a class="reference internal" href="_autosummary/haskpy.typeclasses.html#module-haskpy.typeclasses" title="haskpy.typeclasses"><code class="xref py py-mod docutils literal notranslate"><span class="pre">haskpy.typeclasses</span></code></a>. This section
+highlights a few of the most important ones.</p>
+<div class="section" id="functors-applicatives-and-monads">
+<h3>Functors, applicatives and monads<a class="headerlink" href="#functors-applicatives-and-monads" title="Permalink to this headline">¶</a></h3>
+<p>I recommend that you read <a class="reference external" href="https://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html">“Functors, Applicatives, and Monads in Pictures”</a>
+for a good illustrated explanation about the concepts if you’re not familiar
+with them.</p>
+<p>In short, <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Functor</span></code></a> represents some kind of structure (think of it as
+a container) that can contain values of some type in such a way that those
+values can be modified without modifying the structure/container. This
+modification of the values is called functorial mapping and <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.map.html#haskpy.typeclasses.functor.map" title="haskpy.typeclasses.functor.map"><code class="xref py py-func docutils literal notranslate"><span class="pre">map()</span></code></a> does
+that. You’ve already seen a few examples above on how to use it for
+<a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> and <a class="reference internal" href="_autosummary/haskpy.types.list.List.html#haskpy.types.list.List" title="haskpy.types.list.List"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>, and also functions are functors.
+Functor is an extremely common structure in programming. You can also lift over
+a nested structure by using multiple maps:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">inc</span><span class="p">))(</span><span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">Nothing</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">100</span><span class="p">)))</span>
+<span class="go">List(Just(43), Nothing, Just(101))</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative" title="haskpy.typeclasses.applicative.Applicative"><code class="xref py py-class docutils literal notranslate"><span class="pre">Applicative</span></code></a> is a special case of <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Functor</span></code></a>. Applicative
+types know how to apply functions to values when both the functions and the
+values are wrapped inside structure. This is done with <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.apply.html#haskpy.typeclasses.applicative.apply" title="haskpy.typeclasses.applicative.apply"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply()</span></code></a>
+function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inc_maybe</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">inc_maybe</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
+<span class="go">Just(43)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Nothing</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
+<span class="go">Nothing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">square</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fs</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">inc</span><span class="p">,</span> <span class="n">square</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="go">List(2, 11, 101, 1, 100, 10000)</span>
+</pre></div>
+</div>
+<p>Notice how with lists each function is applied to each value in the other list.
+One common usecase for applicatives is a function that is applied to multiple
+arguments that are all inside structure: map over the first argument, then the
+partially applied function gets inside the structure, so all the remaining
+arguments are applied with the applicative apply:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">add3</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add3_a</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">add3</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add3_ab</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">add3_a</span> <span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">add3_ab</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">Just(143)</span>
+</pre></div>
+</div>
+<p>Or just <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.liftA3.html#haskpy.typeclasses.applicative.liftA3" title="haskpy.typeclasses.applicative.liftA3"><code class="xref py py-func docutils literal notranslate"><span class="pre">liftA3()</span></code></a> for short:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">liftA3</span><span class="p">(</span><span class="n">add3</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">Just(143)</span>
+</pre></div>
+</div>
+<p>Finally, <a class="reference internal" href="_autosummary/haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad" title="haskpy.typeclasses.monad.Monad"><code class="xref py py-class docutils literal notranslate"><span class="pre">Monad</span></code></a> is a special case of <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative" title="haskpy.typeclasses.applicative.Applicative"><code class="xref py py-class docutils literal notranslate"><span class="pre">Applicative</span></code></a>.
+Monads support yet another slightly different way of applying a function: the
+argument is again inside a structure but the function itself isn’t, only its
+output. Alright, that might be a bit difficult to understand. Let’s start from
+the function. The following function inverts the given number, but it handles
+zeros explicitly by using <a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">invert</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">Nothing</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">invert</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">Just(0.25)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">invert</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">Nothing</span>
+</pre></div>
+</div>
+<p>Given this function and a value that is also wrapped inside the same structure,
+we can use <a class="reference internal" href="_autosummary/haskpy.typeclasses.monad.bind.html#haskpy.typeclasses.monad.bind" title="haskpy.typeclasses.monad.bind"><code class="xref py py-func docutils literal notranslate"><span class="pre">bind()</span></code></a> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">invert</span><span class="p">)</span>
+<span class="go">Just(0.1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">invert</span><span class="p">)</span>
+<span class="go">Nothing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Nothing</span><span class="p">,</span> <span class="n">invert</span><span class="p">)</span>
+<span class="go">Nothing</span>
+</pre></div>
+</div>
+<p>For more details, see <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.html#module-haskpy.typeclasses.functor" title="haskpy.typeclasses.functor"><code class="xref py py-mod docutils literal notranslate"><span class="pre">functor</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.html#module-haskpy.typeclasses.applicative" title="haskpy.typeclasses.applicative"><code class="xref py py-mod docutils literal notranslate"><span class="pre">applicative</span></code></a> and
+<a class="reference internal" href="_autosummary/haskpy.typeclasses.monad.html#module-haskpy.typeclasses.monad" title="haskpy.typeclasses.monad"><code class="xref py py-mod docutils literal notranslate"><span class="pre">monad</span></code></a> documentation. There are many other useful monads mentioned in
+a section bit below.</p>
+</div>
+<div class="section" id="monoids">
+<h3>Monoids<a class="headerlink" href="#monoids" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="_autosummary/haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Monoid</span></code></a> is a typeclass for types whose values can be “merged”. That
+is, there’s a binary operator that takes two arguments of the same type and
+returns a result of that type.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+<span class="go">List(10, 20, 30, 40, 50)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s1</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+<span class="go">String(&#39;foobar&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="go">Just(List(10, 20, 30))</span>
+</pre></div>
+</div>
+<p>Each monoid also has a class attribute called <a class="reference internal" href="_autosummary/haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid.empty" title="haskpy.typeclasses.monoid.Monoid.empty"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Monoid.empty</span></code></a> which is
+an identity element of the binary operation. That is, combining value X with the
+identity element gives X as the result:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
+<span class="go">List(10, 20, 30)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">String</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+<span class="go">String(&#39;bar&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
+<span class="go">Just(List(10, 20))</span>
+</pre></div>
+</div>
+<p>For more details, see <a class="reference internal" href="_autosummary/haskpy.typeclasses.monoid.html#module-haskpy.typeclasses.monoid" title="haskpy.typeclasses.monoid"><code class="xref py py-mod docutils literal notranslate"><span class="pre">monoid</span></code></a> and <a class="reference internal" href="_autosummary/haskpy.typeclasses.semigroup.html#module-haskpy.typeclasses.semigroup" title="haskpy.typeclasses.semigroup"><code class="xref py py-mod docutils literal notranslate"><span class="pre">semigroup</span></code></a>. There are
+also a few simple monoids implemented in <a class="reference internal" href="_autosummary/haskpy.types.monoids.html#module-haskpy.types.monoids" title="haskpy.types.monoids"><code class="xref py py-mod docutils literal notranslate"><span class="pre">monoids</span></code></a> such as
+<a class="reference internal" href="_autosummary/haskpy.types.monoids.All.html#haskpy.types.monoids.All" title="haskpy.types.monoids.All"><code class="xref py py-class docutils literal notranslate"><span class="pre">All</span></code></a>.</p>
+</div>
+<div class="section" id="foldables">
+<h3>Foldables<a class="headerlink" href="#foldables" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="_autosummary/haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable" title="haskpy.typeclasses.foldable.Foldable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Foldable</span></code></a> is a typeclass for structure that can be “squashed”, or
+folded. It means that all the values in the structure can be processed into a
+single value and the container structure disappears. The way that the values are
+processed one by one can be controlled by the choice of the folding function
+(e.g., <a class="reference internal" href="_autosummary/haskpy.typeclasses.foldable.foldr.html#haskpy.typeclasses.foldable.foldr" title="haskpy.typeclasses.foldable.foldr"><code class="xref py py-func docutils literal notranslate"><span class="pre">foldr()</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.foldable.foldl.html#haskpy.typeclasses.foldable.foldl" title="haskpy.typeclasses.foldable.foldl"><code class="xref py py-func docutils literal notranslate"><span class="pre">foldl()</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.foldable.fold_map.html#haskpy.typeclasses.foldable.fold_map" title="haskpy.typeclasses.foldable.fold_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">fold_map()</span></code></a>).</p>
+<p>For instance, to calculate the sum of the elements in a list:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">foldl</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+<p>If the values in the container are of monoid type, you can use <a class="reference internal" href="_autosummary/haskpy.typeclasses.foldable.fold.html#haskpy.typeclasses.foldable.fold" title="haskpy.typeclasses.foldable.fold"><code class="xref py py-func docutils literal notranslate"><span class="pre">fold()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">All</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">All</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">All</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">All</span><span class="p">(</span><span class="kc">False</span><span class="p">)))</span>
+<span class="go">All(False)</span>
+</pre></div>
+</div>
+<p>For more information, see <a class="reference internal" href="_autosummary/haskpy.typeclasses.foldable.html#module-haskpy.typeclasses.foldable" title="haskpy.typeclasses.foldable"><code class="xref py py-mod docutils literal notranslate"><span class="pre">foldable</span></code></a>. If you’re interested in how to
+fold infinite lists by short-circuiting and support tail-call optimization, see
+<a class="reference internal" href="_autosummary/haskpy.typeclasses.foldable.foldr_lazy.html#haskpy.typeclasses.foldable.foldr_lazy" title="haskpy.typeclasses.foldable.foldr_lazy"><code class="xref py py-func docutils literal notranslate"><span class="pre">foldr_lazy()</span></code></a>.</p>
+</div>
+<div class="section" id="traversables">
+<h3>Traversables<a class="headerlink" href="#traversables" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Traversable. Show how to flip the structures.</p>
+</div>
+</div>
+<div class="section" id="monad-examples">
+<h3>Monad examples<a class="headerlink" href="#monad-examples" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>State, Reader, Writer</p>
+</div>
+</div>
+</div>
+<div class="section" id="operators">
+<h2>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h2>
+<p>Operators sometimes provide much nicer user experience than using functions.
+However, Python has a fixed set of operators and one cannot define their own
+operators, so one can use only the predefined ones. But using those operators
+for a completely different purpose might be very confusing for the user as the
+operators suddenly mean something totally different - or not, depending on the
+context. Despite this major drawback, HaskPy defines new interpretations for a
+few operators just to make it possible to write more compact code. However, it’s
+up to the user to decide whether it makes sense to use them or not.</p>
+<p>Mapping can be done with <code class="docutils literal notranslate"><span class="pre">**</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span> <span class="o">**</span> <span class="n">xs</span>
+<span class="go">List(11, 21, 31)</span>
+</pre></div>
+</div>
+<p>Applicative applying is done with <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span> <span class="o">**</span> <span class="n">xs</span> <span class="o">@</span> <span class="n">ys</span>
+<span class="go">List(11, 12, 21, 22, 31, 32)</span>
+</pre></div>
+</div>
+<p>Applicative sequencing is done with <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">&gt;&gt;</span> <span class="n">ys</span>
+<span class="go">List(1, 2, 1, 2, 1, 2)</span>
+</pre></div>
+</div>
+<p>Monadic binding is done with <code class="docutils literal notranslate"><span class="pre">%</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">%</span> <span class="n">invert</span>
+<span class="go">Just(0.1)</span>
+</pre></div>
+</div>
+<p>Monoid values are combined with <code class="docutils literal notranslate"><span class="pre">+</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">+</span> <span class="n">ys</span>
+<span class="go">List(10, 20, 30, 1, 2)</span>
+</pre></div>
+</div>
+<p>For more details about why these operators were chosen, see the documentation of
+the operators <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor.__rpow__" title="haskpy.typeclasses.functor.Functor.__rpow__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Functor.__rpow__()</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.__matmul__" title="haskpy.typeclasses.applicative.Applicative.__matmul__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Applicative.__matmul__()</span></code></a>,
+<a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.__rshift__" title="haskpy.typeclasses.applicative.Applicative.__rshift__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Applicative.__rshift__()</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad.__mod__" title="haskpy.typeclasses.monad.Monad.__mod__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Monad.__mod__()</span></code></a> and
+<a class="reference internal" href="_autosummary/haskpy.typeclasses.semigroup.Semigroup.html#haskpy.typeclasses.semigroup.Semigroup.__add__" title="haskpy.typeclasses.semigroup.Semigroup.__add__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Semigroup.__add__()</span></code></a>.</p>
+</div>
+<div class="section" id="algebraic-data-types-adts">
+<h2>Algebraic data types (ADTs)<a class="headerlink" href="#algebraic-data-types-adts" title="Permalink to this headline">¶</a></h2>
+<p>Algebraic data types (ADTs) are composite types constructed by using product and
+sum types. A product type means that the values of that type contain values of
+all the types in the product. A sum type means that the values of that type
+contain a value of one of the types in the sum.</p>
+<p>There are many ways to achieve this in Python, but in HaskPy the following
+approach has been used in <a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> and <a class="reference internal" href="_autosummary/haskpy.types.either.Either.html#haskpy.types.either.Either" title="haskpy.types.either.Either"><code class="xref py py-class docutils literal notranslate"><span class="pre">Either</span></code></a>: Define the
+ADT as a class which has <code class="docutils literal notranslate"><span class="pre">match</span></code> method given as an argument when constructing
+values. The sum type is represented by different function that create those
+objects and the product type is represented by the arguments to those functions.</p>
+<p>For instance, <code class="docutils literal notranslate"><span class="pre">MyMaybe</span> <span class="pre">a</span> <span class="pre">=</span> <span class="pre">MyJust</span> <span class="pre">a</span> <span class="pre">|</span> <span class="pre">MyNothing</span></code> can be represented as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyMaybe</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">match</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">match</span> <span class="o">=</span> <span class="n">match</span>
+
+<span class="k">def</span> <span class="nf">MyJust</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">MyMaybe</span><span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="p">,</span> <span class="n">MyJust</span><span class="p">,</span> <span class="n">MyNothing</span><span class="p">:</span> <span class="n">MyJust</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="n">MyNothing</span> <span class="o">=</span> <span class="n">MyMaybe</span><span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="p">,</span> <span class="n">MyJust</span><span class="p">,</span> <span class="n">MyNothing</span><span class="p">:</span> <span class="n">MyNothing</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The purpose of <code class="docutils literal notranslate"><span class="pre">match</span></code> method is simple pattern matching:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inc_or_die</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">MyJust</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">MyNothing</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">666</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">MyJust</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc_or_die</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">43</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">MyNothing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc_or_die</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">666</span>
+</pre></div>
+</div>
+<p>Note that with this kind of pattern matching, one is forced to provide a
+function to handle each case so the pattern matching is total (no missed cases).</p>
+<p>This definitely isn’t the only way to construct ADTs in Python. A natural
+alternative would be to use subclasses. With the approach shown above, it is
+clear that <code class="docutils literal notranslate"><span class="pre">MyJust</span></code> and <code class="docutils literal notranslate"><span class="pre">MyNothing</span></code> are just data constructors, they cannot
+add any methods of their own. That is <code class="docutils literal notranslate"><span class="pre">MyJust</span></code> and <code class="docutils literal notranslate"><span class="pre">MyNothing</span></code> have exactly
+the same interface. This isn’t forced when using subclasses where one could
+define a method for <code class="docutils literal notranslate"><span class="pre">MyNothing</span></code> only. Also, the implementations of the methods
+are split into multiple classes whereas with this approach all methods are
+implemented in <code class="docutils literal notranslate"><span class="pre">MyMaybe</span></code> class and it’s easy to see what the method does in
+each case (see, for instance, the source of <a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a>). With
+inheritance, one might easily forget to implement some required methods in some
+of the subclasses.</p>
+</div>
+<div class="section" id="profunctor-optics">
+<h2>Profunctor optics<a class="headerlink" href="#profunctor-optics" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="_autosummary/haskpy.optics.html#module-haskpy.optics" title="haskpy.optics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">optics</span></code></a></p></li>
+</ul>
+</div>
+<div class="section" id="compose-and-monad-transformers">
+<h2>Compose and monad transformers<a class="headerlink" href="#compose-and-monad-transformers" title="Permalink to this headline">¶</a></h2>
+<p>monad transformers</p>
+</div>
+<div class="section" id="recursion">
+<h2>Recursion<a class="headerlink" href="#recursion" title="Permalink to this headline">¶</a></h2>
+<p>recursion with tco and short-circuiting</p>
+</div>
+<div class="section" id="property-based-testing">
+<h2>Property-based testing<a class="headerlink" href="#property-based-testing" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#types">Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#type-signature">Type signature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#typeclasses">Typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#operators">Operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#algebraic-data-types-adts">Algebraic data types (ADTs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#profunctor-optics">Profunctor optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compose-and-monad-transformers">Compose and monad transformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recursion">Recursion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#property-based-testing">Property-based testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="motivation.html" title="previous chapter">Motivation</a></li>
+      <li>Next: <a href="api.html" title="next chapter">API</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/overview.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

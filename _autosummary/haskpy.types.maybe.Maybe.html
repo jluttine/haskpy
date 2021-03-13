@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Maybe &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <title>Maybe &#8212; HaskPy 0.1.dev1+g4514a52 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -43,7 +43,110 @@
 <dt id="haskpy.types.maybe.Maybe">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Maybe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">match</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/maybe.html#Maybe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.maybe.Maybe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad" title="haskpy.typeclasses.monad.Monad"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monad.Monad</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.semigroup.Commutative.html#haskpy.typeclasses.semigroup.Commutative" title="haskpy.typeclasses.semigroup.Commutative"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.semigroup.Commutative</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monoid.Monoid</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.hashable.Hashable.html#haskpy.typeclasses.hashable.Hashable" title="haskpy.typeclasses.hashable.Hashable"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.hashable.Hashable</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable" title="haskpy.typeclasses.foldable.Foldable"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.foldable.Foldable</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.equality.Eq</span></code></a></p>
-<p>Maybe type for optional values</p>
+<p>Type <code class="docutils literal notranslate"><span class="pre">Maybe</span> <span class="pre">a</span></code> for a value that might be present or not</p>
+<p><a class="reference internal" href="#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> monad is one of the simplest yet very useful monads. It
+represents a case when you might have a value or not. If you have a value,
+it’s wrapped with <a class="reference internal" href="haskpy.types.maybe.Just.html#haskpy.types.maybe.Just" title="haskpy.types.maybe.Just"><code class="xref py py-func docutils literal notranslate"><span class="pre">Just()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">Just(42)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">Maybe</span>
+</pre></div>
+</div>
+<p>If you don’t have a value, it’s represented with <a class="reference internal" href="haskpy.types.maybe.Nothing.html#haskpy.types.maybe.Nothing" title="haskpy.types.maybe.Nothing"><code class="xref py py-data docutils literal notranslate"><span class="pre">Nothing</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">Nothing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>
+<span class="go">Nothing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">Maybe</span>
+</pre></div>
+</div>
+<p>Quite often Python programmers handle this case by using <code class="docutils literal notranslate"><span class="pre">None</span></code> to
+represent “no value” and then just the plain value otherwise. However,
+whenever you want to do something with the value, you need to first check
+if it’s <code class="docutils literal notranslate"><span class="pre">None</span></code> or not, and handle both cases somehow. And, more
+importantly, you need to remember to do this every time you use a value
+that might be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>With HaskPy, it is explicit that the value might exist or not, so you are
+forced to handle both cases. Or, more interestingly, you can just focus on
+the value and let HaskPy take care of the special case. Let’s see what this
+means. Say you have a function that you’d like to apply to the value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>You can use <a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor.map" title="haskpy.typeclasses.functor.Functor.map"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Functor.map()</span></code></a> method to apply it to the value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="go">Just(43)</span>
+</pre></div>
+</div>
+<p>Or, equivalently, use a function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">Just(43)</span>
+</pre></div>
+</div>
+<p>Quite often there are corresponding functions for the methods and it may
+depend on the context which one is more convenient to use. The order of the
+arguments might be slightly different in the function than in the method
+though.</p>
+<p>But what would’ve happened if we had <code class="docutils literal notranslate"><span class="pre">Nothing</span></code> instead?</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="go">Nothing</span>
+</pre></div>
+</div>
+<p>So, nothing was done to <code class="docutils literal notranslate"><span class="pre">Nothing</span></code>. But the important thing is that you
+didn’t need to worry about whether <code class="docutils literal notranslate"><span class="pre">x</span></code> or <code class="docutils literal notranslate"><span class="pre">y</span></code> was <code class="docutils literal notranslate"><span class="pre">Nothing</span></code> or
+contained a real value, <a class="reference internal" href="#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> took care of that under the hood.
+If in some cases you need to handle both cases explicitly, you can use
+<a class="reference internal" href="haskpy.utils.match.html#haskpy.utils.match" title="haskpy.utils.match"><code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code></a> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">Just</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="mi">2</span><span class="o">*</span><span class="n">v</span><span class="p">,</span> <span class="n">Nothing</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">666</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">84</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">666</span>
+</pre></div>
+</div>
+<p>With <a class="reference internal" href="haskpy.utils.match.html#haskpy.utils.match" title="haskpy.utils.match"><code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code></a> you need to explicitly handle all possible cases or
+you will get an error even if your variable wasn’t <code class="docutils literal notranslate"><span class="pre">Nothing</span></code>. Therefore,
+you’ll never forget to take into account <code class="docutils literal notranslate"><span class="pre">Nothing</span></code> case as might happen
+with the classic <code class="docutils literal notranslate"><span class="pre">None</span></code> approach.</p>
+<p>Alright, this was just a very tiny starter about <a class="reference internal" href="#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="haskpy.types.either.Either.html#haskpy.types.either.Either" title="haskpy.types.either.Either"><code class="xref py py-obj docutils literal notranslate"><span class="pre">haskpy.types.either.Either</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<dl class="py method">
+<dt id="haskpy.types.maybe.Maybe.__add__">
+<code class="sig-name descname"><span class="pre">__add__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.maybe.Maybe.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append two monoids</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">+</span></code> operator to append two monoid values seems natural because
+that’s what Python is doing by default because lists are concatenated
+with <code class="docutils literal notranslate"><span class="pre">+</span></code>.</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="haskpy.types.maybe.Maybe.__annotations__">
 <code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#haskpy.types.maybe.Maybe.__annotations__" title="Permalink to this definition">¶</a></dt>
@@ -392,10 +495,8 @@ construct the iterator.</p>
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
@@ -404,6 +505,7 @@ construct the iterator.</p>
 <li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 
 <div class="relations">

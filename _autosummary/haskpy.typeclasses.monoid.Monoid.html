@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Monoid &#8212; HaskPy 0.1.dev1+g5e7926d documentation</title>
+    <title>Monoid &#8212; HaskPy 0.1.dev1+g4514a52 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="haskpy.typeclasses.monoid.append" href="haskpy.typeclasses.monoid.append.html" />
+    <link rel="next" title="haskpy.typeclasses.foldable" href="haskpy.typeclasses.foldable.html" />
     <link rel="prev" title="haskpy.typeclasses.monoid" href="haskpy.typeclasses.monoid.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -53,15 +53,25 @@
 <div><p>sample_monoid_type &amp; sample_semigroup_type</p>
 </div></blockquote>
 <dl class="py method">
+<dt id="haskpy.typeclasses.monoid.Monoid.__add__">
+<code class="sig-name descname"><span class="pre">__add__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.monoid.Monoid.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append two monoids</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">+</span></code> operator to append two monoid values seems natural because
+that’s what Python is doing by default because lists are concatenated
+with <code class="docutils literal notranslate"><span class="pre">+</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="haskpy.typeclasses.monoid.Monoid.append">
 <code class="sig-name descname"><span class="pre">append</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.monoid.Monoid.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>m -&gt; m -&gt; m</p>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="py method">
 <dt id="haskpy.typeclasses.monoid.Monoid.empty">
-<code class="sig-name descname"><span class="pre">empty</span></code><em class="property"> <span class="pre">=</span> <span class="pre">abstract</span> <span class="pre">class</span> <span class="pre">property</span></em><a class="headerlink" href="#haskpy.typeclasses.monoid.Monoid.empty" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">empty</span></code><a class="headerlink" href="#haskpy.typeclasses.monoid.Monoid.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identity element for the monoid</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -86,10 +96,8 @@
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../property-based-testing.html">Property-based testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
@@ -98,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 
 <div class="relations">
@@ -108,7 +117,7 @@
   <li><a href="haskpy.typeclasses.html">haskpy.typeclasses</a><ul>
   <li><a href="haskpy.typeclasses.monoid.html">haskpy.typeclasses.monoid</a><ul>
       <li>Previous: <a href="haskpy.typeclasses.monoid.html" title="previous chapter">haskpy.typeclasses.monoid</a></li>
-      <li>Next: <a href="haskpy.typeclasses.monoid.append.html" title="next chapter">haskpy.typeclasses.monoid.append</a></li>
+      <li>Next: <a href="haskpy.typeclasses.foldable.html" title="next chapter">haskpy.typeclasses.foldable</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
