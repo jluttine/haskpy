@@ -13,10 +13,27 @@ from ._functor import Functor
 
 
 class Applicative(Functor):
-    """Must define at least pure and either apply or apply_to
+    """Applicative functor typeclass.
+
+    Minimal complete definition::
+
+        pure | (apply | apply_to)
 
     The required Functor methods are given defaults based on the required
-    Applicative methods.
+    Applicative methods, so you don't need to implement ``map`` method.
+
+    References
+    ----------
+
+    - C. McBride and R. Paterson, "Applicative programming with effects",
+      Journal of Functional Programming , Volume 18 , Issue 1 , January 2008 ,
+      pp. 1 - 13. DOI: `<https://doi.org/10.1017/S0956796807006326>`_
+
+    - `Applicative functor at Haskell Wiki
+      <https://wiki.haskell.org/Applicative_functor>`_.
+
+    - `Applicative at Hackage
+      <https://hackage.haskell.org/package/base/docs/Control-Applicative.html>`_
 
     """
 
