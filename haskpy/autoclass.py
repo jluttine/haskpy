@@ -2,10 +2,18 @@ from haskpy import Function, Type
 from haskpy.internal import nonexisting_function, decorator
 
 
-class AbstractClassProperty():
+# class AbstractClassProperty():
 
-    def __repr__(self):
-        return "abstract class property"
+#     def __repr__(self):
+#         return "abstract class property"
+
+
+def AbstractClassProperty(doc):
+    @property
+    def foo(bar):
+        return
+    foo.__doc__ = doc
+    return foo
 
 
 def preprocess_abstract_properties(obj):
@@ -21,7 +29,14 @@ def preprocess_abstract_properties(obj):
             try:
                 getattr(obj, m)
             except NotImplementedError:
-                setattr(obj, m, AbstractClassProperty())
+                setattr(
+                    obj,
+                    m,
+                    # We need to use a bit indirect way to get the docstring of
+                    # the abstract property because we cannot just access the
+                    # property directly.
+                    AbstractClassProperty(obj.__dict__[m].__doc__),
+                )
     return obj
 
 
