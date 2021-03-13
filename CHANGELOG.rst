@@ -2,6 +2,14 @@ Changelog
 =========
 
 
+Dev
+***
+
+Added
+-----
+- Add ``+`` operator for ``Semigroup`` (and ``Monoid``) instances.
+
+
 0.2.0
 *****
 

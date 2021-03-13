@@ -31,6 +31,16 @@ class Semigroup(Type):
     def append(self, x):
         """m -> m -> m"""
 
+    def __add__(self, other):
+        """Append two monoids
+
+        Using ``+`` operator to append two monoid values seems natural because
+        that's what Python is doing by default because lists are concatenated
+        with ``+``.
+
+        """
+        return self.append(other)
+
     #
     # Sampling methods for property tests
     #
@@ -66,6 +76,30 @@ class Semigroup(Type):
             x.append(y).append(z),
             x.append(y.append(z)),
         )
+
+    @class_function
+    @given(st.data())
+    def test_semigroup_append_and_add(cls, data):
+        # Draw types
+        t = data.draw(cls.sample_semigroup_type())
+
+        # Draw values
+        x = data.draw(t)
+        y = data.draw(t)
+
+        cls.assert_semigroup_append_and_add(x, y, data=data)
+        return
+
+    @class_function
+    @assert_output
+    def assert_semigroup_append_and_add(cls, x, y):
+        from .semigroup import append
+        return (
+            x.append(y),
+            x + y,
+            append(x, y)
+        )
+
 
 
 class Commutative(Semigroup):

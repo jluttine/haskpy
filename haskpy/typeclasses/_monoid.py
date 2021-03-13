@@ -7,7 +7,7 @@ from haskpy.internal import (
     abstract_class_function,
 )
 from haskpy.testing import assert_output
-from .semigroup import Semigroup, Commutative
+from ._semigroup import Semigroup
 
 
 class Monoid(Semigroup):
