@@ -163,58 +163,13 @@ class Apply(Functor):
         cls.assert_apply_associative_composition(u, v, w, data=data)
         return
 
-    @class_function
-    @assert_output
-    def assert_applicative_homomorphism(cls, f, x):
-        return (
-            cls.pure(f).apply_to(cls.pure(x)),
-            cls.pure(f(x))
-        )
-
-    @class_function
-    @given(st.data())
-    def test_applicative_homomorphism(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_eq_type())
-        b = data.draw(testing.sample_type())
-
-        # Draw values
-        x = data.draw(a)
-        f = data.draw(testing.sample_function(b))
-
-        cls.assert_applicative_homomorphism(f, x, data=data)
-        return
-
-    @class_function
-    @assert_output
-    def assert_applicative_interchange(cls, u, y):
-        return (
-            u.apply_to(cls.pure(y)),
-            cls.pure(lambda f: f(y)).apply_to(u)
-        )
-
-    @class_function
-    @given(st.data())
-    def test_applicative_interchange(cls, data):
-        # Draw types
-        a = data.draw(testing.sample_eq_type())
-        b = data.draw(testing.sample_type())
-        fab = data.draw(cls.sample_apply_type(testing.sample_function(b)))
-
-        # Draw values
-        y = data.draw(a)
-        u = data.draw(fab)
-
-        cls.assert_applicative_interchange(u, y, data=data)
-        return
-
     #
     # Test laws based on default implementations
     #
 
     @class_function
     @assert_output
-    def assert_applicative_apply(cls, u, v):
+    def assert_apply_apply(cls, u, v):
         from .apply_ import apply
         return (
             v.apply(u),
@@ -225,7 +180,7 @@ class Apply(Functor):
 
     @class_function
     @given(st.data())
-    def test_applicative_apply(cls, data):
+    def test_apply_apply(cls, data):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
@@ -236,7 +191,7 @@ class Apply(Functor):
         v = data.draw(fa)
         u = data.draw(fab)
 
-        cls.assert_applicative_apply(u, v, data=data)
+        cls.assert_apply_apply(u, v, data=data)
         return
 
     @class_function
