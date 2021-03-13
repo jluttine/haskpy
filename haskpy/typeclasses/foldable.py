@@ -281,11 +281,11 @@ class Foldable(Type):
     #
 
     @abstract_class_function
-    def sample_foldable_type(cls, elements):
+    def sample_foldable_type_constructor(cls):
         pass
 
     @abstract_class_function
-    def sample_foldable_functor_type(cls, elements):
+    def sample_foldable_functor_type_constructor(cls):
         """Needed only for subclasses of both Foldable and Functor"""
         pass
 
@@ -312,7 +312,8 @@ class Foldable(Type):
         monoid = data.draw(testing.sample_class(Monoid))
         a = data.draw(testing.sample_eq_type())
         b = data.draw(monoid.sample_monoid_type())
-        fa = data.draw(cls.sample_foldable_type(a))
+        f = data.draw(cls.sample_foldable_type_constructor())
+        fa = f(a)
 
         # Draw values
         f = data.draw(testing.sample_function(b))
@@ -338,7 +339,8 @@ class Foldable(Type):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_eq_type())
-        fa = data.draw(cls.sample_foldable_type(a))
+        f = data.draw(cls.sample_foldable_type_constructor())
+        fa = f(a)
 
         # Draw values
         xs = data.draw(fa)
@@ -368,7 +370,8 @@ class Foldable(Type):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_eq_type())
-        fa = data.draw(cls.sample_foldable_type(a))
+        f = data.draw(cls.sample_foldable_type_constructor())
+        fa = f(a)
 
         # Draw values
         xs = data.draw(fa)
@@ -399,7 +402,8 @@ class Foldable(Type):
         from haskpy.typeclasses import Monoid
         monoid = data.draw(testing.sample_class(Monoid))
         a = data.draw(monoid.sample_monoid_type())
-        fa = data.draw(cls.sample_foldable_type(a))
+        f = data.draw(cls.sample_foldable_type_constructor())
+        fa = f(a)
 
         # Draw values
         xs = data.draw(fa)
@@ -423,7 +427,8 @@ class Foldable(Type):
     def test_foldable_length(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_foldable_type(a))
+        f = data.draw(cls.sample_foldable_type_constructor())
+        fa = f(a)
 
         # Draw values
         xs = data.draw(fa)
@@ -450,7 +455,8 @@ class Foldable(Type):
     def test_foldable_null(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_foldable_type(a))
+        f = data.draw(cls.sample_foldable_type_constructor())
+        fa = f(a)
 
         # Draw values
         xs = data.draw(fa)
@@ -476,7 +482,8 @@ class Foldable(Type):
     @given(st.data())
     def test_foldable_sum(cls, data):
         # Draw types
-        fa = data.draw(cls.sample_foldable_type(st.integers()))
+        f = data.draw(cls.sample_foldable_type_constructor())
+        fa = f(st.integers())
 
         # Draw values
         xs = data.draw(fa)
@@ -503,7 +510,8 @@ class Foldable(Type):
     def test_foldable_elem(cls, data):
         # Draw types
         a = data.draw(testing.sample_eq_type())
-        fa = data.draw(cls.sample_foldable_type(a))
+        f = data.draw(cls.sample_foldable_type_constructor())
+        fa = f(a)
 
         # Draw values
         e = data.draw(a)
@@ -538,7 +546,8 @@ class Foldable(Type):
         monoid = data.draw(testing.sample_class(Monoid))
         b = data.draw(monoid.sample_monoid_type())
         a = data.draw(testing.sample_eq_type())
-        fa = data.draw(cls.sample_foldable_functor_type(a))
+        f = data.draw(cls.sample_foldable_functor_type_constructor())
+        fa = f(a)
 
         # Draw values
         f = data.draw(testing.sample_function(b))

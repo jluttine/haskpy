@@ -65,29 +65,8 @@ class Applicative(Apply):
     #
 
     @abstract_class_function
-    def sample_applicative_type(cls, a):
-        """Sample an applicative type
-
-        Note that it would be tempting to define:
-
-        .. code-block:: python
-
-            def sample_functor_type(cls, a):
-                return cls.sample_applicative_type(a)
-
-        But we can have classes that are applicatives only if some of their
-        arguments are applicative too. For instance, MaybeT(cls, x) is
-        functor/applicative/monad only if cls is. So, we need to have a
-        separate sample_functor_type method.
-
-        But then, how do we make sure that the sampled applicative type is also
-        a functor? For instance, a pathological case could be such that
-        sample_functor_ype returns something completely different type than
-        sample_applicative_type. I suppose we just have to leave that as a
-        responsibility for the user that sample methods are implemented
-        correctly/consistently.
-
-        """
+    def sample_applicative_type_constructor(cls):
+        """Sample an applicative type"""
         pass
 
     #
@@ -108,7 +87,8 @@ class Applicative(Apply):
     def test_applicative_identity(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_applicative_type(a))
+        f = data.draw(cls.sample_applicative_type_constructor())
+        fa = f(a)
 
         # Draw values
         v = data.draw(fa)
@@ -132,9 +112,10 @@ class Applicative(Apply):
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_applicative_type(a))
-        fab = data.draw(cls.sample_applicative_type(testing.sample_function(b)))
-        fbc = data.draw(cls.sample_applicative_type(testing.sample_function(c)))
+        f = data.draw(cls.sample_applicative_type_constructor())
+        fa = f(a)
+        fab = f(testing.sample_function(b))
+        fbc = f(testing.sample_function(c))
 
         # Draw values
         w = data.draw(fa)
@@ -180,7 +161,8 @@ class Applicative(Apply):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        fab = data.draw(cls.sample_applicative_type(testing.sample_function(b)))
+        f = data.draw(cls.sample_applicative_type_constructor())
+        fab = f(testing.sample_function(b))
 
         # Draw values
         y = data.draw(a)
@@ -208,7 +190,8 @@ class Applicative(Apply):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_applicative_type(a))
+        f = data.draw(cls.sample_applicative_type_constructor())
+        fa = f(a)
 
         # Draw values
         v = data.draw(fa)

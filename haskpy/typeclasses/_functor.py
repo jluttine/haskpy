@@ -73,7 +73,7 @@ class Functor(Type):
     #
 
     @abstract_class_function
-    def sample_functor_type(cls, a):
+    def sample_functor_type_constructor(cls):
         pass
 
     #
@@ -94,7 +94,8 @@ class Functor(Type):
     def test_functor_identity(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_functor_type(a))
+        f = data.draw(cls.sample_functor_type_constructor())
+        fa = f(a)
 
         # Draw values
         v = data.draw(fa)
@@ -117,14 +118,15 @@ class Functor(Type):
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_functor_type(a))
+        f = data.draw(cls.sample_functor_type_constructor())
+        fa = f(a)
 
         # Draw values
         v = data.draw(fa)
-        f = data.draw(testing.sample_function(b))
-        g = data.draw(testing.sample_function(c))
+        g = data.draw(testing.sample_function(b))
+        h = data.draw(testing.sample_function(c))
 
-        cls.assert_functor_composition(v, f, g, data=data)
+        cls.assert_functor_composition(v, g, h, data=data)
         return
 
     #
@@ -146,7 +148,8 @@ class Functor(Type):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_functor_type(a))
+        f = data.draw(cls.sample_functor_type_constructor())
+        fa = f(a)
 
         # Draw values
         v = data.draw(fa)
@@ -171,7 +174,8 @@ class Functor(Type):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_functor_type(a))
+        f = data.draw(cls.sample_functor_type_constructor())
+        fa = f(a)
 
         # Draw values
         v = data.draw(fa)

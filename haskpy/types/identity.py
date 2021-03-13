@@ -33,16 +33,16 @@ class Identity(Monad, Eq):
     def sample_value(cls, a):
         return a.map(Identity)
 
-    sample_type = testing.sample_type_from_value(
+    sample_type = testing.create_type_sampler(
         testing.sample_type(),
     )
 
-    sample_functor_type = testing.sample_type_from_value()
-    sample_apply_type = sample_functor_type
-    sample_applicative_type = sample_functor_type
-    sample_monad_type = sample_functor_type
+    sample_functor_type_constructor = testing.create_type_constructor_sampler()
+    sample_apply_type_constructor = sample_functor_type_constructor
+    sample_applicative_type_constructor = sample_functor_type_constructor
+    sample_monad_type_constructor = sample_functor_type_constructor
 
-    sample_eq_type = testing.sample_type_from_value(
+    sample_eq_type = testing.create_type_sampler(
         testing.sample_eq_type(),
     )
 

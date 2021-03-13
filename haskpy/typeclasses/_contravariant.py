@@ -29,7 +29,7 @@ class Contravariant(Type):
     #
 
     @abstract_class_function
-    def sample_contravariant_type(cls, a):
+    def sample_contravariant_type_constructor(cls):
         pass
 
     #
@@ -50,7 +50,8 @@ class Contravariant(Type):
     def test_contravariant_identity(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        ta = data.draw(cls.sample_contravariant_type(a))
+        t = data.draw(cls.sample_contravariant_type_constructor())
+        ta = t(a)
 
         # Draw values
         v = data.draw(ta)
@@ -73,7 +74,8 @@ class Contravariant(Type):
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_eq_type())
-        ta = data.draw(cls.sample_contravariant_type(a))
+        t = data.draw(cls.sample_contravariant_type_constructor())
+        ta = t(a)
 
         # Draw values
         v = data.draw(ta)
@@ -102,7 +104,8 @@ class Contravariant(Type):
         # Draw types
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_eq_type())
-        ta = data.draw(cls.sample_contravariant_type(a))
+        t = data.draw(cls.sample_contravariant_type_constructor())
+        ta = t(a)
 
         # Draw values
         v = data.draw(ta)
@@ -127,7 +130,8 @@ class Contravariant(Type):
         # Draw types
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_eq_type())
-        ta = data.draw(cls.sample_contravariant_type(a))
+        t = data.draw(cls.sample_contravariant_type_constructor())
+        ta = t(a)
 
         # Draw values
         v = data.draw(ta)

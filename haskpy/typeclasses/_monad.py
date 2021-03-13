@@ -118,7 +118,7 @@ class Monad(Applicative):
     #
 
     @abstract_class_function
-    def sample_monad_type(cls, a):
+    def sample_monad_type_constructor(cls):
         pass
 
     #
@@ -136,7 +136,8 @@ class Monad(Applicative):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        mb = data.draw(cls.sample_monad_type(b))
+        m = data.draw(cls.sample_monad_type_constructor())
+        mb = m(b)
 
         # Draw values
         f = data.draw(testing.sample_function(mb))
@@ -155,7 +156,8 @@ class Monad(Applicative):
     def test_monad_right_identity(cls, data):
         # Draw types
         a = data.draw(testing.sample_type())
-        ma = data.draw(cls.sample_monad_type(a))
+        m = data.draw(cls.sample_monad_type_constructor())
+        ma = m(a)
 
         # Draw values
         m = data.draw(ma)
@@ -177,9 +179,10 @@ class Monad(Applicative):
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_type())
-        ma = data.draw(cls.sample_monad_type(a))
-        mb = data.draw(cls.sample_monad_type(b))
-        mc = data.draw(cls.sample_monad_type(c))
+        m = data.draw(cls.sample_monad_type_constructor())
+        ma = m(a)
+        mb = m(b)
+        mc = m(c)
 
         m = data.draw(ma)
         f = data.draw(testing.sample_function(mb))
@@ -209,8 +212,9 @@ class Monad(Applicative):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        ma = data.draw(cls.sample_monad_type(a))
-        mb = data.draw(cls.sample_monad_type(b))
+        m = data.draw(cls.sample_monad_type_constructor())
+        ma = m(a)
+        mb = m(b)
 
         # Draw values
         u = data.draw(ma)
@@ -235,8 +239,9 @@ class Monad(Applicative):
         """Test consistency of ``join`` with the default implementation"""
         # Draw types
         b = data.draw(testing.sample_type())
-        mb = data.draw(cls.sample_monad_type(b))
-        mmb = data.draw(cls.sample_monad_type(mb))
+        m = data.draw(cls.sample_monad_type_constructor())
+        mb = m(b)
+        mmb = m(mb)
 
         # Draw values
         u = data.draw(mmb)
@@ -259,7 +264,8 @@ class Monad(Applicative):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        ma = data.draw(cls.sample_monad_type(a))
+        m = data.draw(cls.sample_monad_type_constructor())
+        ma = m(a)
 
         u = data.draw(ma)
         f = data.draw(testing.sample_function(b))
@@ -282,8 +288,9 @@ class Monad(Applicative):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        ma = data.draw(cls.sample_monad_type(a))
-        mab = data.draw(cls.sample_monad_type(testing.sample_function(b)))
+        m = data.draw(cls.sample_monad_type_constructor())
+        ma = m(a)
+        mab = m(testing.sample_function(b))
 
         # Draw values
         v = data.draw(ma)

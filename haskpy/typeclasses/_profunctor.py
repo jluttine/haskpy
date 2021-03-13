@@ -39,7 +39,7 @@ class Profunctor(Functor, Contravariant):
     #
 
     @abstract_class_function
-    def sample_profunctor_type(cls, a, b):
+    def sample_profunctor_type_constructor(cls):
         pass
 
     #
@@ -61,7 +61,8 @@ class Profunctor(Functor, Contravariant):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        fab = data.draw(cls.sample_profunctor_type(a, b))
+        f = data.draw(cls.sample_profunctor_type_constructor())
+        fab = f(a, b)
 
         # Draw values
         x = data.draw(fab)
@@ -90,7 +91,8 @@ class Profunctor(Functor, Contravariant):
         b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_eq_type())
         d = data.draw(testing.sample_type())
-        fbc = data.draw(cls.sample_profunctor_type(b, c))
+        f = data.draw(cls.sample_profunctor_type_constructor())
+        fbc = f(b, c)
 
         # Draw values
         x = data.draw(fbc)
@@ -115,7 +117,8 @@ class Profunctor(Functor, Contravariant):
         b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_eq_type())
         d = data.draw(testing.sample_type())
-        fbc = data.draw(cls.sample_profunctor_type(b, c))
+        f = data.draw(cls.sample_profunctor_type_constructor())
+        fbc = f(b, c)
 
         # Draw values
         x = data.draw(fbc)
@@ -138,7 +141,8 @@ class Profunctor(Functor, Contravariant):
         # Draw types
         b = data.draw(testing.sample_eq_type())
         d = data.draw(testing.sample_type())
-        fbd = data.draw(cls.sample_profunctor_type(b, d))
+        f = data.draw(cls.sample_profunctor_type_constructor())
+        fbd = f(b, d)
 
         # Draw values
         x = data.draw(fbd)

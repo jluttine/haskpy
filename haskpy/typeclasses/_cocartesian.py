@@ -1,7 +1,7 @@
 from hypothesis import given
 from hypothesis import strategies as st
 
-from haskpy.internal import class_function
+from haskpy.internal import class_function, abstract_class_function
 from haskpy.testing import assert_output
 from haskpy import testing
 
@@ -29,6 +29,10 @@ class Cocartesian(Profunctor):
     def right(self):
         return self.left().dimap(_flip_either, _flip_either)
 
+    @abstract_class_function
+    def sample_cocartesian_type_constructor(cls):
+        pass
+
     #
     # Test Cocartesian laws
     #
@@ -51,7 +55,8 @@ class Cocartesian(Profunctor):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        fab = data.draw(cls.sample_profunctor_type(a, b))
+        f = data.draw(cls.sample_cocartesian_type_constructor())
+        fab = f(a, b)
 
         # Draw values
         h = data.draw(fab)
@@ -99,7 +104,8 @@ class Cocartesian(Profunctor):
             )
         )
         b = data.draw(testing.sample_type())
-        fab = data.draw(cls.sample_profunctor_type(a, b))
+        f = data.draw(cls.sample_cocartesian_type_constructor())
+        fab = f(a, b)
 
         # Draw values
         h = data.draw(fab)
@@ -128,7 +134,8 @@ class Cocartesian(Profunctor):
         a2 = data.draw(testing.sample_eq_type())
         a = Either.sample_value(a1, a2)
         b = data.draw(testing.sample_type())
-        fab = data.draw(cls.sample_profunctor_type(a, b))
+        f = data.draw(cls.sample_cocartesian_type_constructor())
+        fab = f(a, b)
 
         # Draw values
         x = data.draw(fab)
@@ -157,7 +164,8 @@ class Cocartesian(Profunctor):
         a2 = data.draw(testing.sample_eq_type())
         a = Either.sample_value(a1, a2)
         b = data.draw(testing.sample_type())
-        fab = data.draw(cls.sample_profunctor_type(a, b))
+        f = data.draw(cls.sample_cocartesian_type_constructor())
+        fab = f(a, b)
 
         # Draw values
         x = data.draw(fab)

@@ -19,6 +19,10 @@ Changed
 - Rename ``sequence`` to ``apply_second``.
 - Rename ``liftA2`` to ``lift2``.
 - Rename ``liftA3`` to ``lift3``.
+- Modify sampling for property tests. In particular, type constructors are
+  sampled first, then those are used to sample concrete types. This way, other
+  type constructor parameters are kept constant while the one of current
+  interest can be modified.
 
 Fixed
 -----

@@ -258,34 +258,34 @@ class Maybe(
     def sample_value(cls, a):
         return st.one_of(st.just(Nothing), a.map(Just))
 
-    sample_type = testing.sample_type_from_value(
+    sample_type = testing.create_type_sampler(
         testing.sample_type(),
     )
 
-    sample_functor_type = testing.sample_type_from_value()
-    sample_apply_type = sample_functor_type
-    sample_applicative_type = sample_functor_type
-    sample_monad_type = sample_functor_type
+    sample_functor_type_constructor = testing.create_type_constructor_sampler()
+    sample_apply_type_constructor = sample_functor_type_constructor
+    sample_applicative_type_constructor = sample_functor_type_constructor
+    sample_monad_type_constructor = sample_functor_type_constructor
 
-    sample_hashable_type = testing.sample_type_from_value(
+    sample_hashable_type = testing.create_type_sampler(
         testing.sample_hashable_type(),
     )
 
-    sample_semigroup_type = testing.sample_type_from_value(
+    sample_semigroup_type = testing.create_type_sampler(
         testing.sample_semigroup_type(),
     )
     sample_monoid_type = sample_semigroup_type
 
-    sample_commutative_type = testing.sample_type_from_value(
+    sample_commutative_type = testing.create_type_sampler(
         testing.sample_commutative_type(),
     )
 
-    sample_eq_type = testing.sample_type_from_value(
+    sample_eq_type = testing.create_type_sampler(
         testing.sample_eq_type(),
     )
 
-    sample_foldable_type = testing.sample_type_from_value()
-    sample_foldable_functor_type = sample_foldable_type
+    sample_foldable_type_constructor = testing.create_type_constructor_sampler()
+    sample_foldable_functor_type_constructor = sample_foldable_type_constructor
 
 
 Nothing = Maybe(lambda *, Nothing, Just: Nothing())
@@ -366,16 +366,16 @@ def MaybeT(M):
         def sample_value(cls, a):
             return M.sample_value(Maybe.sample_value(a)).map(cls)
 
-        sample_type = testing.sample_type_from_value(
+        sample_type = testing.create_type_sampler(
             testing.sample_type(),
         )
 
-        sample_functor_type = testing.sample_type_from_value()
-        sample_apply_type = sample_functor_type
-        sample_applicative_type = sample_functor_type
-        sample_monad_type = sample_functor_type
+        sample_functor_type_constructor = testing.create_type_constructor_sampler()
+        sample_apply_type_constructor = sample_functor_type_constructor
+        sample_applicative_type_constructor = sample_functor_type_constructor
+        sample_monad_type_constructor = sample_functor_type_constructor
 
-        sample_eq_type = testing.sample_type_from_value(
+        sample_eq_type = testing.create_type_sampler(
             testing.sample_eq_type(),
         )
 

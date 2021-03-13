@@ -146,7 +146,26 @@ def sample_class(typeclass):
     )
 
 
-def sample_type_from_value(*arg_type_strategies):
+def create_type_constructor_sampler(*arg_type_strategies):
+
+    @class_function
+    def sample_type_constructor(cls):
+
+        def sample_concrete_type(arg_value_strategies):
+            def sample_value(*other_arg_value_strategies):
+                return cls.sample_value(
+                    *arg_value_strategies,
+                    *other_arg_value_strategies,
+                )
+            return sample_value
+
+        return st.tuples(*arg_type_strategies).map(sample_concrete_type)
+
+    return sample_type_constructor
+
+
+def create_type_sampler(*arg_type_strategies):
+
     @class_function
     def sample(cls, *other_arg_value_strategies):
         y = st.tuples(*arg_type_strategies).map(

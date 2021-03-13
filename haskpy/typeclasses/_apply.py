@@ -105,15 +105,15 @@ class Apply(Functor):
     #
 
     @abstract_class_function
-    def sample_apply_type(cls, a):
-        """Sample an apply type
+    def sample_apply_type_constructor(cls):
+        """Sample an apply type constructor
 
         Note that it would be tempting to define:
 
         .. code-block:: python
 
-            def sample_functor_type(cls, a):
-                return cls.sample_apply_type(a)
+            def sample_functor_type_constructor(cls, a):
+                return cls.sample_apply_type_constructor(a)
 
         But we can have classes that are Apply instances only if some of their
         arguments are Apply instances too. For instance, MaybeT(cls, x) is
@@ -128,7 +128,6 @@ class Apply(Functor):
         correctly/consistently.
 
         """
-        pass
 
     #
     # Test typeclass laws
@@ -151,9 +150,10 @@ class Apply(Functor):
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_eq_type())
         c = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_apply_type(a))
-        fab = data.draw(cls.sample_apply_type(testing.sample_function(b)))
-        fbc = data.draw(cls.sample_apply_type(testing.sample_function(c)))
+        f = data.draw(cls.sample_apply_type_constructor())
+        fa = f(a)
+        fab = f(testing.sample_function(b))
+        fbc = f(testing.sample_function(c))
 
         # Draw values
         w = data.draw(fa)
@@ -184,8 +184,9 @@ class Apply(Functor):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_apply_type(a))
-        fab = data.draw(cls.sample_apply_type(testing.sample_function(b)))
+        f = data.draw(cls.sample_apply_type_constructor())
+        fa = f(a)
+        fab = f(testing.sample_function(b))
 
         # Draw values
         v = data.draw(fa)
@@ -211,8 +212,9 @@ class Apply(Functor):
         # Draw types
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_apply_type(a))
-        fb = data.draw(cls.sample_apply_type(b))
+        f = data.draw(cls.sample_apply_type_constructor())
+        fa = f(a)
+        fb = f(b)
 
         # Draw values
         u = data.draw(fa)
@@ -238,8 +240,9 @@ class Apply(Functor):
         # Draw types
         a = data.draw(testing.sample_type())
         b = data.draw(testing.sample_type())
-        fa = data.draw(cls.sample_apply_type(a))
-        fb = data.draw(cls.sample_apply_type(b))
+        f = data.draw(cls.sample_apply_type_constructor())
+        fa = f(a)
+        fb = f(b)
 
         # Draw values
         u = data.draw(fa)

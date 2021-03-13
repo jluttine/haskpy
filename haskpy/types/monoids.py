@@ -55,7 +55,7 @@ class Sum(Commutative, Monoid, Hashable):
     def sample_value(cls):
         return st.integers().map(Sum)
 
-    sample_type = testing.sample_type_from_value()
+    sample_type = testing.create_type_sampler()
     sample_eq_type = sample_type
     sample_semigroup_type = sample_type
     sample_commutative_type = sample_type
@@ -89,7 +89,7 @@ class All(Commutative, Monoid, Hashable):
     def sample_value(cls):
         return st.booleans().map(All)
 
-    sample_type = testing.sample_type_from_value()
+    sample_type = testing.create_type_sampler()
     sample_eq_type = sample_type
     sample_semigroup_type = sample_type
     sample_commutative_type = sample_type
@@ -123,7 +123,7 @@ class Any(Commutative, Monoid, Hashable):
     def sample_value(cls):
         return st.booleans().map(Any)
 
-    sample_type = testing.sample_type_from_value()
+    sample_type = testing.create_type_sampler()
     sample_eq_type = sample_type
     sample_semigroup_type = sample_type
     sample_commutative_type = sample_type
@@ -160,7 +160,7 @@ class String(Monoid, Hashable):
     def sample_value(cls):
         return st.text().map(lambda s: String(s))
 
-    sample_type = testing.sample_type_from_value()
+    sample_type = testing.create_type_sampler()
     sample_eq_type = sample_type
     sample_semigroup_type = sample_type
     sample_monoid_type = sample_type
@@ -192,7 +192,7 @@ class Endo(Monoid):
     def sample_value(cls, a):
         return testing.sample_function(a).map(lambda f: Endo(f))
 
-    sample_type = testing.sample_type_from_value(
+    sample_type = testing.create_type_sampler(
         testing.sample_eq_type(),
     )
     sample_semigroup_type = sample_type

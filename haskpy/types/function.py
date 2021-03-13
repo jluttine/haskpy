@@ -289,35 +289,40 @@ class Function(Monad, Cartesian, Cocartesian, Semigroup):
     def sample_value(cls, _, b):
         return testing.sample_function(b).map(cls)
 
-    sample_type = testing.sample_type_from_value(
+    sample_type = testing.create_type_sampler(
         testing.sample_hashable_type(),
         testing.sample_type(),
     )
 
-    sample_semigroup_type = testing.sample_type_from_value(
+    sample_semigroup_type = testing.create_type_sampler(
         testing.sample_hashable_type(),
         testing.sample_semigroup_type(),
     )
 
-    sample_monoid_type = testing.sample_type_from_value(
+    sample_monoid_type = testing.create_type_sampler(
         testing.sample_hashable_type(),
         testing.sample_monoid_type(),
     )
 
-    sample_functor_type = testing.sample_type_from_value(
+    sample_functor_type_constructor = testing.create_type_constructor_sampler(
         testing.sample_hashable_type(),
     )
-    sample_apply_type = sample_functor_type
-    sample_applicative_type = sample_functor_type
-    sample_monad_type = sample_functor_type
+    sample_apply_type_constructor = sample_functor_type_constructor
+    sample_applicative_type_constructor = sample_functor_type_constructor
+    sample_monad_type_constructor = sample_functor_type_constructor
 
     @class_function
-    def sample_contravariant_type(cls, a):
-        return st.tuples(a, testing.sample_type()).map(
-            lambda args: cls.sample_value(*args)
+    def sample_contravariant_type_constructor(cls):
+        return testing.sample_type().map(
+            lambda b: lambda a: cls.sample_value(a, b)
         )
+        # return st.tuples(a, testing.sample_type()).map(
+        #     lambda args: cls.sample_value(*args)
+        # )
 
-    sample_profunctor_type = testing.sample_type_from_value()
+    sample_profunctor_type_constructor = testing.create_type_constructor_sampler()
+    sample_cartesian_type_constructor = sample_profunctor_type_constructor
+    sample_cocartesian_type_constructor = sample_profunctor_type_constructor
 
 
 def function(f):
