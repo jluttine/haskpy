@@ -51,7 +51,6 @@ class Maybe(
         Monoid,
         Hashable,
         Foldable,
-        Eq,
 ):
     """Type ``Maybe a`` for a value that might be present or not
 

@@ -18,7 +18,7 @@
 import attr
 import hypothesis.strategies as st
 
-from haskpy.typeclasses import Monoid, Commutative, Hashable, Eq
+from haskpy.typeclasses import Monoid, Commutative, Hashable
 from haskpy.utils import identity
 from haskpy.internal import (
     class_property,
@@ -30,7 +30,7 @@ from haskpy import testing
 
 
 @immutable
-class Sum(Commutative, Monoid, Hashable, Eq):
+class Sum(Commutative, Monoid, Hashable):
     """Sum monoid"""
 
     number = attr.ib()
@@ -64,7 +64,7 @@ class Sum(Commutative, Monoid, Hashable, Eq):
 
 
 @immutable
-class All(Commutative, Monoid, Hashable, Eq):
+class All(Commutative, Monoid, Hashable):
     """All monoid"""
 
     boolean = attr.ib()
@@ -98,7 +98,7 @@ class All(Commutative, Monoid, Hashable, Eq):
 
 
 @immutable
-class Any(Commutative, Monoid, Hashable, Eq):
+class Any(Commutative, Monoid, Hashable):
     """Any monoid"""
 
     boolean = attr.ib()
@@ -132,7 +132,7 @@ class Any(Commutative, Monoid, Hashable, Eq):
 
 
 @immutable
-class String(Monoid, Hashable, Eq):
+class String(Monoid, Hashable):
     """String monoid"""
 
     string = attr.ib(converter=str)
