@@ -146,7 +146,7 @@ class Apply(Functor):
 
     @class_function
     @given(st.data())
-    def test_applicative_associative_composition(cls, data):
+    def test_apply_associative_composition(cls, data):
         # Draw types
         a = data.draw(testing.sample_eq_type())
         b = data.draw(testing.sample_eq_type())
@@ -160,7 +160,7 @@ class Apply(Functor):
         v = data.draw(fab)
         u = data.draw(fbc)
 
-        cls.assert_applicative_composition(u, v, w, data=data)
+        cls.assert_apply_associative_composition(u, v, w, data=data)
         return
 
     @class_function
