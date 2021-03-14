@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dictionary &#8212; HaskPy 0.1.dev1+g4514a52 documentation</title>
+    <title>Dictionary &#8212; HaskPy 0.1.dev1+g032ccd2 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="haskpy.types.identity" href="haskpy.types.identity.html" />
+    <link rel="next" title="haskpy.types.dictionary.lookup" href="haskpy.types.dictionary.lookup.html" />
     <link rel="prev" title="haskpy.types.dictionary" href="haskpy.types.dictionary.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -41,9 +41,249 @@
 <h1>Dictionary<a class="headerlink" href="#dictionary" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="haskpy.types.dictionary.Dictionary">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Dictionary</span></code><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p><strong>TODO</strong></p>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Dictionary</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply" title="haskpy.typeclasses.apply_.Apply"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.apply_.Apply</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.equality.Eq</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monoid.Monoid</span></code></a></p>
+<p>Dictionary type</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>For method ideas, refer to:
+<a class="reference external" href="https://pursuit.purescript.org/packages/purescript-unordered-collections/0.2.0/docs/Data.HashMap">https://pursuit.purescript.org/packages/purescript-unordered-collections/0.2.0/docs/Data.HashMap</a></p>
+</div>
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__add__">
+<code class="sig-name descname"><span class="pre">__add__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append two monoids</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">+</span></code> operator to append two monoid values seems natural because
+that’s what Python is doing by default because lists are concatenated
+with <code class="docutils literal notranslate"><span class="pre">+</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="haskpy.types.dictionary.Dictionary.__annotations__">
+<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__eq__">
+<code class="sig-name descname"><span class="pre">__eq__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark method non-existing</p>
+<p>This is a workaround for Python forcefully creating some methods. One
+cannot create objects that don’t have <code class="docutils literal notranslate"><span class="pre">__eq__</span></code>, <code class="docutils literal notranslate"><span class="pre">__ge__</span></code>, <code class="docutils literal notranslate"><span class="pre">__gt__</span></code>
+and many other methods. They are there and it’s not possible to delete
+them. With this wrapper you can override those methods so that they won’t
+show up in <code class="docutils literal notranslate"><span class="pre">__dir__</span></code> listing and if accessed in any way,
+<code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> is raised. Note that it just hides the methods, one can
+still access them as <code class="docutils literal notranslate"><span class="pre">object.__getattribute__(obj,</span> <span class="pre">&quot;__eq__&quot;)</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__eq_test__">
+<code class="sig-name descname"><span class="pre">__eq_test__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.__eq_test__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__eq_test__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__getitem__">
+<code class="sig-name descname"><span class="pre">__getitem__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="haskpy.types.dictionary.Dictionary.__hash__">
+<code class="sig-name descname"><span class="pre">__hash__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__lshift__">
+<code class="sig-name descname"><span class="pre">__lshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__lshift__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence with``&lt;&lt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__matmul__">
+<code class="sig-name descname"><span class="pre">__matmul__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__matmul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Application operand <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> applies similarly as <code class="docutils literal notranslate"><span class="pre">&lt;*&gt;</span></code> in Haskell</p>
+<p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">&#64;</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">f.apply_to(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">x.apply(f)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">apply(f,</span> <span class="pre">x)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not typically used as often as some other more common operators
+so less risk for confusion.</p></li>
+<li><p>The operator is not a commutative as isn’t <code class="docutils literal notranslate"><span class="pre">apply</span></code> either.</p></li>
+<li><p>If we see matrix as some structure, then matrix multiplication takes
+both left and right operand inside this structure and gives a result
+also inside this structure, similarly as <code class="docutils literal notranslate"><span class="pre">apply</span></code> does. So it’s an
+operator for two operands having a similar structure.</p></li>
+<li><p>The operator evaluates the contained function(s) at the contained
+value(s). Thus, <code class="docutils literal notranslate"><span class="pre">f</span></code> “at” <code class="docutils literal notranslate"><span class="pre">x</span></code> makes perfect sense.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__ne__">
+<code class="sig-name descname"><span class="pre">__ne__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inequality comparison: <code class="docutils literal notranslate"><span class="pre">Eq</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code></p>
+<p>Can be used as <code class="docutils literal notranslate"><span class="pre">!=</span></code> operator.</p>
+<p>The default implementation uses <code class="docutils literal notranslate"><span class="pre">__eq__</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__rpow__">
+<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__rpow__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
+<p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not typically used as often as multiplication or addition so
+less risk of confusion.</p></li>
+<li><p>It’s not commutative operator as isn’t lifting either.</p></li>
+<li><p>The two operands have very different roles. They are not at the same
+“level”.</p></li>
+<li><p>The right operand is “higher”, that is, it’s inside a structure and
+the left operand is kind of “raised to the power” of the second
+operand, where the “power” is the functorial structure.</p></li>
+<li><p>The same operand is also used for function composition because
+function composition is just mapping. Visually the symbol can be
+seen as chaining two stars similarly as function composition chains
+two functions.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__rshift__">
+<code class="sig-name descname"><span class="pre">__rshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__rshift__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.alter">
+<code class="sig-name descname"><span class="pre">alter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.alter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.alter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.append">
+<code class="sig-name descname"><span class="pre">append</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two dictionaries</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Semigroup</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="n">Dictionary</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">Dictionary</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">Dictionary</span> <span class="n">a</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If a key is in both dictionaries, the values are expected to be
+semigroup instances, so that they can be combined. Alternative
+solutions would be to prefer either the first or the second
+dictionary value as done in Haskell and PureScript, so that there
+would be no need to constrain the contained type to be an instance
+of Semigroup. This class provides separate methods
+<a class="reference internal" href="#haskpy.types.dictionary.Dictionary.append_first" title="haskpy.types.dictionary.Dictionary.append_first"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dictionary.append_first()</span></code></a> and
+<a class="reference internal" href="#haskpy.types.dictionary.Dictionary.append_second" title="haskpy.types.dictionary.Dictionary.append_second"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dictionary.append_second()</span></code></a> for those purposes.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.append_first">
+<code class="sig-name descname"><span class="pre">append_first</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.append_first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.append_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two dictionaries preferring the elements of the first</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.append_second">
+<code class="sig-name descname"><span class="pre">append_second</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.append_second"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.append_second" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two dictionaries preferring the elements of the second</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.apply">
+<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a dictionary of functions to a dictionary of values</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dictionary</span> <span class="n">k</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">Dictionary</span> <span class="n">k</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dictionary</span> <span class="n">k</span> <span class="n">b</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The resulting dictionary will have only such keys that are in both
+of the input dictionaries.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.apply_first">
+<code class="sig-name descname"><span class="pre">apply_first</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.apply_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two actions, keeping only the result of the first</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.apply_second">
+<code class="sig-name descname"><span class="pre">apply_second</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.apply_second" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two actions, keeping only the result of the second</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.apply_to">
+<code class="sig-name descname"><span class="pre">apply_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.apply_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>f (a -&gt; b) -&gt; f a -&gt; f b</p>
+<p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">apply</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.delete">
+<code class="sig-name descname"><span class="pre">delete</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="haskpy.types.dictionary.Dictionary.empty">
+<code class="sig-name descname"><span class="pre">empty</span></code><em class="property"> <span class="pre">=</span> <span class="pre">Dictionary({})</span></em><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.insert">
+<code class="sig-name descname"><span class="pre">insert</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.insert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.insert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.keys">
+<code class="sig-name descname"><span class="pre">keys</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.lookup">
+<code class="sig-name descname"><span class="pre">lookup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.lookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.lookup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.map">
+<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a function to each value in the dictionary</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dictionary</span> <span class="n">k</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dictionary</span> <span class="n">k</span> <span class="n">b</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.replace">
+<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Haskell ($&gt;) operator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.singleton">
+<code class="sig-name descname"><span class="pre">singleton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.singleton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.singleton" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.update">
+<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.values">
+<code class="sig-name descname"><span class="pre">values</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -88,7 +328,7 @@
   <li><a href="haskpy.types.html">haskpy.types</a><ul>
   <li><a href="haskpy.types.dictionary.html">haskpy.types.dictionary</a><ul>
       <li>Previous: <a href="haskpy.types.dictionary.html" title="previous chapter">haskpy.types.dictionary</a></li>
-      <li>Next: <a href="haskpy.types.identity.html" title="next chapter">haskpy.types.identity</a></li>
+      <li>Next: <a href="haskpy.types.dictionary.lookup.html" title="next chapter">haskpy.types.dictionary.lookup</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

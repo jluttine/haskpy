@@ -1,0 +1,6 @@
+haskpy.types.dictionary.lookup
+==============================
+
+.. currentmodule:: haskpy.types.dictionary
+
+.. autofunction:: lookup

@@ -94,20 +94,20 @@ with :py:func:`.map` function:
     Nothing
 
 To apply a two-argument function to values that are both inside
-:py:class:`.Maybe` structure, one can use :py:func:`.liftA2`:
+:py:class:`.Maybe` structure, one can use :py:func:`.lift2`:
 
 .. code-block:: python
 
     >>> add = hp.function(lambda a, b: a + b)
-    >>> hp.liftA2(add, x, x)
+    >>> hp.lift2(add, x, x)
     Just(84)
-    >>> hp.liftA2(add, x, y)
+    >>> hp.lift2(add, x, y)
     Nothing
 
 See :py:class:`.Function` for more details and examples on HaskPy function type.
 See :py:mod:`.utils` for a small collection of simple functions. Most functions
 in the entire HaskPy package are imported so that they are available directly
-under ``haskpy`` package as shown above with ``hp.map`` and ``hp.liftA2``.
+under ``haskpy`` package as shown above with ``hp.map`` and ``hp.lift2``.
 
 
 List
@@ -199,11 +199,11 @@ arguments are applied with the applicative apply:
    >>> hp.apply(add3_ab, hp.Just(1))
    Just(143)
 
-Or just :py:func:`.liftA3` for short:
+Or just :py:func:`.lift3` for short:
 
 .. code-block:: python
 
-   >>> hp.liftA3(add3, hp.Just(42), hp.Just(100), hp.Just(1))
+   >>> hp.lift3(add3, hp.Just(42), hp.Just(100), hp.Just(1))
    Just(143)
 
 Finally, :py:class:`.Monad` is a special case of :py:class:`.Applicative`.

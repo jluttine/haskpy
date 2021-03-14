@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Applicative &#8212; HaskPy 0.1.dev1+g4514a52 documentation</title>
+    <title>Applicative &#8212; HaskPy 0.1.dev1+g032ccd2 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="haskpy.typeclasses.applicative.apply" href="haskpy.typeclasses.applicative.apply.html" />
+    <link rel="next" title="haskpy.typeclasses.monad" href="haskpy.typeclasses.monad.html" />
     <link rel="prev" title="haskpy.typeclasses.applicative" href="haskpy.typeclasses.applicative.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -42,13 +42,31 @@
 <dl class="py class">
 <dt id="haskpy.typeclasses.applicative.Applicative">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Applicative</span></code><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.functor.Functor</span></code></a></p>
-<p>Must define at least pure and either apply or apply_to</p>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply" title="haskpy.typeclasses.apply_.Apply"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.apply_.Apply</span></code></a></p>
+<p>Applicative functor typeclass.</p>
+<p>Minimal complete definition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pure</span> <span class="o">|</span> <span class="p">(</span><span class="n">apply</span> <span class="o">|</span> <span class="n">apply_to</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>The required Functor methods are given defaults based on the required
-Applicative methods.</p>
+Applicative methods, so you don’t need to implement <code class="docutils literal notranslate"><span class="pre">map</span></code> method.</p>
+<p class="rubric">References</p>
+<ul class="simple">
+<li><p>C. McBride and R. Paterson, “Applicative programming with effects”,
+Journal of Functional Programming , Volume 18 , Issue 1 , January 2008 ,
+pp. 1 - 13. DOI: <a class="reference external" href="https://doi.org/10.1017/S0956796807006326">https://doi.org/10.1017/S0956796807006326</a></p></li>
+<li><p><a class="reference external" href="https://wiki.haskell.org/Applicative_functor">Applicative functor at Haskell Wiki</a>.</p></li>
+<li><p><a class="reference external" href="https://hackage.haskell.org/package/base/docs/Control-Applicative.html">Applicative at Hackage</a></p></li>
+</ul>
+<dl class="py method">
+<dt id="haskpy.typeclasses.applicative.Applicative.__lshift__">
+<code class="sig-name descname"><span class="pre">__lshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.__lshift__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence with``&lt;&lt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
+</dd></dl>
+
 <dl class="py method">
 <dt id="haskpy.typeclasses.applicative.Applicative.__matmul__">
-<code class="sig-name descname"><span class="pre">__matmul__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_applicative.html#Applicative.__matmul__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.__matmul__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__matmul__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.__matmul__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Application operand <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> applies similarly as <code class="docutils literal notranslate"><span class="pre">&lt;*&gt;</span></code> in Haskell</p>
 <p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">&#64;</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">f.apply_to(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">x.apply(f)</span></code> and
 <code class="docutils literal notranslate"><span class="pre">apply(f,</span> <span class="pre">x)</span></code>.</p>
@@ -90,20 +108,38 @@ two functions.</p></li>
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.applicative.Applicative.__rshift__">
-<code class="sig-name descname"><span class="pre">__rshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_applicative.html#Applicative.__rshift__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.__rshift__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sequence with``&gt;&gt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
+<code class="sig-name descname"><span class="pre">__rshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.__rshift__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="haskpy.typeclasses.applicative.Applicative.apply">
-<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_applicative.html#Applicative.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.apply" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>m a -&gt; m (a -&gt; b) -&gt; m b</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">apply_to</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="haskpy.typeclasses.applicative.Applicative.apply_first">
+<code class="sig-name descname"><span class="pre">apply_first</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.apply_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two actions, keeping only the result of the first</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.applicative.Applicative.apply_second">
+<code class="sig-name descname"><span class="pre">apply_second</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.apply_second" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two actions, keeping only the result of the second</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt id="haskpy.typeclasses.applicative.Applicative.apply_to">
-<code class="sig-name descname"><span class="pre">apply_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_applicative.html#Applicative.apply_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.apply_to" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">apply_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>f (a -&gt; b) -&gt; f a -&gt; f b</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">apply</span></code>.</p>
 </dd></dl>
@@ -129,12 +165,6 @@ two functions.</p></li>
 <dt id="haskpy.typeclasses.applicative.Applicative.replace">
 <code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Haskell ($&gt;) operator</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="haskpy.typeclasses.applicative.Applicative.sequence">
-<code class="sig-name descname"><span class="pre">sequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_applicative.html#Applicative.sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>f a -&gt; f b -&gt; f b</p>
 </dd></dl>
 
 </dd></dl>
@@ -181,7 +211,7 @@ two functions.</p></li>
   <li><a href="haskpy.typeclasses.html">haskpy.typeclasses</a><ul>
   <li><a href="haskpy.typeclasses.applicative.html">haskpy.typeclasses.applicative</a><ul>
       <li>Previous: <a href="haskpy.typeclasses.applicative.html" title="previous chapter">haskpy.typeclasses.applicative</a></li>
-      <li>Next: <a href="haskpy.typeclasses.applicative.apply.html" title="next chapter">haskpy.typeclasses.applicative.apply</a></li>
+      <li>Next: <a href="haskpy.typeclasses.monad.html" title="next chapter">haskpy.typeclasses.monad</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

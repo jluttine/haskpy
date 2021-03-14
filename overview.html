@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Overview &#8212; HaskPy 0.1.dev1+g4514a52 documentation</title>
+    <title>Overview &#8212; HaskPy 0.1.dev1+g032ccd2 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -103,18 +103,18 @@ with <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor
 </pre></div>
 </div>
 <p>To apply a two-argument function to values that are both inside
-<a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> structure, one can use <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.liftA2.html#haskpy.typeclasses.applicative.liftA2" title="haskpy.typeclasses.applicative.liftA2"><code class="xref py py-func docutils literal notranslate"><span class="pre">liftA2()</span></code></a>:</p>
+<a class="reference internal" href="_autosummary/haskpy.types.maybe.Maybe.html#haskpy.types.maybe.Maybe" title="haskpy.types.maybe.Maybe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maybe</span></code></a> structure, one can use <a class="reference internal" href="_autosummary/haskpy.typeclasses.apply_.lift2.html#haskpy.typeclasses.apply_.lift2" title="haskpy.typeclasses.apply_.lift2"><code class="xref py py-func docutils literal notranslate"><span class="pre">lift2()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">add</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">liftA2</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">lift2</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 <span class="go">Just(84)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">liftA2</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">lift2</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="go">Nothing</span>
 </pre></div>
 </div>
 <p>See <a class="reference internal" href="_autosummary/haskpy.types.function.Function.html#haskpy.types.function.Function" title="haskpy.types.function.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a> for more details and examples on HaskPy function type.
 See <a class="reference internal" href="_autosummary/haskpy.utils.html#module-haskpy.utils" title="haskpy.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">utils</span></code></a> for a small collection of simple functions. Most functions
 in the entire HaskPy package are imported so that they are available directly
-under <code class="docutils literal notranslate"><span class="pre">haskpy</span></code> package as shown above with <code class="docutils literal notranslate"><span class="pre">hp.map</span></code> and <code class="docutils literal notranslate"><span class="pre">hp.liftA2</span></code>.</p>
+under <code class="docutils literal notranslate"><span class="pre">haskpy</span></code> package as shown above with <code class="docutils literal notranslate"><span class="pre">hp.map</span></code> and <code class="docutils literal notranslate"><span class="pre">hp.lift2</span></code>.</p>
 </div>
 <div class="section" id="list">
 <h3>List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
@@ -164,7 +164,7 @@ a nested structure by using multiple maps:</p>
 </div>
 <p><a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative" title="haskpy.typeclasses.applicative.Applicative"><code class="xref py py-class docutils literal notranslate"><span class="pre">Applicative</span></code></a> is a special case of <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Functor</span></code></a>. Applicative
 types know how to apply functions to values when both the functions and the
-values are wrapped inside structure. This is done with <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.apply.html#haskpy.typeclasses.applicative.apply" title="haskpy.typeclasses.applicative.apply"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply()</span></code></a>
+values are wrapped inside structure. This is done with <a class="reference internal" href="_autosummary/haskpy.typeclasses.apply_.apply.html#haskpy.typeclasses.apply_.apply" title="haskpy.typeclasses.apply_.apply"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply()</span></code></a>
 function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inc_maybe</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">inc_maybe</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
@@ -189,8 +189,8 @@ arguments are applied with the applicative apply:</p>
 <span class="go">Just(143)</span>
 </pre></div>
 </div>
-<p>Or just <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.liftA3.html#haskpy.typeclasses.applicative.liftA3" title="haskpy.typeclasses.applicative.liftA3"><code class="xref py py-func docutils literal notranslate"><span class="pre">liftA3()</span></code></a> for short:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">liftA3</span><span class="p">(</span><span class="n">add3</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<p>Or just <a class="reference internal" href="_autosummary/haskpy.typeclasses.apply_.lift3.html#haskpy.typeclasses.apply_.lift3" title="haskpy.typeclasses.apply_.lift3"><code class="xref py py-func docutils literal notranslate"><span class="pre">lift3()</span></code></a> for short:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">lift3</span><span class="p">(</span><span class="n">add3</span><span class="p">,</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 <span class="go">Just(143)</span>
 </pre></div>
 </div>

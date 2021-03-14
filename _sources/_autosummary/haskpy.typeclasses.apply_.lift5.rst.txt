@@ -1,0 +1,6 @@
+haskpy.typeclasses.apply\_.lift5
+================================
+
+.. currentmodule:: haskpy.typeclasses.apply_
+
+.. autofunction:: lift5

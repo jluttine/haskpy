@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>List &#8212; HaskPy 0.1.dev1+g4514a52 documentation</title>
+    <title>List &#8212; HaskPy 0.1.dev1+g032ccd2 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -92,6 +92,12 @@ with <code class="docutils literal notranslate"><span class="pre">+</span></code
 </dd></dl>
 
 <dl class="py method">
+<dt id="haskpy.types.list.List.__lshift__">
+<code class="sig-name descname"><span class="pre">__lshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__lshift__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence with``&lt;&lt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="haskpy.types.list.List.__matmul__">
 <code class="sig-name descname"><span class="pre">__matmul__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__matmul__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Application operand <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> applies similarly as <code class="docutils literal notranslate"><span class="pre">&lt;*&gt;</span></code> in Haskell</p>
@@ -161,7 +167,7 @@ two functions.</p></li>
 <dl class="py method">
 <dt id="haskpy.types.list.List.__rshift__">
 <code class="sig-name descname"><span class="pre">__rshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__rshift__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sequence with``&gt;&gt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
+<dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
 </dd></dl>
 
 <dl class="py method">
@@ -174,6 +180,24 @@ two functions.</p></li>
 <dt id="haskpy.types.list.List.apply">
 <code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; List (a -&gt; b) -&gt; List b</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.list.List.apply_first">
+<code class="sig-name descname"><span class="pre">apply_first</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.apply_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two actions, keeping only the result of the first</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.list.List.apply_second">
+<code class="sig-name descname"><span class="pre">apply_second</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.apply_second" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two actions, keeping only the result of the second</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -287,12 +311,6 @@ the iterator.</p>
 <dt id="haskpy.types.list.List.replace">
 <code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Haskell ($&gt;) operator</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="haskpy.types.list.List.sequence">
-<code class="sig-name descname"><span class="pre">sequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>f a -&gt; f b -&gt; f b</p>
 </dd></dl>
 
 <dl class="py method">

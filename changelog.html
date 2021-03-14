@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Changelog &#8212; HaskPy 0.1.dev1+g4514a52 documentation</title>
+    <title>Changelog &#8212; HaskPy 0.1.dev1+g032ccd2 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,13 +38,32 @@
 <div class="section" id="added">
 <h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">Dictionary</span></code> type.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">Apply</span></code> typeclass. In the typeclass hierarchy, it’s between <code class="docutils literal notranslate"><span class="pre">Functor</span></code>
+and <code class="docutils literal notranslate"><span class="pre">Applicative</span></code>.</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">+</span></code> operator for <code class="docutils literal notranslate"><span class="pre">Semigroup</span></code> (and <code class="docutils literal notranslate"><span class="pre">Monoid</span></code>) instances.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> operator for <code class="docutils literal notranslate"><span class="pre">Apply</span></code> (and <code class="docutils literal notranslate"><span class="pre">Applicative</span></code>) instances.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">apply_first</span></code> method to <code class="docutils literal notranslate"><span class="pre">Apply</span></code>.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">lift4</span></code> and <code class="docutils literal notranslate"><span class="pre">lift5</span></code> functions.</p></li>
+</ul>
+</div>
+<div class="section" id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Rename <code class="docutils literal notranslate"><span class="pre">sequence</span></code> to <code class="docutils literal notranslate"><span class="pre">apply_second</span></code>.</p></li>
+<li><p>Rename <code class="docutils literal notranslate"><span class="pre">liftA2</span></code> to <code class="docutils literal notranslate"><span class="pre">lift2</span></code>.</p></li>
+<li><p>Rename <code class="docutils literal notranslate"><span class="pre">liftA3</span></code> to <code class="docutils literal notranslate"><span class="pre">lift3</span></code>.</p></li>
+<li><p>Modify sampling for property tests. In particular, type constructors are
+sampled first, then those are used to sample concrete types. This way, other
+type constructor parameters are kept constant while the one of current
+interest can be modified.</p></li>
 </ul>
 </div>
 <div class="section" id="fixed">
 <h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fix <code class="docutils literal notranslate"><span class="pre">liftA2</span></code> and <code class="docutils literal notranslate"><span class="pre">liftA3</span></code>.</p></li>
+<li><p>Complete <code class="docutils literal notranslate"><span class="pre">Hashable</span></code> typeclass.</p></li>
 </ul>
 </div>
 </div>
@@ -57,8 +76,8 @@
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">LinkedList</span></code> type.</p></li>
 </ul>
 </div>
-<div class="section" id="changed">
-<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Mask out some built-in class methods such as <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> and <code class="docutils literal notranslate"><span class="pre">__hash__</span></code>.
 Python doesn’t allow deleting these methods so we need to do some black magic
@@ -67,8 +86,8 @@ to hide them as if they didn’t exist.</p></li>
 positional arguments.</p></li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h3>Fixed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Fixed<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fix the composition operator <code class="docutils literal notranslate"><span class="pre">**</span></code> for <code class="docutils literal notranslate"><span class="pre">Function</span></code> objects.</p></li>
 </ul>
@@ -81,37 +100,37 @@ positional arguments.</p></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id4">
-<h2>0.1.3<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id5">
-<h3>Fixed<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h2>0.1.3<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h3>Fixed<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fix PyPI releasing on GitHub</p></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id6">
-<h2>0.1.2<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id7">
-<h3>Changed<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h2>0.1.2<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h3>Changed<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Improve operator docstrings.</p></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id8">
-<h2>0.1.1<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id9">
-<h3>Changed<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h2>0.1.1<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id10">
+<h3>Changed<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Change bind operator to <code class="docutils literal notranslate"><span class="pre">%</span></code>.</p></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id10">
-<h2>0.1.0<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id11">
-<h3>Added<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<h2>0.1.0<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id12">
+<h3>Added<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Add typeclasses <code class="docutils literal notranslate"><span class="pre">Functor</span></code>, <code class="docutils literal notranslate"><span class="pre">Applicative</span></code>, <code class="docutils literal notranslate"><span class="pre">Monad</span></code>, <code class="docutils literal notranslate"><span class="pre">Semigroup</span></code>,
 <code class="docutils literal notranslate"><span class="pre">Monoid</span></code>, <code class="docutils literal notranslate"><span class="pre">Commutative</span></code>, <code class="docutils literal notranslate"><span class="pre">CommutativeMonoid</span></code>, <code class="docutils literal notranslate"><span class="pre">Foldable</span></code>,
@@ -153,10 +172,10 @@ positional arguments.</p></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dev">Dev</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id1">0.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">0.1.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id6">0.1.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id8">0.1.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id10">0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">0.1.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">0.1.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">0.1.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">0.1.0</a></li>
 </ul>
 </li>
 </ul>

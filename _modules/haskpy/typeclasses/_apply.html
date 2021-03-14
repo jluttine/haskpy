@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses._apply &#8212; HaskPy 0.1.dev1+g032ccd2 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.typeclasses._apply</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">given</span>
+<span class="kn">import</span> <span class="nn">hypothesis.strategies</span> <span class="k">as</span> <span class="nn">st</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.testing</span> <span class="kn">import</span> <span class="n">assert_output</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+<span class="kn">from</span> <span class="nn">haskpy.internal</span> <span class="kn">import</span> <span class="n">class_function</span>
+
+<span class="c1"># Use the &quot;hidden&quot; module in order to avoid circular imports</span>
+<span class="kn">from</span> <span class="nn">._functor</span> <span class="kn">import</span> <span class="n">Functor</span>
+
+
+<span class="k">class</span> <span class="nc">Apply</span><span class="p">(</span><span class="n">Functor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply typeclass</span>
+
+<span class="sd">    :py:class:`.Apply` is to :py:class:`.Applicative` as :py:class:`.Semigroup`</span>
+<span class="sd">    is to :py:class:`.Monoid`.</span>
+
+<span class="sd">    Minimal complete definition::</span>
+
+<span class="sd">        map | (apply | apply_to)</span>
+
+<span class="sd">    Why do we need :py:class:`.Apply` in addition to :py:class:`.Applicative`?</span>
+<span class="sd">    For instance, :py:class:`.Dictionary` is an instance of :py:class:`.Apply`</span>
+<span class="sd">    but not :py:class:`.Applicative`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    - `Apply at PureScript Pursuit</span>
+<span class="sd">      &lt;https://pursuit.purescript.org/packages/purescript-prelude/3.0.0/docs/Control.Apply&gt;`_</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Apply.apply"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;m a -&gt; m (a -&gt; b) -&gt; m b</span>
+
+<span class="sd">        Default implementation is based on ``apply_to``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Apply.apply_to"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply.apply_to">[docs]</a>    <span class="k">def</span> <span class="nf">apply_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;f (a -&gt; b) -&gt; f a -&gt; f b</span>
+
+<span class="sd">        Default implementation is based on ``apply``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Apply.apply_first"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply.apply_first">[docs]</a>    <span class="k">def</span> <span class="nf">apply_first</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Combine two actions, keeping only the result of the first</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            Apply f =&gt; f a -&gt; f b -&gt; f a</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="n">const</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">const</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Apply.apply_second"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply.apply_second">[docs]</a>    <span class="k">def</span> <span class="nf">apply_second</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Combine two actions, keeping only the result of the second</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            Apply f =&gt; f a -&gt; f b -&gt; f b</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="n">identity</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">identity</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Apply.__matmul__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply.__matmul__">[docs]</a>    <span class="k">def</span> <span class="fm">__matmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Application operand ``@`` applies similarly as ``&lt;*&gt;`` in Haskell</span>
+
+<span class="sd">        ``f @ x`` translates to ``f.apply_to(x)``, ``x.apply(f)`` and</span>
+<span class="sd">        ``apply(f, x)``.</span>
+
+<span class="sd">        Why ``@`` operator?</span>
+
+<span class="sd">        - It&#39;s not typically used as often as some other more common operators</span>
+<span class="sd">          so less risk for confusion.</span>
+
+<span class="sd">        - The operator is not a commutative as isn&#39;t ``apply`` either.</span>
+
+<span class="sd">        - If we see matrix as some structure, then matrix multiplication takes</span>
+<span class="sd">          both left and right operand inside this structure and gives a result</span>
+<span class="sd">          also inside this structure, similarly as ``apply`` does. So it&#39;s an</span>
+<span class="sd">          operator for two operands having a similar structure.</span>
+
+<span class="sd">        - The operator evaluates the contained function(s) at the contained</span>
+<span class="sd">          value(s). Thus, ``f`` &quot;at&quot; ``x`` makes perfect sense.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Apply.__lshift__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply.__lshift__">[docs]</a>    <span class="k">def</span> <span class="fm">__lshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sequence with``&lt;&lt;`` similarly as with ``&lt;*`` and ``&lt;&lt;`` in Haskell&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_first</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Apply.__rshift__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply.__rshift__">[docs]</a>    <span class="k">def</span> <span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sequence with ``&gt;&gt;`` similarly as with ``*&gt;`` and ``&gt;&gt;`` in Haskell&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_second</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Sampling methods for property tests</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">sample_apply_type_constructor</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sample an apply type constructor</span>
+
+<span class="sd">        By default, :py:meth:`.Functor.sample_functor_type_constructor` is</span>
+<span class="sd">        used. If Apply type requires more constraints than Functor type,</span>
+<span class="sd">        override this default implementation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">sample_functor_type_constructor</span><span class="p">()</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test typeclass laws</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_apply_associative_composition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;u @ (v @ w) == ((compose ** u) @ v) @ w&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">haskpy.types.function</span> <span class="kn">import</span> <span class="n">compose</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">w</span><span class="p">)),</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">compose</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">w</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_apply_associative_composition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_apply_type_constructor</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">fbc</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fbc</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_apply_associative_composition</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test laws based on default implementations</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_apply_apply</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.apply_</span> <span class="kn">import</span> <span class="n">apply</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">u</span><span class="p">),</span>
+            <span class="n">apply</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="n">u</span> <span class="o">@</span> <span class="n">v</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_apply_apply</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_apply_type_constructor</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">fab</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fab</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_apply_apply</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_apply_apply_first</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.apply_</span> <span class="kn">import</span> <span class="n">apply_first</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Apply</span><span class="o">.</span><span class="n">apply_first</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">apply_first</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="n">apply_first</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="n">u</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_apply_apply_first</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_apply_type_constructor</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">fb</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fb</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_apply_apply_first</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_apply_apply_second</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.apply_</span> <span class="kn">import</span> <span class="n">apply_second</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Apply</span><span class="o">.</span><span class="n">apply_second</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">apply_second</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="n">apply_second</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="n">u</span> <span class="o">&gt;&gt;</span> <span class="n">v</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_apply_apply_second</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_apply_type_constructor</span><span class="p">())</span>
+        <span class="n">fa</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">fb</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fb</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_apply_apply_second</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

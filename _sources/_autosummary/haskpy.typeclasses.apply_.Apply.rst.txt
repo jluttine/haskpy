@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.apply_.Apply
+   :noindex:
+
+Apply
+===============================
+
+.. currentmodule:: haskpy.typeclasses.apply_
+
+.. autoclass:: Apply
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:
