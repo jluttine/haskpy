@@ -4,6 +4,7 @@
    :toctree:
 
    Dictionary
+   lookup
 
 """
 
@@ -184,11 +185,15 @@ class Dictionary(Apply, Eq, Monoid):
     sample_functor_type_constructor = testing.create_type_constructor_sampler(
         testing.sample_hashable_type(),
     )
-    sample_apply_type_constructor = sample_functor_type_constructor
 
     sample_eq_type = testing.create_type_sampler(
         testing.sample_hashable_type(),
         testing.sample_eq_type(),
+    )
+
+    sample_semigroup_type = testing.create_type_sampler(
+        testing.sample_hashable_type(),
+        testing.sample_semigroup_type(),
     )
 
 
