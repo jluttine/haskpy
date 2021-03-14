@@ -17,6 +17,7 @@ from haskpy.types.maybe import *
 from haskpy.types.either import *
 from haskpy.types.list import *
 from haskpy.types.linkedlist import *
+from haskpy.types.dictionary import *
 from haskpy.types.identity import *
 from haskpy.types.compose import *
 from haskpy.types.monoids import *

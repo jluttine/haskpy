@@ -19,6 +19,10 @@ class Apply(Functor):
 
         map | (apply | apply_to)
 
+    Why do we need :py:class:`.Apply` in addition to :py:class:`.Applicative`?
+    For instance, :py:class:`.Dictionary` is an instance of :py:class:`.Apply`
+    but not :py:class:`.Applicative`.
+
     References
     ----------
 
