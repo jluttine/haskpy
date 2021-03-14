@@ -7,25 +7,88 @@
 
 """
 
+import itertools
+
 import attr
 from hypothesis import strategies as st
 
-from haskpy.internal import immutable, class_function
-from haskpy.typeclasses import Apply, Eq
+from haskpy.internal import immutable, class_function, class_property
+from haskpy.typeclasses import Apply, Eq, Monoid
 from haskpy.types.maybe import Just, Nothing
 from haskpy.types.function import function
 from haskpy import testing
 
 
 @immutable(init=False)
-class Dictionary(Apply, Eq):
-    """Dictionary type"""
+class Dictionary(Apply, Eq, Monoid):
+    """Dictionary type
+
+    .. todo::
+
+        For method ideas, refer to:
+        `<https://pursuit.purescript.org/packages/purescript-unordered-collections/0.2.0/docs/Data.HashMap>`_
+
+    """
 
     __dict = attr.ib()
 
     def __init__(self, *args, **kwargs):
         object.__setattr__(self, "_Dictionary__dict", dict(*args, **kwargs))
         return
+
+    @class_property
+    def empty(cls):
+        """Empty dictionary"""
+        return cls()
+
+    def append(self, other):
+        """Combine two dictionaries
+
+        ::
+
+            Semigroup a => Dictionary a -> Dictionary a -> Dictionary a
+
+        .. note::
+
+            If a key is in both dictionaries, the values are expected to be
+            semigroup instances, so that they can be combined. Alternative
+            solutions would be to prefer either the first or the second
+            dictionary value as done in Haskell and PureScript, so that there
+            would be no need to constrain the contained type to be an instance
+            of Semigroup. This class provides separate methods
+            :py:meth:`.Dictionary.append_first` and
+            :py:meth:`.Dictionary.append_second` for those purposes.
+
+        """
+        self_keys = set(self.__dict.keys())
+        other_keys = set(other.__dict.keys())
+
+        self_only_keys = self_keys.difference(other_keys)
+        other_only_keys = other_keys.difference(self_keys)
+        both_keys = self_keys.intersection(other_keys)
+
+        return Dictionary(
+            {
+                key: (
+                    self.__dict[key] if c == 1 else
+                    other.__dict[key] if c == 2 else
+                    self.__dict[key].append(other.__dict[key])
+                )
+                for (c, key) in itertools.chain(
+                        zip(itertools.repeat(1), self_only_keys),
+                        zip(itertools.repeat(2), other_only_keys),
+                        zip(itertools.repeat(3), both_keys),
+                )
+            }
+        )
+
+    def append_first(self, other):
+        """Combine two dictionaries preferring the elements of the first"""
+        raise NotImplementedError()
+
+    def append_second(self, other):
+        """Combine two dictionaries preferring the elements of the second"""
+        raise NotImplementedError()
 
     def map(self, f):
         """Apply a function to each value in the dictionary
@@ -68,6 +131,28 @@ class Dictionary(Apply, Eq):
             return Nothing
         else:
             return Just(x)
+
+    @class_function
+    def singleton(cls, key, value):
+        return cls({key: value})
+
+    def insert(self, key, value):
+        raise NotImplementedError()
+
+    def delete(self, key):
+        raise NotImplementedError()
+
+    def update(self, f, key):
+        raise NotImplementedError()
+
+    def alter(self, f, key):
+        raise NotImplementedError()
+
+    def keys(self):
+        raise NotImplementedError()
+
+    def values(self):
+        raise NotImplementedError()
 
     def __getitem__(self, key):
         return self.lookup(key)
