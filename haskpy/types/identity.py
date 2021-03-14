@@ -38,9 +38,8 @@ class Identity(Monad, Eq):
     )
 
     sample_functor_type_constructor = testing.create_type_constructor_sampler()
-    sample_apply_type_constructor = sample_functor_type_constructor
-    sample_applicative_type_constructor = sample_functor_type_constructor
-    sample_monad_type_constructor = sample_functor_type_constructor
+
+    # Some typeclass instances have constraints for the types inside
 
     sample_eq_type = testing.create_type_sampler(
         testing.sample_eq_type(),
@@ -54,8 +53,14 @@ def IdentityT(M):
         def __repr__(cls):
             return "IdentityT({})".format(repr(M))
 
+    is_eq = issubclass(M, Eq)
+
+    bases = [] + (
+        [Eq] if is_eq else []
+    )
+
     @immutable
-    class IdentityM(Monad, metaclass=MetaIdentityM):
+    class IdentityM(Monad, *bases, metaclass=MetaIdentityM):
 
         decomposed = attr.ib()
 
@@ -99,6 +104,10 @@ def IdentityT(M):
 
             return IdentityM(mib)  # :: IdentityT m b
 
+        if is_eq:
+            def __eq__(self, other):
+                return self.decomposed == other.decomposed
+
         def __repr__(self):
             return "{0}({1})".format(repr(type(self)), repr(self.decomposed))
 
@@ -107,50 +116,41 @@ def IdentityT(M):
 
         @class_function
         def sample_type(cls):
-            return (
-                Identity.sample_type()
-                .flatmap(M.sample_functor_type)
-                .map(lambda s: s.map(cls))
+            return M.sample_monad_type_constructor().map(
+                lambda m: m(Identity.sample_type()).map(cls)
             )
 
-        @class_function
-        def sample_functor_type(cls, a):
-            return (
-                Identity.sample_functor_type(a)
-                .flatmap(M.sample_functor_type)
-                .map(lambda s: s.map(cls))
-            )
+        if is_eq:
+            @class_function
+            def sample_eq_type(cls):
+                return M.sample_monad_type_constructor().map(
+                    # Note that we can't be really sure if the Eq instance of M
+                    # has any constraints for the contained type (i.e., Maybe
+                    # in this case). A simple pathological monad M could be
+                    # such that it totally ignores the contained type. However,
+                    # it's the most typical case that M requires the contained
+                    # type to be an instance of Eq too, so let's assume so.
+                    # There's no real harm as this is only sampling for tests
+                    # so it means we just use a bit more limited set of
+                    # samples. But in practice, this is almost always needed.
+                    #
+                    # We could perhaps refactor the sampling methods so that we
+                    # could write something like:
+                    #
+                    #     lambda m: m.sample_eq_type(Identity).map(cls)
+                    #
+                    # That is, m will decide how to constrain the sampling.
+                    lambda m: m(Identity.sample_eq_type()).map(cls)
+                )
 
         @class_function
-        def sample_apply_type(cls, a):
-            return (
-                Identity.sample_apply_type(a)
-                .flatmap(M.sample_apply_type)
-                .map(lambda s: s.map(cls))
-            )
-
-        @class_function
-        def sample_applicative_type(cls, a):
-            return (
-                Identity.sample_applicative_type(a)
-                .flatmap(M.sample_applicative_type)
-                .map(lambda s: s.map(cls))
-            )
-
-        @class_function
-        def sample_monad_type(cls, a):
-            return (
-                Identity.sample_monad_type(a)
-                .flatmap(M.sample_monad_type)
-                .map(lambda s: s.map(cls))
-            )
-
-        @class_function
-        def sample_eq_type(cls):
-            return (
-                Identity.sample_eq_type()
-                .flatmap(M.sample_monad_type)
-                .map(lambda s: s.map(cls))
+        def sample_functor_type_constructor(cls):
+            # This is a Monad transformer class, so let's sample monads even
+            # when functors are required.
+            return Identity.sample_monad_type_constructor().flatmap(
+                lambda f: M.sample_monad_type_constructor().map(
+                    lambda g: lambda a: g(f(a)).map(cls)
+                )
             )
 
     return IdentityM

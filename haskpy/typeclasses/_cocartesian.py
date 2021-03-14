@@ -31,7 +31,14 @@ class Cocartesian(Profunctor):
 
     @abstract_class_function
     def sample_cocartesian_type_constructor(cls):
-        pass
+        """Sample a cocartesian type constructor
+
+        By default, :py:meth:`.Profunctor.sample_profunctor_type_constructor`
+        is used. If Cocartesian type requires more constraints than Profunctor
+        type, override this default implementation.
+
+        """
+        return cls.sample_profunctor_type_constructor()
 
     #
     # Test Cocartesian laws

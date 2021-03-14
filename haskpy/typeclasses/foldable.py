@@ -284,10 +284,18 @@ class Foldable(Type):
     def sample_foldable_type_constructor(cls):
         pass
 
-    @abstract_class_function
+    @class_function
     def sample_foldable_functor_type_constructor(cls):
-        """Needed only for subclasses of both Foldable and Functor"""
-        pass
+        """Sample type constructor that is both Foldable and Functor
+
+        Needed only for subclasses of both Foldable and Functor
+
+        By default, the normal Foldable sampler is used. Override this defaul
+        implementation if there are more constraints in order to make the type
+        constructor an instance of Functor too.
+
+        """
+        return cls.sample_foldable_type_constructor()
 
     #
     # Test Foldable laws

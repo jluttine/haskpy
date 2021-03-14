@@ -263,9 +263,9 @@ class Maybe(
     )
 
     sample_functor_type_constructor = testing.create_type_constructor_sampler()
-    sample_apply_type_constructor = sample_functor_type_constructor
-    sample_applicative_type_constructor = sample_functor_type_constructor
-    sample_monad_type_constructor = sample_functor_type_constructor
+    sample_foldable_type_constructor = testing.create_type_constructor_sampler()
+
+    # Some typeclass instances have constraints for the type inside Maybe
 
     sample_hashable_type = testing.create_type_sampler(
         testing.sample_hashable_type(),
@@ -274,7 +274,6 @@ class Maybe(
     sample_semigroup_type = testing.create_type_sampler(
         testing.sample_semigroup_type(),
     )
-    sample_monoid_type = sample_semigroup_type
 
     sample_commutative_type = testing.create_type_sampler(
         testing.sample_commutative_type(),
@@ -283,9 +282,6 @@ class Maybe(
     sample_eq_type = testing.create_type_sampler(
         testing.sample_eq_type(),
     )
-
-    sample_foldable_type_constructor = testing.create_type_constructor_sampler()
-    sample_foldable_functor_type_constructor = sample_foldable_type_constructor
 
 
 Nothing = Maybe(lambda *, Nothing, Just: Nothing())
@@ -316,8 +312,14 @@ def MaybeT(M):
         def __repr__(cls):
             return "MaybeT({})".format(repr(M))
 
+    is_eq = issubclass(M, Eq)
+
+    bases = [] + (
+        [Eq] if is_eq else []
+    )
+
     @immutable
-    class MaybeM(Monad, Eq, metaclass=MetaMaybeM):
+    class MaybeM(Monad, *bases, metaclass=MetaMaybeM):
 
         # The attribute name may sound weird but it makes sense once you
         # understand that this indeed is the not-yet-composed variable and if
@@ -363,20 +365,35 @@ def MaybeT(M):
             return eq_test(self.decomposed, other.decomposed, data)
 
         @class_function
-        def sample_value(cls, a):
-            return M.sample_value(Maybe.sample_value(a)).map(cls)
+        def sample_type(cls):
+            return M.sample_monad_type_constructor().map(
+                lambda m: m(Maybe.sample_type()).map(cls)
+            )
 
-        sample_type = testing.create_type_sampler(
-            testing.sample_type(),
-        )
+        if is_eq:
+            @class_function
+            def sample_eq_type(cls):
+                return M.sample_monad_type_constructor().map(
+                    # Note that we can't be really sure if the Eq instance of M
+                    # has any constraints for the contained type (i.e., Maybe
+                    # in this case). A simple pathological monad M could be
+                    # such that it totally ignores the contained type. However,
+                    # it's the most typical case that M requires the contained
+                    # type to be an instance of Eq too, so let's assume so.
+                    # There's no real harm as this is only sampling for tests
+                    # so it means we just use a bit more limited set of
+                    # samples. But in practice, this is almost always needed.
+                    lambda m: m(Maybe.sample_eq_type()).map(cls)
+                )
 
-        sample_functor_type_constructor = testing.create_type_constructor_sampler()
-        sample_apply_type_constructor = sample_functor_type_constructor
-        sample_applicative_type_constructor = sample_functor_type_constructor
-        sample_monad_type_constructor = sample_functor_type_constructor
-
-        sample_eq_type = testing.create_type_sampler(
-            testing.sample_eq_type(),
-        )
+        @class_function
+        def sample_functor_type_constructor(cls):
+            # This is a Monad transformer class, so let's sample monads even
+            # when functors are required.
+            return Maybe.sample_monad_type_constructor().flatmap(
+                lambda f: M.sample_monad_type_constructor().map(
+                    lambda g: lambda a: g(f(a)).map(cls)
+                )
+            )
 
     return MaybeM

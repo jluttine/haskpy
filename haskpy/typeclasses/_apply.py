@@ -3,10 +3,7 @@ import hypothesis.strategies as st
 
 from haskpy.testing import assert_output
 from haskpy import testing
-from haskpy.internal import (
-    class_function,
-    abstract_class_function,
-)
+from haskpy.internal import class_function
 
 # Use the "hidden" module in order to avoid circular imports
 from ._functor import Functor
@@ -104,30 +101,16 @@ class Apply(Functor):
     # Sampling methods for property tests
     #
 
-    @abstract_class_function
+    @class_function
     def sample_apply_type_constructor(cls):
         """Sample an apply type constructor
 
-        Note that it would be tempting to define:
-
-        .. code-block:: python
-
-            def sample_functor_type_constructor(cls, a):
-                return cls.sample_apply_type_constructor(a)
-
-        But we can have classes that are Apply instances only if some of their
-        arguments are Apply instances too. For instance, MaybeT(cls, x) is
-        functor/applicative/monad only if cls is. So, we need to have a
-        separate sample_functor_type method.
-
-        But then, how do we make sure that the sampled Apply instance type is
-        also a functor? For instance, a pathological case could be such that
-        sample_functor_type returns something completely different type than
-        sample_apply_type. I suppose we just have to leave that as a
-        responsibility for the user that sample methods are implemented
-        correctly/consistently.
+        By default, :py:meth:`.Functor.sample_functor_type_constructor` is
+        used. If Apply type requires more constraints than Functor type,
+        override this default implementation.
 
         """
+        return cls.sample_functor_type_constructor()
 
     #
     # Test typeclass laws

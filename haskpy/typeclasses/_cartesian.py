@@ -1,7 +1,7 @@
 from hypothesis import given
 from hypothesis import strategies as st
 
-from haskpy.internal import class_function, abstract_class_function
+from haskpy.internal import class_function
 from haskpy.testing import assert_output
 from haskpy import testing
 
@@ -31,9 +31,16 @@ class Cartesian(Profunctor):
         """p a b -> p (c, a) (c, a)"""
         return self.first().dimap(_flip_tuple, _flip_tuple)
 
-    @abstract_class_function
+    @class_function
     def sample_cartesian_type_constructor(cls):
-        pass
+        """Sample a cartesian type constructor
+
+        By default, :py:meth:`.Profunctor.sample_profunctor_type_constructor`
+        is used. If Cartesian type requires more constraints than Profunctor
+        type, override this default implementation.
+
+        """
+        return cls.sample_profunctor_type_constructor()
 
     #
     # Test Cartesian laws

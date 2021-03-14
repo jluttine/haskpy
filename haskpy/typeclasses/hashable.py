@@ -33,9 +33,16 @@ class Hashable(Eq):
     def __hash__(self):
         pass
 
-    @abstract_class_function
+    @class_function
     def sample_hashable_type(cls):
-        pass
+        """Sample a hashable type
+
+        By default, :py:meth:`.Eq.sample_eq_type` is used. If Hashable type
+        requires more constraints than Eq type, override this default
+        implementation.
+
+        """
+        return cls.sample_eq_type()
 
     @class_function
     def assert_hashable_equality(cls, x, y):

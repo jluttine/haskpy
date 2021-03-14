@@ -1,4 +1,4 @@
-from haskpy import Identity, IdentityT, Function, List
+from haskpy import Identity, IdentityT, Function, List, Either
 from haskpy.testing import make_test_class
 
 
@@ -12,5 +12,6 @@ def test_identity_map():
     return
 
 
+TestIdentityT = make_test_class(IdentityT(Either))
 TestIdentityT = make_test_class(IdentityT(List))
 TestIdentityT = make_test_class(IdentityT(Function))

@@ -1,4 +1,4 @@
-from haskpy import Maybe, Just, Nothing, MaybeT, List, Function, Compose
+from haskpy import Maybe, Just, Nothing, MaybeT, List, Function, Compose, Either
 from haskpy.testing import make_test_class
 
 
@@ -26,6 +26,7 @@ def test_maybe_foldl():
 
 
 # Test typeclass laws for MaybeT monad transformer (using some example monad).
+TestMaybeT = make_test_class(MaybeT(Either))
 TestMaybeT = make_test_class(MaybeT(Function))
 TestMaybeT = make_test_class(MaybeT(List))
 

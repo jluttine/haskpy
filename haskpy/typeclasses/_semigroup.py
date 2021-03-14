@@ -3,11 +3,7 @@ from hypothesis import given
 
 from .typeclass import Type
 from haskpy.testing import assert_output
-from haskpy.internal import (
-    class_function,
-    abstract_function,
-    abstract_class_function,
-)
+from haskpy.internal import class_function, abstract_function
 
 
 class Semigroup(Type):
@@ -45,9 +41,15 @@ class Semigroup(Type):
     # Sampling methods for property tests
     #
 
-    @abstract_class_function
+    @class_function
     def sample_semigroup_type(cls):
-        pass
+        """Sample a semigroup type
+
+        By default, :py:meth:`.Type.sample_type` is used. If Semigroup type
+        requires some constraints, override this default implementation.
+
+        """
+        return cls.sample_type()
 
     #
     # Test Semigroup laws
@@ -101,7 +103,6 @@ class Semigroup(Type):
         )
 
 
-
 class Commutative(Semigroup):
     """Semigroup following commutativity law
 
@@ -126,9 +127,16 @@ class Commutative(Semigroup):
     # Sampling methods for property tests
     #
 
-    @abstract_class_function
+    @class_function
     def sample_commutative_type(cls):
-        pass
+        """Sample a commutative type
+
+        By default, :py:meth:`.Semigroup.sample_semigroup_type` is used. If
+        Commutative type requires more constraints Semigroup type, override
+        this default implementation.
+
+        """
+        return cls.sample_semigroup_type()
 
     #
     # Test Commutative laws

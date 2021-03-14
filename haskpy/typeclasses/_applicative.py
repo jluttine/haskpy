@@ -64,10 +64,16 @@ class Applicative(Apply):
     # Sampling methods for property tests
     #
 
-    @abstract_class_function
+    @class_function
     def sample_applicative_type_constructor(cls):
-        """Sample an applicative type"""
-        pass
+        """Sample an applicative type
+
+        By default, :py:meth:`.Apply.sample_apply_type_constructor` is used. If
+        Applicative type requires more constraints than Apply type, override
+        this default implementation.
+
+        """
+        return cls.sample_apply_type_constructor()
 
     #
     # Test typeclass laws

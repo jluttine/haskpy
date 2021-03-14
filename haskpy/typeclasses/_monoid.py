@@ -31,6 +31,17 @@ class Monoid(Semigroup):
     def empty(cls):
         """Identity element for the monoid"""
 
+    @class_function
+    def sample_monoid_type(cls):
+        """Sample a monoid type
+
+        By default, :py:meth:`.Semigroup.sample_semigroup_type` is used. If
+        Monoid type requires more constraints Semigroup type, override this
+        default implementation.
+
+        """
+        return cls.sample_semigroup_type()
+
     #
     # Test Monoid laws
     #
@@ -56,7 +67,3 @@ class Monoid(Semigroup):
             x.append(cls.empty),
             cls.empty.append(x),
         )
-
-    @abstract_class_function
-    def sample_monoid_type(cls):
-        pass

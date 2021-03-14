@@ -1,7 +1,7 @@
 import hypothesis.strategies as st
 from hypothesis import given
 
-from haskpy.internal import class_function, abstract_class_function
+from haskpy.internal import class_function
 from haskpy.testing import assert_output
 from haskpy import testing
 
@@ -117,9 +117,16 @@ class Monad(Applicative):
     # Sampling methods for property tests
     #
 
-    @abstract_class_function
+    @class_function
     def sample_monad_type_constructor(cls):
-        pass
+        """Sample a monad type constructor
+
+        By default, :py:meth:`.Applicative.sample_applicative_type_constructor`
+        is used. If Monad type requires more constraints than Applicative type,
+        override this default implementation.
+
+        """
+        return cls.sample_applicative_type_constructor()
 
     #
     # Test typeclass laws
