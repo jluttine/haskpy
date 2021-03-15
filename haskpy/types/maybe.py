@@ -32,8 +32,8 @@ from haskpy.typeclasses import (
     Commutative,
     Monoid,
     Hashable,
-    Foldable,
     Eq,
+    Traversable,
 )
 from haskpy.internal import (
     immutable,
@@ -50,7 +50,7 @@ class Maybe(
         Commutative,
         Monoid,
         Hashable,
-        Foldable,
+        Traversable,
 ):
     """Type ``Maybe a`` for a value that might be present or not
 
@@ -211,6 +211,17 @@ class Maybe(
         yield from self.match(
             Nothing=lambda: (),
             Just=lambda x: (x,),
+        )
+
+    def sequence(self, applicative):
+        return self.match(
+            Nothing=lambda: applicative.pure(Nothing),
+            # Instead of x.map(Just), access the method via the class so that
+            # if the given applicative class is inconsistent with the contained
+            # value an error would be raised. This helps making sure that if
+            # sequence works for case Just, it'll be consistent with case
+            # Nothing. "If it runs, it probably works."
+            Just=lambda x: applicative.map(x, Just),
         )
 
     def __repr__(self):
