@@ -438,7 +438,7 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
     #     #return st.lists(a, max_size=10).map(lambda xs: cls(*xs))
 
     @class_function
-    def sample_value(cls, a):
+    def sample_value(cls, a, max_depth=3):
         # It's not possible to sample linked lists lazily because hypothesis
         # doesn't support that sampling happens at some later point (the
         # sampler gets "frozen"). So, we must sample everything at once,
@@ -447,12 +447,15 @@ class LinkedList(Monad, Monoid, Foldable, Eq):
         #
         # This non-lazy sampling could be implemented recursively as follows:
         #
-        return st.deferred(
-            lambda: st.one_of(
-                st.just(Nil),
-                a.flatmap(
-                    lambda x: cls.sample_value(a).map(
-                        lambda xs: Cons(x, lambda: xs)
+        return (
+            st.just(Nil) if max_depth <= 0 else
+            st.deferred(
+                lambda: st.one_of(
+                    st.just(Nil),
+                    a.flatmap(
+                        lambda x: cls.sample_value(a, max_depth=max_depth-1).map(
+                            lambda xs: Cons(x, lambda: xs)
+                        )
                     )
                 )
             )

@@ -11,9 +11,9 @@ import attr
 import functools
 from hypothesis import strategies as st
 
-from haskpy.typeclasses import Monad, Monoid, Foldable, Eq
+from haskpy.typeclasses import Monad, Monoid, Traversable, Eq
 from haskpy.types.maybe import Just, Nothing
-from haskpy import testing
+from haskpy import testing, lift2
 from haskpy.internal import (
     immutable,
     class_property,
@@ -23,7 +23,7 @@ from haskpy.testing import eq_test
 
 
 @immutable(init=False)
-class List(Monad, Monoid, Foldable, Eq):
+class List(Monad, Monoid, Traversable, Eq):
 
     __xs = attr.ib(converter=tuple)
 
@@ -111,6 +111,13 @@ class List(Monad, Monoid, Foldable, Eq):
             initial,
         )
 
+    def sequence(self, applicative):
+        """Applicative f => List (f a) -> f (List a)"""
+        return self.foldl(
+            lift2(lambda xs: lambda x: List(*xs.__xs, x)),
+            applicative.pure(List()),
+        )
+
     def __repr__(self):
         return "List{}".format(repr(self.__xs))
 
@@ -120,7 +127,9 @@ class List(Monad, Monoid, Foldable, Eq):
 
     @class_function
     def sample_value(cls, a):
-        return st.lists(a, max_size=10).map(lambda xs: cls(*xs))
+        # Use very short lists because otherwise some tests like Traversable
+        # sequence/traverse might explode to huuuuge computations.
+        return st.lists(a, max_size=3).map(lambda xs: cls(*xs))
 
     sample_type = testing.create_type_sampler(
         testing.sample_type(),
