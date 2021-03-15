@@ -226,7 +226,7 @@ class Foldable(Type):
         """
         warn("Using default implementation of to_iter", PerformanceWarning)
         return self.foldl(
-            lambda acc, x: itertools.chain(acc, (x,)),
+            lambda acc: lambda x: itertools.chain(acc, (x,)),
             itertools.chain()
         )
 

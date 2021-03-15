@@ -9,19 +9,21 @@
 """
 
 import itertools
+import functools
+import builtins
 
 import attr
 from hypothesis import strategies as st
 
 from haskpy.internal import immutable, class_function, class_property
-from haskpy.typeclasses import Apply, Eq, Monoid
+from haskpy.typeclasses import Apply, Eq, Monoid, Traversable, lift2
 from haskpy.types.maybe import Just, Nothing
 from haskpy.types.function import function
 from haskpy import testing
 
 
 @immutable(init=False)
-class Dictionary(Apply, Eq, Monoid):
+class Dictionary(Apply, Eq, Monoid, Traversable):
     """Dictionary type
 
     .. todo::
@@ -125,6 +127,48 @@ class Dictionary(Apply, Eq, Monoid):
             for key in keys
         })
 
+    def fold_map(self, monoid, f):
+        """Monoid m => Dictionary k a -> Monoid -> (a -> m) -> m"""
+        xs = builtins.map(f, self.__dict.values())
+        return functools.reduce(
+            monoid.append,
+            xs,
+            monoid.empty,
+        )
+
+    def foldl(self, combine, initial):
+        """Dictionary k a -> (b -> a -> b) -> b -> b"""
+        return functools.reduce(
+            lambda acc, x: combine(acc)(x),
+            self.__dict.values(),
+            initial,
+        )
+
+    def foldr(self, combine, initial):
+        """Dictionary k a -> (a -> b -> b) -> b -> b"""
+        return functools.reduce(
+            lambda acc, x: combine(x)(acc),
+            reversed(self.__dict.values()),
+            initial,
+        )
+
+    def foldl_with_index(self, combine, initial):
+        """Dictionary k a -> (k -> b -> a -> b) -> b -> b"""
+        return functools.reduce(
+            lambda acc, key_value: combine(key_value[0])(acc)(key_value[1]),
+            self.__dict.items(),
+            initial,
+        )
+
+    def sequence(self, applicative):
+        """Applicative f => Dictionary k (f a) -> f (Dictionary k a)"""
+        return self.foldl_with_index(
+            lambda key: lift2(
+                lambda xs: lambda x: xs.append(Dictionary({key: x}))
+            ),
+            applicative.pure(Dictionary()),
+        )
+
     def lookup(self, key):
         try:
             x = self.__dict[key]
@@ -175,7 +219,7 @@ class Dictionary(Apply, Eq, Monoid):
 
     @class_function
     def sample_value(cls, k, a):
-        return st.dictionaries(k, a).map(Dictionary)
+        return st.dictionaries(k, a, max_size=3).map(Dictionary)
 
     sample_type = testing.create_type_sampler(
         testing.sample_hashable_type(),
@@ -185,6 +229,8 @@ class Dictionary(Apply, Eq, Monoid):
     sample_functor_type_constructor = testing.create_type_constructor_sampler(
         testing.sample_hashable_type(),
     )
+
+    sample_foldable_type_constructor = sample_functor_type_constructor
 
     sample_eq_type = testing.create_type_sampler(
         testing.sample_hashable_type(),
