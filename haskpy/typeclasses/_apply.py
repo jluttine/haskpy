@@ -94,7 +94,7 @@ class Apply(Functor):
         return self.apply_to(x)
 
     def __lshift__(self, x):
-        """Sequence with``<<`` similarly as with ``<*`` and ``<<`` in Haskell"""
+        """Sequence with ``<<`` similarly as with ``<*`` and ``<<`` in Haskell"""
         return self.apply_first(x)
 
     def __rshift__(self, x):
