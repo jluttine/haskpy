@@ -109,5 +109,6 @@ from .cocartesian import *
 from .semigroup import *
 from .monoid import *
 from .foldable import *
+from .traversable import *
 from .hashable import *
 from .equality import *

@@ -7,6 +7,7 @@ Dev
 
 Added
 -----
+- Add ``Traversable`` typeclass.
 - Add ``Dictionary`` type.
 - Add ``Apply`` typeclass. In the typeclass hierarchy, it's between ``Functor``
   and ``Applicative``.

@@ -12,6 +12,7 @@ import functools
 from hypothesis import strategies as st
 
 from haskpy.typeclasses import Monad, Monoid, Foldable, Eq
+from haskpy.types.maybe import Just, Nothing
 from haskpy import testing
 from haskpy.internal import (
     immutable,
@@ -73,6 +74,12 @@ class List(Monad, Monoid, Foldable, Eq):
 
     def elem(self, e):
         return e in self.__xs
+
+    def last(self):
+        try:
+            return Just(self.__xs[-1])
+        except IndexError:
+            return Nothing
 
     def foldl(self, combine, initial):
         """List a -> (b -> a -> b) -> b -> b
