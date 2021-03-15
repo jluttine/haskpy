@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dictionary &#8212; HaskPy 0.1.dev1+gce1c960 documentation</title>
+    <title>Dictionary &#8212; HaskPy 0.1.dev1+g37f1f2e documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -42,7 +42,7 @@
 <dl class="py class">
 <dt id="haskpy.types.dictionary.Dictionary">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Dictionary</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply" title="haskpy.typeclasses.apply_.Apply"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.apply_.Apply</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.equality.Eq</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monoid.Monoid</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.apply_.Apply.html#haskpy.typeclasses.apply_.Apply" title="haskpy.typeclasses.apply_.Apply"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.apply_.Apply</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.equality.Eq</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monoid.Monoid</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.traversable.Traversable.html#haskpy.typeclasses.traversable.Traversable" title="haskpy.typeclasses.traversable.Traversable"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.traversable.Traversable</span></code></a></p>
 <p>Dictionary type</p>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
@@ -62,6 +62,12 @@ with <code class="docutils literal notranslate"><span class="pre">+</span></code
 <dt id="haskpy.types.dictionary.Dictionary.__annotations__">
 <code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__annotations__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__contains__">
+<code class="sig-name descname"><span class="pre">__contains__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override elem if you want to change the default implementation</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="haskpy.types.dictionary.Dictionary.__eq__">
@@ -90,6 +96,18 @@ still access them as <code class="docutils literal notranslate"><span class="pre
 <dt id="haskpy.types.dictionary.Dictionary.__hash__">
 <code class="sig-name descname"><span class="pre">__hash__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__hash__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__iter__">
+<code class="sig-name descname"><span class="pre">__iter__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to_iter if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.__len__">
+<code class="sig-name descname"><span class="pre">__len__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override length if you want to change the default implementation</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="haskpy.types.dictionary.Dictionary.__lshift__">
@@ -234,10 +252,56 @@ of the input dictionaries.</p>
 <code class="sig-name descname"><span class="pre">delete</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.delete" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.elem">
+<code class="sig-name descname"><span class="pre">elem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; a -&gt; bool</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="haskpy.types.dictionary.Dictionary.empty">
 <code class="sig-name descname"><span class="pre">empty</span></code><em class="property"> <span class="pre">=</span> <span class="pre">Dictionary({})</span></em><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.empty" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.fold">
+<code class="sig-name descname"><span class="pre">fold</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.fold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.fold2">
+<code class="sig-name descname"><span class="pre">fold2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.fold2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.fold_map">
+<code class="sig-name descname"><span class="pre">fold_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.fold_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.fold_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monoid m =&gt; Dictionary k a -&gt; Monoid -&gt; (a -&gt; m) -&gt; m</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.foldl">
+<code class="sig-name descname"><span class="pre">foldl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.foldl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.foldl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary k a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.foldl_with_index">
+<code class="sig-name descname"><span class="pre">foldl_with_index</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.foldl_with_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.foldl_with_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary k a -&gt; (k -&gt; b -&gt; a -&gt; b) -&gt; b -&gt; b</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.foldr">
+<code class="sig-name descname"><span class="pre">foldr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.foldr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.foldr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary k a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.head">
+<code class="sig-name descname"><span class="pre">head</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.head" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return head (or default if no head): <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code></p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="haskpy.types.dictionary.Dictionary.insert">
@@ -248,6 +312,14 @@ of the input dictionaries.</p>
 <dt id="haskpy.types.dictionary.Dictionary.keys">
 <code class="sig-name descname"><span class="pre">keys</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.keys" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.length">
+<code class="sig-name descname"><span class="pre">length</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; int</p>
+<p>The default implementation isn’t very efficient as it traverses through
+the iterator.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="haskpy.types.dictionary.Dictionary.lookup">
@@ -264,15 +336,56 @@ of the input dictionaries.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.null">
+<code class="sig-name descname"><span class="pre">null</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.null" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="haskpy.types.dictionary.Dictionary.replace">
 <code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Haskell ($&gt;) operator</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.sequence">
+<code class="sig-name descname"><span class="pre">sequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applicative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applicative f =&gt; Dictionary k (f a) -&gt; f (Dictionary k a)</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="haskpy.types.dictionary.Dictionary.singleton">
 <code class="sig-name descname"><span class="pre">singleton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/dictionary.html#Dictionary.singleton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.singleton" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.sum">
+<code class="sig-name descname"><span class="pre">sum</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; number</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.to_iter">
+<code class="sig-name descname"><span class="pre">to_iter</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.to_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; Iter a</p>
+<p>Instead of to_list (as in Haskell), let’s provide to_iter. With
+iterables, we can write efficient implementations for many other
+methods (e.g., sum, elem) even for large or sometimes infinite
+foldables.</p>
+<p>The default implementation isn’t very efficient as it uses folding to
+construct the iterator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.types.dictionary.Dictionary.traverse">
+<code class="sig-name descname"><span class="pre">traverse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applicative</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.dictionary.Dictionary.traverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map each element to an action and collect the results</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">Traversable</span> <span class="pre">t</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Applicative</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">t</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="p">(</span><span class="n">t</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">sequence</span></code>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="haskpy.types.dictionary.Dictionary.update">

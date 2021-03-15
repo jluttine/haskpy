@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Traversable &#8212; HaskPy 0.1.dev1+gce1c960 documentation</title>
+    <title>Traversable &#8212; HaskPy 0.1.dev1+g37f1f2e documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -42,8 +42,202 @@
 <dl class="py class">
 <dt id="haskpy.typeclasses.traversable.Traversable">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Traversable</span></code><a class="reference internal" href="../_modules/haskpy/typeclasses/traversable.html#Traversable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p><strong>TODO</strong></p>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.functor.Functor</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable" title="haskpy.typeclasses.foldable.Foldable"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.foldable.Foldable</span></code></a></p>
+<p>Data structures that can be traversed, accumulating results and effects</p>
+<p>Minimal complete definition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">traverse</span> <span class="o">|</span> <span class="n">sequence</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.__contains__">
+<code class="sig-name descname"><span class="pre">__contains__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override elem if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.__iter__">
+<code class="sig-name descname"><span class="pre">__iter__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to_iter if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.__len__">
+<code class="sig-name descname"><span class="pre">__len__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override length if you want to change the default implementation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.__rpow__">
+<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.__rpow__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
+<p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
+<p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
+<ul class="simple">
+<li><p>It’s not typically used as often as multiplication or addition so
+less risk of confusion.</p></li>
+<li><p>It’s not commutative operator as isn’t lifting either.</p></li>
+<li><p>The two operands have very different roles. They are not at the same
+“level”.</p></li>
+<li><p>The right operand is “higher”, that is, it’s inside a structure and
+the left operand is kind of “raised to the power” of the second
+operand, where the “power” is the functorial structure.</p></li>
+<li><p>The same operand is also used for function composition because
+function composition is just mapping. Visually the symbol can be
+seen as chaining two stars similarly as function composition chains
+two functions.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.elem">
+<code class="sig-name descname"><span class="pre">elem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.fold">
+<code class="sig-name descname"><span class="pre">fold</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.fold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.fold2">
+<code class="sig-name descname"><span class="pre">fold2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.fold2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.fold_map">
+<code class="sig-name descname"><span class="pre">fold_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.fold_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monoid m =&gt; t a -&gt; (a -&gt; m) -&gt; m (ignoring <code class="docutils literal notranslate"><span class="pre">monoid</span></code> argument)</p>
+<p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">foldl</span></code> (or, if not
+implemented, recursively on <code class="docutils literal notranslate"><span class="pre">foldr</span></code>). Thus, all possibilities for
+parallelism is lost.</p>
+<p><code class="docutils literal notranslate"><span class="pre">monoid</span></code> is the monoidic class of the values inside the foldable. It
+is only used to determine the identity value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.foldl">
+<code class="sig-name descname"><span class="pre">foldl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.foldl" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</p>
+<p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">foldr</span></code> (or, if not
+implemented, recursively on <code class="docutils literal notranslate"><span class="pre">fold_map</span></code>). Either way, the default
+implementation doesn’t scale up well, so an instance implementation is
+strongly recommended.</p>
+<p>Intuition:</p>
+<ul class="simple">
+<li><p>equivalent to for-loop on lists</p></li>
+<li><p>never works on infinite lists (so not possible to implement <code class="docutils literal notranslate"><span class="pre">map</span></code>
+in terms of <code class="docutils literal notranslate"><span class="pre">foldl</span></code>)</p></li>
+</ul>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=GPwtT31zKRY">Tony Morris - An Intuition for List Folds</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.foldr">
+<code class="sig-name descname"><span class="pre">foldr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.foldr" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The default is very poor in Python. It is strongly recommended to
+provide an instance implementation for this.</p>
+</div>
+<p>The default implementation uses <code class="docutils literal notranslate"><span class="pre">fold_map</span></code> by utilizing
+(endo)function monoid:</p>
+<blockquote>
+<div><p>empty :: b -&gt; b</p>
+<p>append :: (b -&gt; b) -&gt; (b -&gt; b) -&gt; (b -&gt; b)</p>
+</div></blockquote>
+<p>One can see <code class="docutils literal notranslate"><span class="pre">combine</span></code> function as a transformation to this monoid:</p>
+<blockquote>
+<div><p>combine :: a -&gt; (b -&gt; b)</p>
+</div></blockquote>
+<p>Then, just use endofunction monoid to compose all those <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code>
+endofunctions into a single endofunction <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code>. Finally, apply
+this function to the initial value.</p>
+<p>Intuition:</p>
+<ul class="simple">
+<li><p>performs constructor replacement</p></li>
+<li><p>may work on infinite lists</p></li>
+<li><p>doesn’t “calculate from the right” but associates to the right
+(otherwise it couldn’t work on infinite lists)</p></li>
+</ul>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=GPwtT31zKRY">Tony Morris - An Intuition for List Folds</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.head">
+<code class="sig-name descname"><span class="pre">head</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.head" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return head (or default if no head): <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.length">
+<code class="sig-name descname"><span class="pre">length</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; int</p>
+<p>The default implementation isn’t very efficient as it traverses through
+the iterator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.map">
+<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Haskell fmap</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.null">
+<code class="sig-name descname"><span class="pre">null</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.null" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.replace">
+<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Haskell ($&gt;) operator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.sequence">
+<code class="sig-name descname"><span class="pre">sequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applicative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/traversable.html#Traversable.sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evalute each action in the structure and collect the results</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">Traversable</span> <span class="pre">t</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Applicative</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">t</span> <span class="p">(</span><span class="n">f</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="p">(</span><span class="n">t</span> <span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">traverse</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.sum">
+<code class="sig-name descname"><span class="pre">sum</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; number</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.to_iter">
+<code class="sig-name descname"><span class="pre">to_iter</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.to_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>t a -&gt; Iter a</p>
+<p>Instead of to_list (as in Haskell), let’s provide to_iter. With
+iterables, we can write efficient implementations for many other
+methods (e.g., sum, elem) even for large or sometimes infinite
+foldables.</p>
+<p>The default implementation isn’t very efficient as it uses folding to
+construct the iterator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.traverse">
+<code class="sig-name descname"><span class="pre">traverse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applicative</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/traversable.html#Traversable.traverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.traverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map each element to an action and collect the results</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">Traversable</span> <span class="pre">t</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Applicative</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">t</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="p">(</span><span class="n">t</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">sequence</span></code>.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
