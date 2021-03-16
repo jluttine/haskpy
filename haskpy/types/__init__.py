@@ -9,6 +9,7 @@
    :toctree:
 
    function
+   uncurried
    maybe
    either
    validation

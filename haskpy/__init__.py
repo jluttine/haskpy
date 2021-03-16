@@ -13,6 +13,7 @@
 
 from .typeclasses import *
 from haskpy.types.function import *
+from haskpy.types.uncurried import *
 from haskpy.types.maybe import *
 from haskpy.types.either import *
 from haskpy.types.list import *

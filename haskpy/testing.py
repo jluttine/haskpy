@@ -140,6 +140,11 @@ def sample_function(draw, b):
     return memoize(lambda _: draw(b))
 
 
+@st.composite
+def sample_uncurried_function(draw, b):
+    return memoize_uncurried(lambda *_, **__: draw(b))
+
+
 def sample_class(typeclass):
     return st.sampled_from(
         tuple(filter(lambda cls: issubclass(cls, typeclass), types()))
@@ -203,3 +208,12 @@ class memoize():
     @property
     def __code__(self):
         return self.__f.__code__
+
+
+def memoize_uncurried(f):
+
+    @memoize
+    def packed(args_kwargs):
+        return f(*args_kwargs[0], **args_kwargs[1])
+
+    return lambda *args, **kwargs: packed((args, kwargs))

@@ -143,6 +143,19 @@ class Dictionary(Apply, Eq, Monoid, Traversable):
             for key in keys
         })
 
+    # def bind(self, f):
+    #     """Dictionary k a -> (a -> Dictionary k b) -> Dictionary k b
+
+    #     When joining values for identical keys, the first (left) dictionary
+    #     value is preferred. However, note that it can be random in which order
+    #     the dictionaries are joined.
+
+    #     """
+    #     return self.map(f).foldl(
+    #         append_first,
+    #         Dictionary()
+    #     )
+
     def fold_map(self, monoid, f):
         """Monoid m => Dictionary k a -> Monoid -> (a -> m) -> m"""
         xs = builtins.map(f, self.__dict.values())
