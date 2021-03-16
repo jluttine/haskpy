@@ -233,9 +233,9 @@ we can use :py:func:`.bind` function:
    >>> hp.bind(hp.Nothing, invert)
    Nothing
 
-For more details, see :py:mod:`.functor`, :py:mod:`.applicative` and
-:py:mod:`.monad` documentation. There are many other useful monads mentioned in
-a section bit below.
+For more details, see :py:mod:`.functor`, :py:mod:`.apply_`, :py:mod:`.bind_`,
+:py:mod:`.applicative` and :py:mod:`.monad` documentation. There are many other
+useful monads mentioned in a section bit below.
 
 Monoids
 -------
@@ -370,7 +370,7 @@ Monoid values are combined with ``+``:
 
 For more details about why these operators were chosen, see the documentation of
 the operators :py:meth:`.Functor.__rpow__`, :py:meth:`.Applicative.__matmul__`,
-:py:meth:`.Applicative.__rshift__`, :py:meth:`.Monad.__mod__` and
+:py:meth:`.Applicative.__rshift__`, :py:meth:`.Bind.__mod__` and
 :py:meth:`.Semigroup.__add__`.
 
 Algebraic data types (ADTs)

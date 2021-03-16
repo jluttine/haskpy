@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Traversable &#8212; HaskPy 0.1.dev1+g37f1f2e documentation</title>
+    <title>Traversable &#8212; HaskPy 0.1.dev1+g1acd53e documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -92,6 +92,12 @@ two functions.</p></li>
 <dt id="haskpy.typeclasses.traversable.Traversable.elem">
 <code class="sig-name descname"><span class="pre">elem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.elem" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; a -&gt; bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.traversable.Traversable.flap">
+<code class="sig-name descname"><span class="pre">flap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.flap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functor f =&gt; f (a -&gt; b) -&gt; a - &gt; f b</p>
 </dd></dl>
 
 <dl class="py method">
@@ -183,7 +189,7 @@ the iterator.</p>
 <dl class="py method">
 <dt id="haskpy.typeclasses.traversable.Traversable.map">
 <code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.traversable.Traversable.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Haskell fmap</p>
+<dd><p>Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b</p>
 </dd></dl>
 
 <dl class="py method">

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Overview &#8212; HaskPy 0.1.dev1+g37f1f2e documentation</title>
+    <title>Overview &#8212; HaskPy 0.1.dev1+g1acd53e documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -208,7 +208,7 @@ zeros explicitly by using <a class="reference internal" href="_autosummary/haskp
 </pre></div>
 </div>
 <p>Given this function and a value that is also wrapped inside the same structure,
-we can use <a class="reference internal" href="_autosummary/haskpy.typeclasses.monad.bind.html#haskpy.typeclasses.monad.bind" title="haskpy.typeclasses.monad.bind"><code class="xref py py-func docutils literal notranslate"><span class="pre">bind()</span></code></a> function:</p>
+we can use <a class="reference internal" href="_autosummary/haskpy.typeclasses.bind_.bind.html#haskpy.typeclasses.bind_.bind" title="haskpy.typeclasses.bind_.bind"><code class="xref py py-func docutils literal notranslate"><span class="pre">bind()</span></code></a> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">invert</span><span class="p">)</span>
 <span class="go">Just(0.1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hp</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Just</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">invert</span><span class="p">)</span>
@@ -217,9 +217,9 @@ we can use <a class="reference internal" href="_autosummary/haskpy.typeclasses.m
 <span class="go">Nothing</span>
 </pre></div>
 </div>
-<p>For more details, see <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.html#module-haskpy.typeclasses.functor" title="haskpy.typeclasses.functor"><code class="xref py py-mod docutils literal notranslate"><span class="pre">functor</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.html#module-haskpy.typeclasses.applicative" title="haskpy.typeclasses.applicative"><code class="xref py py-mod docutils literal notranslate"><span class="pre">applicative</span></code></a> and
-<a class="reference internal" href="_autosummary/haskpy.typeclasses.monad.html#module-haskpy.typeclasses.monad" title="haskpy.typeclasses.monad"><code class="xref py py-mod docutils literal notranslate"><span class="pre">monad</span></code></a> documentation. There are many other useful monads mentioned in
-a section bit below.</p>
+<p>For more details, see <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.html#module-haskpy.typeclasses.functor" title="haskpy.typeclasses.functor"><code class="xref py py-mod docutils literal notranslate"><span class="pre">functor</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.apply_.html#module-haskpy.typeclasses.apply_" title="haskpy.typeclasses.apply_"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apply_</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.bind_.html#module-haskpy.typeclasses.bind_" title="haskpy.typeclasses.bind_"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bind_</span></code></a>,
+<a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.html#module-haskpy.typeclasses.applicative" title="haskpy.typeclasses.applicative"><code class="xref py py-mod docutils literal notranslate"><span class="pre">applicative</span></code></a> and <a class="reference internal" href="_autosummary/haskpy.typeclasses.monad.html#module-haskpy.typeclasses.monad" title="haskpy.typeclasses.monad"><code class="xref py py-mod docutils literal notranslate"><span class="pre">monad</span></code></a> documentation. There are many other
+useful monads mentioned in a section bit below.</p>
 </div>
 <div class="section" id="monoids">
 <h3>Monoids<a class="headerlink" href="#monoids" title="Permalink to this headline">¶</a></h3>
@@ -332,7 +332,7 @@ up to the user to decide whether it makes sense to use them or not.</p>
 </div>
 <p>For more details about why these operators were chosen, see the documentation of
 the operators <a class="reference internal" href="_autosummary/haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor.__rpow__" title="haskpy.typeclasses.functor.Functor.__rpow__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Functor.__rpow__()</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.__matmul__" title="haskpy.typeclasses.applicative.Applicative.__matmul__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Applicative.__matmul__()</span></code></a>,
-<a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.__rshift__" title="haskpy.typeclasses.applicative.Applicative.__rshift__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Applicative.__rshift__()</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad.__mod__" title="haskpy.typeclasses.monad.Monad.__mod__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Monad.__mod__()</span></code></a> and
+<a class="reference internal" href="_autosummary/haskpy.typeclasses.applicative.Applicative.html#haskpy.typeclasses.applicative.Applicative.__rshift__" title="haskpy.typeclasses.applicative.Applicative.__rshift__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Applicative.__rshift__()</span></code></a>, <a class="reference internal" href="_autosummary/haskpy.typeclasses.bind_.Bind.html#haskpy.typeclasses.bind_.Bind.__mod__" title="haskpy.typeclasses.bind_.Bind.__mod__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Bind.__mod__()</span></code></a> and
 <a class="reference internal" href="_autosummary/haskpy.typeclasses.semigroup.Semigroup.html#haskpy.typeclasses.semigroup.Semigroup.__add__" title="haskpy.typeclasses.semigroup.Semigroup.__add__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Semigroup.__add__()</span></code></a>.</p>
 </div>
 <div class="section" id="algebraic-data-types-adts">

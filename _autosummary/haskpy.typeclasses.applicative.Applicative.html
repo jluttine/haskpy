@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Applicative &#8212; HaskPy 0.1.dev1+g37f1f2e documentation</title>
+    <title>Applicative &#8212; HaskPy 0.1.dev1+g1acd53e documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -61,7 +61,7 @@ pp. 1 - 13. DOI: <a class="reference external" href="https://doi.org/10.1017/S09
 <dl class="py method">
 <dt id="haskpy.typeclasses.applicative.Applicative.__lshift__">
 <code class="sig-name descname"><span class="pre">__lshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.__lshift__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sequence with``&lt;&lt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
+<dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
 </dd></dl>
 
 <dl class="py method">
@@ -142,6 +142,12 @@ two functions.</p></li>
 <code class="sig-name descname"><span class="pre">apply_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>f (a -&gt; b) -&gt; f a -&gt; f b</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">apply</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="haskpy.typeclasses.applicative.Applicative.flap">
+<code class="sig-name descname"><span class="pre">flap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.applicative.Applicative.flap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functor f =&gt; f (a -&gt; b) -&gt; a - &gt; f b</p>
 </dd></dl>
 
 <dl class="py method">

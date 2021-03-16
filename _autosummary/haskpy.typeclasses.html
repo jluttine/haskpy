@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>haskpy.typeclasses &#8212; HaskPy 0.1.dev1+g37f1f2e documentation</title>
+    <title>haskpy.typeclasses &#8212; HaskPy 0.1.dev1+g1acd53e documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -64,7 +64,7 @@ first argument.</p>
 implementations are provided by methods/attributes of the type so Python can
 find the correct implementation easily. Then, top-level functions act as thin
 wrappers over these methods. For instance, <a class="reference internal" href="haskpy.typeclasses.functor.map.html#haskpy.typeclasses.functor.map" title="haskpy.typeclasses.functor.map"><code class="xref py py-func docutils literal notranslate"><span class="pre">map()</span></code></a> calls
-<a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor.map" title="haskpy.typeclasses.functor.Functor.map"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Functor.map()</span></code></a> method of the second argument and <a class="reference internal" href="haskpy.typeclasses.monad.bind.html#haskpy.typeclasses.monad.bind" title="haskpy.typeclasses.monad.bind"><code class="xref py py-func docutils literal notranslate"><span class="pre">bind()</span></code></a>
+<a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor.map" title="haskpy.typeclasses.functor.Functor.map"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Functor.map()</span></code></a> method of the second argument and <a class="reference internal" href="haskpy.typeclasses.bind_.bind.html#haskpy.typeclasses.bind_.bind" title="haskpy.typeclasses.bind_.bind"><code class="xref py py-func docutils literal notranslate"><span class="pre">bind()</span></code></a>
 calls <a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad.bind" title="haskpy.typeclasses.monad.Monad.bind"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Monad.bind()</span></code></a> method of the first argument.</p>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
@@ -111,25 +111,28 @@ calls <a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#ha
 <tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.apply_.html#module-haskpy.typeclasses.apply_" title="haskpy.typeclasses.apply_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_</span></code></a></p></td>
 <td><p>Apply typeclass</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.applicative.html#module-haskpy.typeclasses.applicative" title="haskpy.typeclasses.applicative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applicative</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.bind_.html#module-haskpy.typeclasses.bind_" title="haskpy.typeclasses.bind_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bind_</span></code></a></p></td>
+<td><p>Bind typeclass</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.applicative.html#module-haskpy.typeclasses.applicative" title="haskpy.typeclasses.applicative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applicative</span></code></a></p></td>
 <td><p>Applicatives</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.monad.html#module-haskpy.typeclasses.monad" title="haskpy.typeclasses.monad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monad</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.monad.html#module-haskpy.typeclasses.monad" title="haskpy.typeclasses.monad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monad</span></code></a></p></td>
 <td><p>Monads are lovely</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.contravariant.html#module-haskpy.typeclasses.contravariant" title="haskpy.typeclasses.contravariant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contravariant</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.contravariant.html#module-haskpy.typeclasses.contravariant" title="haskpy.typeclasses.contravariant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contravariant</span></code></a></p></td>
 <td><p>Contravariant functors</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.profunctor.html#module-haskpy.typeclasses.profunctor" title="haskpy.typeclasses.profunctor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profunctor</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.profunctor.html#module-haskpy.typeclasses.profunctor" title="haskpy.typeclasses.profunctor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profunctor</span></code></a></p></td>
 <td><p>Profunctors</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.cartesian.html#module-haskpy.typeclasses.cartesian" title="haskpy.typeclasses.cartesian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cartesian</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.cartesian.html#module-haskpy.typeclasses.cartesian" title="haskpy.typeclasses.cartesian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cartesian</span></code></a></p></td>
 <td><p>Cartesian functors</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.cocartesian.html#module-haskpy.typeclasses.cocartesian" title="haskpy.typeclasses.cocartesian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cocartesian</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.cocartesian.html#module-haskpy.typeclasses.cocartesian" title="haskpy.typeclasses.cocartesian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cocartesian</span></code></a></p></td>
 <td><p>Cocartesian functors</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="haskpy.typeclasses.bifunctor.html#module-haskpy.typeclasses.bifunctor" title="haskpy.typeclasses.bifunctor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bifunctor</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="haskpy.typeclasses.bifunctor.html#module-haskpy.typeclasses.bifunctor" title="haskpy.typeclasses.bifunctor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bifunctor</span></code></a></p></td>
 <td><p><strong>TODO</strong></p></td>
 </tr>
 </tbody>

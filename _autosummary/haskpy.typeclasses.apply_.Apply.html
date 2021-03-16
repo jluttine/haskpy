@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Apply &#8212; HaskPy 0.1.dev1+g37f1f2e documentation</title>
+    <title>Apply &#8212; HaskPy 0.1.dev1+g1acd53e documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -60,7 +60,7 @@ but not <a class="reference internal" href="haskpy.typeclasses.applicative.Appli
 <dl class="py method">
 <dt id="haskpy.typeclasses.apply_.Apply.__lshift__">
 <code class="sig-name descname"><span class="pre">__lshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_apply.html#Apply.__lshift__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.apply_.Apply.__lshift__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sequence with``&lt;&lt;`` similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
+<dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
 </dd></dl>
 
 <dl class="py method">
@@ -144,9 +144,15 @@ two functions.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt id="haskpy.typeclasses.apply_.Apply.flap">
+<code class="sig-name descname"><span class="pre">flap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.apply_.Apply.flap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functor f =&gt; f (a -&gt; b) -&gt; a - &gt; f b</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="haskpy.typeclasses.apply_.Apply.map">
 <code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.apply_.Apply.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Haskell fmap</p>
+<dd><p>Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b</p>
 </dd></dl>
 
 <dl class="py method">

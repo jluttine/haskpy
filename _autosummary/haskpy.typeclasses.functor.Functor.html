@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Functor &#8212; HaskPy 0.1.dev1+g37f1f2e documentation</title>
+    <title>Functor &#8212; HaskPy 0.1.dev1+g1acd53e documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -48,9 +48,14 @@
 <blockquote>
 <div><p>map</p>
 </div></blockquote>
+<p>Functor laws:</p>
+<ul class="simple">
+<li><p>Identity: <code class="docutils literal notranslate"><span class="pre">map(identity)</span> <span class="pre">==</span> <span class="pre">identity</span></code></p></li>
+<li><p>Composition: <code class="docutils literal notranslate"><span class="pre">map(compose(f,</span> <span class="pre">g))</span> <span class="pre">==</span> <span class="pre">compose(map(f),</span> <span class="pre">map(g))</span></code></p></li>
+</ul>
 <p>For property tests:</p>
 <blockquote>
-<div><p>sample_functor_type</p>
+<div><p>sample_functor_type_constructor</p>
 </div></blockquote>
 <p class="rubric">Examples</p>
 <p>In Haskell, Map is a Functor, but not Applicative</p>
@@ -77,9 +82,15 @@ two functions.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt id="haskpy.typeclasses.functor.Functor.flap">
+<code class="sig-name descname"><span class="pre">flap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_functor.html#Functor.flap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor.flap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functor f =&gt; f (a -&gt; b) -&gt; a - &gt; f b</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="haskpy.typeclasses.functor.Functor.map">
 <code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_functor.html#Functor.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.functor.Functor.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Haskell fmap</p>
+<dd><p>Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b</p>
 </dd></dl>
 
 <dl class="py method">

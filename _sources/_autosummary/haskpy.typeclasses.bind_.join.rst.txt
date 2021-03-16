@@ -1,0 +1,6 @@
+haskpy.typeclasses.bind\_.join
+==============================
+
+.. currentmodule:: haskpy.typeclasses.bind_
+
+.. autofunction:: join

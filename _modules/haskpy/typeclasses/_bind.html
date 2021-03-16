@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.typeclasses._bind &#8212; HaskPy 0.1.dev1+g1acd53e documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.typeclasses._bind</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">hypothesis.strategies</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">given</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.internal</span> <span class="kn">import</span> <span class="n">class_function</span>
+<span class="kn">from</span> <span class="nn">haskpy.testing</span> <span class="kn">import</span> <span class="n">assert_output</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+
+<span class="c1"># Use the &quot;hidden&quot; module in order to avoid circular imports</span>
+<span class="kn">from</span> <span class="nn">._apply</span> <span class="kn">import</span> <span class="n">Apply</span>
+
+
+<span class="k">class</span> <span class="nc">Bind</span><span class="p">(</span><span class="n">Apply</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bind typeclass extends :py:class:`.Apply` with a bind operation</span>
+
+<span class="sd">    Minimal complete definition::</span>
+
+<span class="sd">        map &amp; (bind | join)</span>
+
+<span class="sd">    Typeclass laws:</span>
+
+<span class="sd">    - Associativity: ``(x % f) % g = x % (lambda k: f(k) % g)``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Bind.bind"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.bind_.Bind.html#haskpy.typeclasses.bind_.Bind.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;m a -&gt; (a -&gt; m b) -&gt; m b</span>
+
+<span class="sd">        Default implementation is based on ``join`` and ``map``:</span>
+
+<span class="sd">        self :: m a</span>
+
+<span class="sd">        f :: a -&gt; m b</span>
+
+<span class="sd">        map f :: m a -&gt; m (m b)</span>
+
+<span class="sd">        join :: m (m b) -&gt; m b</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Bind.join"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.bind_.Bind.html#haskpy.typeclasses.bind_.Bind.join">[docs]</a>    <span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;m (m a) -&gt; m a</span>
+
+<span class="sd">        Default implementation is based on ``bind``:</span>
+
+<span class="sd">        self :: m (m a)</span>
+
+<span class="sd">        identity :: m a -&gt; m a</span>
+
+<span class="sd">        bind :: m (m a) -&gt; (m a -&gt; m a) -&gt; m a</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">haskpy.utils</span> <span class="kn">import</span> <span class="n">identity</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">identity</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Bind.apply"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.bind_.Bind.html#haskpy.typeclasses.bind_.Bind.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;m a -&gt; m (a -&gt; b) -&gt; m b</span>
+
+<span class="sd">          self :: m a</span>
+
+<span class="sd">          f :: m (a -&gt; b)</span>
+
+<span class="sd">        Default implementation is based on ``bind`` and ``map``. In order to</span>
+<span class="sd">        use ``bind``, let&#39;s write its type as follows:</span>
+
+<span class="sd">          bind :: m (a -&gt; b) -&gt; ((a -&gt; b) -&gt; m b) -&gt; m b</span>
+
+<span class="sd">        Let&#39;s also use a simple helper function:</span>
+
+<span class="sd">          h = \g -&gt; map g self :: (a -&gt; b) -&gt; m b</span>
+
+<span class="sd">        Now:</span>
+
+<span class="sd">          bind f h :: m b</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">g</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Bind.__mod__"><a class="viewcode-back" href="../../../_autosummary/haskpy.typeclasses.bind_.Bind.html#haskpy.typeclasses.bind_.Bind.__mod__">[docs]</a>    <span class="k">def</span> <span class="fm">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Use ``%`` as bind operator similarly as ``&gt;&gt;=`` in Haskell</span>
+
+<span class="sd">        That is, ``x % f`` is equivalent to ``bind(x, f)`` and ``x.bind(f)``.</span>
+
+<span class="sd">        Why ``%`` operator?</span>
+
+<span class="sd">        - It&#39;s not very often used so less risk for confusion.</span>
+
+<span class="sd">        - It&#39;s not commutative as isn&#39;t bind either.</span>
+
+<span class="sd">        - It is similar to bind in a sense that the result has the same unit as</span>
+<span class="sd">          the left operand while the right operand has different unit.</span>
+
+<span class="sd">        - The symbol works visually as a line &quot;binds&quot; two circles and on the</span>
+<span class="sd">          other hand two circles tell about two similar structures on both</span>
+<span class="sd">          sides but those structures are just on different &quot;level&quot;.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Sampling methods for property tests</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">sample_bind_type_constructor</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sample type constructor of Bind instance</span>
+
+<span class="sd">        By default, :py:meth:`.Apply.sample_apply_type_constructor` is used. If</span>
+<span class="sd">        Bind type requires more constraints than pply type, override this</span>
+<span class="sd">        default implementation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">sample_apply_type_constructor</span><span class="p">()</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test typeclass laws</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_bind_associativity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">g</span><span class="p">),</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_bind_associativity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_bind_type_constructor</span><span class="p">())</span>
+        <span class="n">ma</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">mb</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">mc</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ma</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">mb</span><span class="p">))</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">mc</span><span class="p">))</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_bind_associativity</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Test laws based on default implementations</span>
+    <span class="c1">#</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_bind_bind</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.bind_</span> <span class="kn">import</span> <span class="n">bind</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Bind</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>
+            <span class="n">bind</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_bind_bind</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test consistency of ``bind`` with the default implementation&quot;&quot;&quot;</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_bind_type_constructor</span><span class="p">())</span>
+        <span class="n">ma</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">mb</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ma</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">mb</span><span class="p">))</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_bind_bind</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_bind_join</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.bind_</span> <span class="kn">import</span> <span class="n">join</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Bind</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">u</span><span class="p">),</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">join</span><span class="p">(),</span>
+            <span class="n">join</span><span class="p">(</span><span class="n">u</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_bind_join</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test consistency of ``join`` with the default implementation&quot;&quot;&quot;</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_bind_type_constructor</span><span class="p">())</span>
+        <span class="n">mb</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">mmb</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">mb</span><span class="p">)</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">mmb</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_bind_join</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@assert_output</span>
+    <span class="k">def</span> <span class="nf">assert_bind_apply</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Bind</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">),</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">u</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@class_function</span>
+    <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">test_bind_apply</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test consistency ``apply`` with the default implementations&quot;&quot;&quot;</span>
+        <span class="c1"># Draw types</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_eq_type</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">())</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">sample_bind_type_constructor</span><span class="p">())</span>
+        <span class="n">ma</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">mab</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+        <span class="c1"># Draw values</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ma</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">mab</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">assert_bind_apply</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

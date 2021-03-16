@@ -1,0 +1,15 @@
+.. py:data:: haskpy.typeclasses.bind_.Bind
+   :noindex:
+
+Bind
+=============================
+
+.. currentmodule:: haskpy.typeclasses.bind_
+
+.. autoclass:: Bind
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:

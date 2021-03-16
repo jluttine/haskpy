@@ -1,0 +1,6 @@
+haskpy.typeclasses.bind_
+========================
+
+.. currentmodule:: haskpy.typeclasses.bind_
+
+.. automodule:: haskpy.typeclasses.bind_
