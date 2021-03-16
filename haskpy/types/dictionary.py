@@ -87,11 +87,27 @@ class Dictionary(Apply, Eq, Monoid, Traversable):
 
     def append_first(self, other):
         """Combine two dictionaries preferring the elements of the first"""
-        raise NotImplementedError()
+        def get(key):
+            try:
+                return self.__dict[key]
+            except KeyError:
+                return other.__dict[key]
+        return Dictionary({
+            key: get(key)
+            for key in set(self.__dict.keys()).union(set(other.__dict.keys()))
+        })
 
     def append_second(self, other):
         """Combine two dictionaries preferring the elements of the second"""
-        raise NotImplementedError()
+        def get(key):
+            try:
+                return other.__dict[key]
+            except KeyError:
+                return self.__dict[key]
+        return Dictionary({
+            key: get(key)
+            for key in set(self.__dict.keys()).union(set(other.__dict.keys()))
+        })
 
     def map(self, f):
         """Apply a function to each value in the dictionary
@@ -246,3 +262,13 @@ class Dictionary(Apply, Eq, Monoid, Traversable):
 @function
 def lookup(key, d):
     return d[key]
+
+
+@function
+def append_first(x, y):
+    return x.append_first(y)
+
+
+@function
+def append_second(x, y):
+    return x.append_second(y)
