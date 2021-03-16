@@ -16,6 +16,7 @@ Added
 - Add ``<<`` operator for ``Apply`` (and ``Applicative``) instances.
 - Add ``apply_first`` method to ``Apply``.
 - Add ``lift4`` and ``lift5`` functions.
+- Add ``flap`` (and ``flip``) functions.
 
 Changed
 -------

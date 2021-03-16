@@ -24,7 +24,32 @@ Functor.__module__ = __name__
 
 @function
 def map(f, x):
+    """Functor f => (a -> b) -> f a -> f b"""
     return x.map(f)
+
+
+@function
+def flap(f, x):
+    """Functor f => f (a -> b) -> a - > f b
+
+    Note that ``flap`` generalizes ``flip``:
+
+    .. code-block:: python
+
+        >>> flap(function(lambda a: lambda b: a - b), 4, 3)
+        -1
+
+    This is easy to see if you write use function type in the type signature::
+
+        (c -> a -> b) -> a -> c -> b
+
+    So, we just define ``flip = flap``.
+
+    """
+    return f.flap(x)
+
+
+flip = flap
 
 
 @function

@@ -20,11 +20,17 @@ class Functor(Type):
 
         map
 
+    Functor laws:
+
+    - Identity: ``map(identity) == identity``
+
+    - Composition: ``map(compose(f, g)) == compose(map(f), map(g))``
+
     For property tests:
 
     ..
 
-        sample_functor_type
+        sample_functor_type_constructor
 
     Examples
     --------
@@ -35,7 +41,11 @@ class Functor(Type):
 
     @abstract_function
     def map(self, f):
-        """Haskell fmap"""
+        """Functor f => f a -> (a -> b) -> f b"""
+
+    def flap(self, x):
+        """Functor f => f (a -> b) -> a - > f b"""
+        return self.map(lambda f: f(x))
 
     def replace(self, x):
         """Haskell ($>) operator"""
