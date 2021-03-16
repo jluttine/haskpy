@@ -1,0 +1,6 @@
+haskpy.types.uncurried
+======================
+
+.. currentmodule:: haskpy.types.uncurried
+
+.. automodule:: haskpy.types.uncurried

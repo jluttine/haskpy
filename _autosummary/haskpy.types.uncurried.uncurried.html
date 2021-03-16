@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.types.uncurried.uncurried &#8212; HaskPy 0.1.dev1+g0ffde66 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="haskpy.types.maybe" href="haskpy.types.maybe.html" />
+    <link rel="prev" title="haskpy.types.uncurried.UncurriedFunctionMonoid" href="haskpy.types.uncurried.UncurriedFunctionMonoid.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="haskpy-types-uncurried-uncurried">
+<h1>haskpy.types.uncurried.uncurried<a class="headerlink" href="#haskpy-types-uncurried-uncurried" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="haskpy.types.uncurried.uncurried">
+<code class="sig-name descname"><span class="pre">uncurried</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/uncurried.html#uncurried"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.uncurried.uncurried" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator for transforming functions into monads</p>
+<p>This can be useful for converting value constructors into function monads,
+so that one can use <code class="docutils literal notranslate"><span class="pre">map</span></code> and other methods of a function monad. For
+instance, <code class="docutils literal notranslate"><span class="pre">List</span></code> is a value constructor but doesn’t have monadic methods.
+By wrapping it with <code class="docutils literal notranslate"><span class="pre">uncurried</span></code>, you can treat it like a normal uncurried
+function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Maybe</span><span class="p">,</span> <span class="n">Just</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MaybeList</span> <span class="o">=</span> <span class="n">uncurried</span><span class="p">(</span><span class="n">List</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">xs</span><span class="p">:</span> <span class="n">xs</span><span class="o">.</span><span class="n">sequence</span><span class="p">(</span><span class="n">Maybe</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MaybeList</span><span class="p">(</span><span class="n">Just</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">Just</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">Just</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+<span class="go">Just(List(10, 20, 30))</span>
+</pre></div>
+</div>
+<p>The above example converted <code class="docutils literal notranslate"><span class="pre">List</span></code> constructor into a special constructor
+that converts <code class="docutils literal notranslate"><span class="pre">List</span> <span class="pre">(Maybe</span> <span class="pre">a)</span></code> into <code class="docutils literal notranslate"><span class="pre">Maybe</span> <span class="pre">(List</span> <span class="pre">a)</span></code> automatically.
+This can be useful so that you can easily create lists inside your own
+custom monads.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="haskpy.types.html">haskpy.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.typeclasses.html">haskpy.typeclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.utils.html">haskpy.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.optics.html">haskpy.optics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="haskpy.testing.html">haskpy.testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API</a><ul>
+  <li><a href="haskpy.types.html">haskpy.types</a><ul>
+  <li><a href="haskpy.types.uncurried.html">haskpy.types.uncurried</a><ul>
+      <li>Previous: <a href="haskpy.types.uncurried.UncurriedFunctionMonoid.html" title="previous chapter">haskpy.types.uncurried.UncurriedFunctionMonoid</a></li>
+      <li>Next: <a href="haskpy.types.maybe.html" title="next chapter">haskpy.types.maybe</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/haskpy.types.uncurried.uncurried.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>haskpy.types.uncurried &#8212; HaskPy 0.1.dev1+g0ffde66 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for haskpy.types.uncurried</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Uncurried functions that are similar to normal Python functions</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree:</span>
+
+<span class="sd">   UncurriedFunction</span>
+<span class="sd">   UncurriedFunctionMonoid</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree:</span>
+
+<span class="sd">   uncurried</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">hypothesis</span> <span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.typeclasses._monad</span> <span class="kn">import</span> <span class="n">Monad</span>
+<span class="kn">from</span> <span class="nn">haskpy.typeclasses._monoid</span> <span class="kn">import</span> <span class="n">Monoid</span>
+<span class="kn">from</span> <span class="nn">haskpy.typeclasses._semigroup</span> <span class="kn">import</span> <span class="n">Semigroup</span>
+
+<span class="kn">from</span> <span class="nn">haskpy.internal</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">immutable</span><span class="p">,</span>
+    <span class="n">class_property</span><span class="p">,</span>
+    <span class="n">class_function</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">haskpy.testing</span> <span class="kn">import</span> <span class="n">eq_test</span>
+<span class="kn">from</span> <span class="nn">haskpy</span> <span class="kn">import</span> <span class="n">testing</span>
+
+
+<div class="viewcode-block" id="UncurriedFunctionMonoid"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunctionMonoid.html#haskpy.types.uncurried.UncurriedFunctionMonoid">[docs]</a><span class="k">def</span> <span class="nf">UncurriedFunctionMonoid</span><span class="p">(</span><span class="n">monoid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a function type that has a Monoid instance&quot;&quot;&quot;</span>
+
+    <span class="nd">@immutable</span>
+    <span class="k">class</span> <span class="nc">_UncurriedFunctionMonoid</span><span class="p">(</span><span class="n">Monoid</span><span class="p">,</span> <span class="n">UncurriedFunction</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function type with Monoid instance added&quot;&quot;&quot;</span>
+
+        <span class="nd">@class_property</span>
+        <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_UncurriedFunctionMonoid</span><span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">monoid</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
+
+        <span class="nd">@class_function</span>
+        <span class="k">def</span> <span class="nf">sample_monoid_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">monoid</span><span class="o">.</span><span class="n">sample_monoid_type</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">sample_value</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">_UncurriedFunctionMonoid</span></div>
+
+
+<div class="viewcode-block" id="UncurriedFunction"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction">[docs]</a><span class="nd">@immutable</span>
+<span class="k">class</span> <span class="nc">UncurriedFunction</span><span class="p">(</span><span class="n">Monad</span><span class="p">,</span> <span class="n">Semigroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Monad instance for normal Python functions</span>
+
+<span class="sd">    The functions can take any number of positional and keyword arguments, so</span>
+<span class="sd">    the signature can be anything supported by Python. The function must be</span>
+<span class="sd">    called by passing all arguments at the same time, so it doesn&#39;t support</span>
+<span class="sd">    automatic partial evaluation like :py:class:`.Function`. One way to think</span>
+<span class="sd">    of this in type level is that the collection of all positional and keyword</span>
+<span class="sd">    arguments are represented by type ``Args``. So, the type of</span>
+<span class="sd">    ``UncurriedFunction`` is ``Args -&gt; a``. This is a bit notational abuse as</span>
+<span class="sd">    ``Args`` cannot be an output of a function, only an input. So, type ``a -&gt;</span>
+<span class="sd">    Args`` makes no sense. This means that one cannot compose these functions</span>
+<span class="sd">    in a way that would pass ``Args`` to the next function because a function</span>
+<span class="sd">    can only output a single value, not many values.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        Monoid instance of UncurriedFunction requires the knowledge of the</span>
+<span class="sd">        contained monoid type in order to be able to create ``empty``. The</span>
+<span class="sd">        contained type is not known because Function class can be used to</span>
+<span class="sd">        create functions of any type. This is just convenience and simpler user</span>
+<span class="sd">        interface. If you need Monoid instance of UncurriedFunction, use</span>
+<span class="sd">        UncurriedFunctionMonoid function to create such a class. Note though</span>
+<span class="sd">        that the Semigroup instance is available in this Function without</span>
+<span class="sd">        needing to use UncurriedFunctionMonoid.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__f</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">__</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">callable</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+<div class="viewcode-block" id="UncurriedFunction.__attrs_post_init__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.__attrs_post_init__">[docs]</a>    <span class="k">def</span> <span class="nf">__attrs_post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__qualname__&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__module__&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__doc__&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="c1">#object.__setattr__(self, &quot;__annotations__&quot;, self.__f.__annotations__)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__defaults__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__kwdefaults__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__code__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="o">.</span><span class="vm">__code__</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__signature__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UncurriedFunction.pure"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.pure">[docs]</a>    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UncurriedFunction.map"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.map">[docs]</a>    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;(Args -&gt; b) -&gt; (b -&gt; c) -&gt; (Args -&gt; c)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">UncurriedFunction</span><span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">g</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="UncurriedFunction.apply"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;(Args -&gt; b) -&gt; (Args -&gt; b -&gt; c) -&gt; Args -&gt; c&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">UncurriedFunction</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">g</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)(</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="UncurriedFunction.bind"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;(Args -&gt; b) -&gt; (b -&gt; Args -&gt; c) -&gt; Args -&gt; c&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">UncurriedFunction</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">g</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="UncurriedFunction.append"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Semigroup b =&gt; (Args -&gt; b) -&gt; (Args -&gt; b) -&gt; (Args -&gt; b)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="o">.</span><span class="n">apply_to</span><span class="p">(</span><span class="n">g</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UncurriedFunction.__call__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UncurriedFunction.__pow__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.__pow__">[docs]</a>    <span class="k">def</span> <span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># We need to implement __pow__ for UncurriedFunction objects because</span>
+        <span class="c1"># otherwise composing UncurriedFunction objects wouldn&#39;t be possible:</span>
+        <span class="c1"># If f and g are UncurriedFunction objects in f ** g, Python will try</span>
+        <span class="c1"># f.__pow__(g) and if it fails, it won&#39;t try g.__rpow__(f) because it</span>
+        <span class="c1"># already concluded that UncurriedFunction object doesn&#39;t support pow</span>
+        <span class="c1"># operation with a UncurriedFunction object.</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="fm">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UncurriedFunction.__get__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.__get__">[docs]</a>    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">objtype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Support instance methods.</span>
+
+<span class="sd">        See: https://stackoverflow.com/a/3296318</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Instance method, bind the first argument</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+            <span class="c1"># Keep the docstring untouched</span>
+            <span class="n">fp</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span>
+            <span class="k">return</span> <span class="n">UncurriedFunction</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Class method</span>
+            <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="UncurriedFunction.__eq_test__"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.UncurriedFunction.html#haskpy.types.uncurried.UncurriedFunction.__eq_test__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq_test__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">input_strategy</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">()):</span>
+        <span class="c1"># NOTE: This is used only in tests when the function input doesn&#39;t</span>
+        <span class="c1"># really matter so any hashable type here is ok. The type doesn&#39;t</span>
+        <span class="c1"># matter because the functions are either _TestFunction or created with</span>
+        <span class="c1"># pure.</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">input_strategy</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">eq_test</span><span class="p">(</span><span class="bp">self</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span></div>
+
+    <span class="nd">@class_function</span>
+    <span class="k">def</span> <span class="nf">sample_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">testing</span><span class="o">.</span><span class="n">sample_function</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="n">sample_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">create_type_sampler</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_hashable_type</span><span class="p">(),</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">sample_semigroup_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">create_type_sampler</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_hashable_type</span><span class="p">(),</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_semigroup_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">sample_monoid_type</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">create_type_sampler</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_hashable_type</span><span class="p">(),</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_monoid_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">sample_functor_type_constructor</span> <span class="o">=</span> <span class="n">testing</span><span class="o">.</span><span class="n">create_type_constructor_sampler</span><span class="p">(</span>
+        <span class="n">testing</span><span class="o">.</span><span class="n">sample_hashable_type</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">sample_apply_type_constructor</span> <span class="o">=</span> <span class="n">sample_functor_type_constructor</span>
+    <span class="n">sample_applicative_type_constructor</span> <span class="o">=</span> <span class="n">sample_functor_type_constructor</span>
+    <span class="n">sample_monad_type_constructor</span> <span class="o">=</span> <span class="n">sample_functor_type_constructor</span></div>
+
+
+<div class="viewcode-block" id="uncurried"><a class="viewcode-back" href="../../../_autosummary/haskpy.types.uncurried.uncurried.html#haskpy.types.uncurried.uncurried">[docs]</a><span class="k">def</span> <span class="nf">uncurried</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decorator for transforming functions into monads</span>
+
+<span class="sd">    This can be useful for converting value constructors into function monads,</span>
+<span class="sd">    so that one can use ``map`` and other methods of a function monad. For</span>
+<span class="sd">    instance, ``List`` is a value constructor but doesn&#39;t have monadic methods.</span>
+<span class="sd">    By wrapping it with ``uncurried``, you can treat it like a normal uncurried</span>
+<span class="sd">    function:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt;&gt; from haskpy import List, Maybe, Just</span>
+<span class="sd">        &gt;&gt;&gt; MaybeList = uncurried(List).map(lambda xs: xs.sequence(Maybe))</span>
+<span class="sd">        &gt;&gt;&gt; MaybeList(Just(10), Just(20), Just(30))</span>
+<span class="sd">        Just(List(10, 20, 30))</span>
+
+<span class="sd">    The above example converted ``List`` constructor into a special constructor</span>
+<span class="sd">    that converts ``List (Maybe a)`` into ``Maybe (List a)`` automatically.</span>
+<span class="sd">    This can be useful so that you can easily create lists inside your own</span>
+<span class="sd">    custom monads.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Don&#39;t wrap twice</span>
+    <span class="k">return</span> <span class="n">f</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">UncurriedFunction</span><span class="p">)</span> <span class="k">else</span> <span class="n">UncurriedFunction</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">HaskPy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../motivation.html">Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019-2020, Jaakko Luttinen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

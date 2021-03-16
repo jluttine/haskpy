@@ -1,0 +1,15 @@
+.. py:data:: haskpy.types.uncurried.UncurriedFunction
+   :noindex:
+
+UncurriedFunction
+========================================
+
+.. currentmodule:: haskpy.types.uncurried
+
+.. autoclass:: UncurriedFunction
+   :members:
+   :special-members:
+   :inherited-members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:
