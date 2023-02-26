@@ -43,13 +43,15 @@ class _Code():
 def FunctionMonoid(monoid):
     """Create a function type that has a Monoid instance"""
 
+    assert issubclass(monoid, Monoid)
+
     @immutable
     class _FunctionMonoid(Monoid, Function):
         """Function type with Monoid instance added"""
 
         @class_property
         def empty(cls):
-            return _FunctionMonoid(lambda _: monoid.empty)
+            return cls(lambda _: monoid.empty)
 
         @class_function
         def sample_monoid_type(cls):
