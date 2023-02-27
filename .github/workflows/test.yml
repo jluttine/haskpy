@@ -23,4 +23,4 @@ jobs:
         pip install .[dev]
     - name: Run tests
       run: |
-        pytest .
+        pytest . --hypothesis-profile ci

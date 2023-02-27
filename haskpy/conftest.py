@@ -1,6 +1,6 @@
 import sys
 import hypothesis.strategies as st
-from hypothesis import given
+from hypothesis import given, settings
 
 
 def is_pytest():
@@ -15,6 +15,12 @@ def pytest_configure(config):
         pass
     foo()
     return
+
+settings.register_profile("dev", deadline=200)
+settings.register_profile("ci", deadline=1000)
+
+# By default, use dev profile
+settings.load_profile("dev")
 
 # PYTEST_RUNNING = False
 
