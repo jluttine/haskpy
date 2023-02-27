@@ -8,6 +8,11 @@ def is_pytest():
 
 
 def pytest_configure(config):
+    settings.register_profile("dev", deadline=200)
+    settings.register_profile("ci", deadline=1000)
+    # By default, use dev profile
+    settings.load_profile("dev")
+
     # Workaround for Hypothesis bug causing flaky tests if they use characters
     # or text: https://github.com/HypothesisWorks/hypothesis/issues/2108
     @given(st.text())
@@ -16,11 +21,6 @@ def pytest_configure(config):
     foo()
     return
 
-settings.register_profile("dev", deadline=200)
-settings.register_profile("ci", deadline=1000)
-
-# By default, use dev profile
-settings.load_profile("dev")
 
 # PYTEST_RUNNING = False
 
