@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profunctor &#8212; HaskPy 0.1.dev1+g79fca70 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Profunctor &#8212; HaskPy 0.1.dev1+geded28e documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="haskpy.typeclasses.profunctor.dimap" href="haskpy.typeclasses.profunctor.dimap.html" />
@@ -33,22 +33,22 @@
           <div class="body" role="main">
             
   <dl class="py data">
-<dt>
-<code class="sig-prename descclassname"><span class="pre">haskpy.typeclasses.profunctor.</span></code><code class="sig-name descname"><span class="pre">Profunctor</span></code></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">haskpy.typeclasses.profunctor.</span></span><span class="sig-name descname"><span class="pre">Profunctor</span></span></dt>
 <dd></dd></dl>
 
-<div class="section" id="profunctor">
-<h1>Profunctor<a class="headerlink" href="#profunctor" title="Permalink to this headline">¶</a></h1>
+<section id="profunctor">
+<h1>Profunctor<a class="headerlink" href="#profunctor" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
-<dt id="haskpy.typeclasses.profunctor.Profunctor">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Profunctor</span></code><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.functor.Functor</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.contravariant.Contravariant.html#haskpy.typeclasses.contravariant.Contravariant" title="haskpy.typeclasses.contravariant.Contravariant"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.contravariant.Contravariant</span></code></a></p>
+<dt class="sig sig-object py" id="haskpy.typeclasses.profunctor.Profunctor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Profunctor</span></span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.functor.Functor.html#haskpy.typeclasses.functor.Functor" title="haskpy.typeclasses.functor.Functor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Functor</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.contravariant.Contravariant.html#haskpy.typeclasses.contravariant.Contravariant" title="haskpy.typeclasses.contravariant.Contravariant"><code class="xref py py-class docutils literal notranslate"><span class="pre">Contravariant</span></code></a></p>
 <p>Minimal complete definition: <code class="docutils literal notranslate"><span class="pre">dimap</span> <span class="pre">|</span> <span class="pre">(contramap</span> <span class="pre">&amp;</span> <span class="pre">map)</span></code>.</p>
 <p>Instead of using <code class="docutils literal notranslate"><span class="pre">lmap</span></code> and <code class="docutils literal notranslate"><span class="pre">rmap</span></code> as in Haskell, let’s use the already
 introduced <code class="docutils literal notranslate"><span class="pre">contramap</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code>.</p>
 <dl class="py method">
-<dt id="haskpy.typeclasses.profunctor.Profunctor.__rpow__">
-<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.__rpow__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.profunctor.Profunctor.__rpow__">
+<span class="sig-name descname"><span class="pre">__rpow__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.__rpow__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
 <p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
 <p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
@@ -69,44 +69,44 @@ two functions.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.typeclasses.profunctor.Profunctor.contramap">
-<code class="sig-name descname"><span class="pre">contramap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.contramap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.contramap" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.profunctor.Profunctor.contramap">
+<span class="sig-name descname"><span class="pre">contramap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.contramap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.contramap" title="Permalink to this definition">¶</a></dt>
 <dd><p>(a -&gt; b) -&gt; p b c -&gt; p a c</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.typeclasses.profunctor.Profunctor.contrareplace">
-<code class="sig-name descname"><span class="pre">contrareplace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.contrareplace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.profunctor.Profunctor.contrareplace">
+<span class="sig-name descname"><span class="pre">contrareplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.contrareplace" title="Permalink to this definition">¶</a></dt>
 <dd><p>f b -&gt; b -&gt; f a</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.typeclasses.profunctor.Profunctor.dimap">
-<code class="sig-name descname"><span class="pre">dimap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.dimap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.dimap" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.profunctor.Profunctor.dimap">
+<span class="sig-name descname"><span class="pre">dimap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.dimap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.dimap" title="Permalink to this definition">¶</a></dt>
 <dd><p>p b c -&gt; (a -&gt; b) -&gt; (c -&gt; d) -&gt; p a d</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.typeclasses.profunctor.Profunctor.flap">
-<code class="sig-name descname"><span class="pre">flap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.flap" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.profunctor.Profunctor.flap">
+<span class="sig-name descname"><span class="pre">flap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.flap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Functor f =&gt; f (a -&gt; b) -&gt; a - &gt; f b</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.typeclasses.profunctor.Profunctor.map">
-<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.map" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.profunctor.Profunctor.map">
+<span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/typeclasses/_profunctor.html#Profunctor.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>(b -&gt; c) -&gt; p a b -&gt; p a c</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.typeclasses.profunctor.Profunctor.replace">
-<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.replace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.profunctor.Profunctor.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.profunctor.Profunctor.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Haskell ($&gt;) operator</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
           </div>
@@ -125,7 +125,7 @@ two functions.</p></li>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
@@ -159,12 +159,12 @@ two functions.</p></li>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -181,8 +181,8 @@ two functions.</p></li>
       &copy;2019-2020, Jaakko Luttinen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
       <a href="../_sources/_autosummary/haskpy.typeclasses.profunctor.Profunctor.rst.txt"

@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Commutative &#8212; HaskPy 0.1.dev1+g79fca70 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Commutative &#8212; HaskPy 0.1.dev1+geded28e documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="haskpy.typeclasses.semigroup.append" href="haskpy.typeclasses.semigroup.append.html" />
@@ -33,16 +33,16 @@
           <div class="body" role="main">
             
   <dl class="py data">
-<dt>
-<code class="sig-prename descclassname"><span class="pre">haskpy.typeclasses.semigroup.</span></code><code class="sig-name descname"><span class="pre">Commutative</span></code></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">haskpy.typeclasses.semigroup.</span></span><span class="sig-name descname"><span class="pre">Commutative</span></span></dt>
 <dd></dd></dl>
 
-<div class="section" id="commutative">
-<h1>Commutative<a class="headerlink" href="#commutative" title="Permalink to this headline">¶</a></h1>
+<section id="commutative">
+<h1>Commutative<a class="headerlink" href="#commutative" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
-<dt id="haskpy.typeclasses.semigroup.Commutative">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Commutative</span></code><a class="headerlink" href="#haskpy.typeclasses.semigroup.Commutative" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.semigroup.Semigroup.html#haskpy.typeclasses.semigroup.Semigroup" title="haskpy.typeclasses.semigroup.Semigroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.semigroup.Semigroup</span></code></a></p>
+<dt class="sig sig-object py" id="haskpy.typeclasses.semigroup.Commutative">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Commutative</span></span><a class="headerlink" href="#haskpy.typeclasses.semigroup.Commutative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.semigroup.Semigroup.html#haskpy.typeclasses.semigroup.Semigroup" title="haskpy.typeclasses.semigroup.Semigroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semigroup</span></code></a></p>
 <p>Semigroup following commutativity law</p>
 <p>This typeclass doesn’t add any features nor methods. It only adds a test
 for the commutativity law.</p>
@@ -55,8 +55,8 @@ for the commutativity law.</p>
 <div><p>sample_semigroup_type &amp; sample_commutative_type</p>
 </div></blockquote>
 <dl class="py method">
-<dt id="haskpy.typeclasses.semigroup.Commutative.__add__">
-<code class="sig-name descname"><span class="pre">__add__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.semigroup.Commutative.__add__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.semigroup.Commutative.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.semigroup.Commutative.__add__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append two monoids</p>
 <p>Using <code class="docutils literal notranslate"><span class="pre">+</span></code> operator to append two monoid values seems natural because
 that’s what Python is doing by default because lists are concatenated
@@ -64,14 +64,14 @@ with <code class="docutils literal notranslate"><span class="pre">+</span></code
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.typeclasses.semigroup.Commutative.append">
-<code class="sig-name descname"><span class="pre">append</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.semigroup.Commutative.append" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.typeclasses.semigroup.Commutative.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.typeclasses.semigroup.Commutative.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>m -&gt; m -&gt; m</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
           </div>
@@ -90,7 +90,7 @@ with <code class="docutils literal notranslate"><span class="pre">+</span></code
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
@@ -124,12 +124,12 @@ with <code class="docutils literal notranslate"><span class="pre">+</span></code
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -146,8 +146,8 @@ with <code class="docutils literal notranslate"><span class="pre">+</span></code
       &copy;2019-2020, Jaakko Luttinen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
       <a href="../_sources/_autosummary/haskpy.typeclasses.semigroup.Commutative.rst.txt"

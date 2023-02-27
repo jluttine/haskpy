@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LinkedList &#8212; HaskPy 0.1.dev1+g79fca70 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>LinkedList &#8212; HaskPy 0.1.dev1+geded28e documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="haskpy.types.linkedlist.Cons" href="haskpy.types.linkedlist.Cons.html" />
@@ -33,16 +33,16 @@
           <div class="body" role="main">
             
   <dl class="py data">
-<dt>
-<code class="sig-prename descclassname"><span class="pre">haskpy.types.linkedlist.</span></code><code class="sig-name descname"><span class="pre">LinkedList</span></code></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">haskpy.types.linkedlist.</span></span><span class="sig-name descname"><span class="pre">LinkedList</span></span></dt>
 <dd></dd></dl>
 
-<div class="section" id="linkedlist">
-<h1>LinkedList<a class="headerlink" href="#linkedlist" title="Permalink to this headline">¶</a></h1>
+<section id="linkedlist">
+<h1>LinkedList<a class="headerlink" href="#linkedlist" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
-<dt id="haskpy.types.linkedlist.LinkedList">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">LinkedList</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">match</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad" title="haskpy.typeclasses.monad.Monad"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monad.Monad</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monoid.Monoid</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable" title="haskpy.typeclasses.foldable.Foldable"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.foldable.Foldable</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.equality.Eq</span></code></a></p>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LinkedList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">match</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad" title="haskpy.typeclasses.monad.Monad"><code class="xref py py-class docutils literal notranslate"><span class="pre">Monad</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Monoid</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.foldable.Foldable.html#haskpy.typeclasses.foldable.Foldable" title="haskpy.typeclasses.foldable.Foldable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Foldable</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eq</span></code></a></p>
 <p>Linked-list with “lazy” Cons</p>
 <p>The “lazy” Cons makes it possible to construct infinite lists. For
 instance, an infinite list of a repeated value 42 can be constructed as:</p>
@@ -81,8 +81,8 @@ recursion depths:</p>
 <p>This happens because each value depends recursively on all the previous
 values</p>
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__add__">
-<code class="sig-name descname"><span class="pre">__add__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__add__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__add__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append two monoids</p>
 <p>Using <code class="docutils literal notranslate"><span class="pre">+</span></code> operator to append two monoid values seems natural because
 that’s what Python is doing by default because lists are concatenated
@@ -90,53 +90,53 @@ with <code class="docutils literal notranslate"><span class="pre">+</span></code
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="haskpy.types.linkedlist.LinkedList.__annotations__">
-<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__annotations__">
+<span class="sig-name descname"><span class="pre">__annotations__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__annotations__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__contains__">
-<code class="sig-name descname"><span class="pre">__contains__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__contains__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__contains__">
+<span class="sig-name descname"><span class="pre">__contains__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__contains__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override elem if you want to change the default implementation</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__eq__">
-<code class="sig-name descname"><span class="pre">__eq__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__eq__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__eq__" title="Permalink to this definition">¶</a></dt>
 <dd><p>LinkedList a -&gt; LinkedList a -&gt; bool</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__eq_test__">
-<code class="sig-name descname"><span class="pre">__eq_test__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.__eq_test__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__eq_test__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__eq_test__">
+<span class="sig-name descname"><span class="pre">__eq_test__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.__eq_test__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__eq_test__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="haskpy.types.linkedlist.LinkedList.__hash__">
-<code class="sig-name descname"><span class="pre">__hash__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__hash__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__hash__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__iter__">
-<code class="sig-name descname"><span class="pre">__iter__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__iter__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__iter__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override to_iter if you want to change the default implementation</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__len__">
-<code class="sig-name descname"><span class="pre">__len__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__len__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__len__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override length if you want to change the default implementation</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__lshift__">
-<code class="sig-name descname"><span class="pre">__lshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__lshift__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__lshift__">
+<span class="sig-name descname"><span class="pre">__lshift__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__lshift__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__matmul__">
-<code class="sig-name descname"><span class="pre">__matmul__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__matmul__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__matmul__">
+<span class="sig-name descname"><span class="pre">__matmul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__matmul__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Application operand <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> applies similarly as <code class="docutils literal notranslate"><span class="pre">&lt;*&gt;</span></code> in Haskell</p>
 <p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">&#64;</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">f.apply_to(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">x.apply(f)</span></code> and
 <code class="docutils literal notranslate"><span class="pre">apply(f,</span> <span class="pre">x)</span></code>.</p>
@@ -155,8 +155,8 @@ value(s). Thus, <code class="docutils literal notranslate"><span class="pre">f</
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__mod__">
-<code class="sig-name descname"><span class="pre">__mod__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__mod__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__mod__">
+<span class="sig-name descname"><span class="pre">__mod__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__mod__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use <code class="docutils literal notranslate"><span class="pre">%</span></code> as bind operator similarly as <code class="docutils literal notranslate"><span class="pre">&gt;&gt;=</span></code> in Haskell</p>
 <p>That is, <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">f</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">bind(x,</span> <span class="pre">f)</span></code> and <code class="docutils literal notranslate"><span class="pre">x.bind(f)</span></code>.</p>
 <p>Why <code class="docutils literal notranslate"><span class="pre">%</span></code> operator?</p>
@@ -172,21 +172,21 @@ sides but those structures are just on different “level”.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__ne__">
-<code class="sig-name descname"><span class="pre">__ne__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__ne__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__ne__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inequality comparison: <code class="docutils literal notranslate"><span class="pre">Eq</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code></p>
 <p>Can be used as <code class="docutils literal notranslate"><span class="pre">!=</span></code> operator.</p>
 <p>The default implementation uses <code class="docutils literal notranslate"><span class="pre">__eq__</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__repr">
-<code class="sig-name descname"><span class="pre">__repr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxdepth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__repr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__repr">
+<span class="sig-name descname"><span class="pre">__repr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxdepth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__repr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__rpow__">
-<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__rpow__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__rpow__">
+<span class="sig-name descname"><span class="pre">__rpow__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__rpow__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
 <p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
 <p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
@@ -207,25 +207,25 @@ two functions.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.__rshift__">
-<code class="sig-name descname"><span class="pre">__rshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__rshift__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.__rshift__">
+<span class="sig-name descname"><span class="pre">__rshift__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.__rshift__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList._scanl">
-<code class="sig-name descname"><span class="pre">_scanl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList._scanl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList._scanl" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList._scanl">
+<span class="sig-name descname"><span class="pre">_scanl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList._scanl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList._scanl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.append">
-<code class="sig-name descname"><span class="pre">append</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.append" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>LinkedList a -&gt; LinkedList a -&gt; LinkedList a</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.apply">
-<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>m a -&gt; m (a -&gt; b) -&gt; m b</p>
 <blockquote>
 <div><p>self :: m a</p>
@@ -247,8 +247,8 @@ use <code class="docutils literal notranslate"><span class="pre">bind</span></co
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.apply_first">
-<code class="sig-name descname"><span class="pre">apply_first</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply_first" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.apply_first">
+<span class="sig-name descname"><span class="pre">apply_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply_first" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine two actions, keeping only the result of the first</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">a</span>
 </pre></div>
@@ -256,8 +256,8 @@ use <code class="docutils literal notranslate"><span class="pre">bind</span></co
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.apply_second">
-<code class="sig-name descname"><span class="pre">apply_second</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply_second" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.apply_second">
+<span class="sig-name descname"><span class="pre">apply_second</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply_second" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine two actions, keeping only the result of the second</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
 </pre></div>
@@ -265,53 +265,53 @@ use <code class="docutils literal notranslate"><span class="pre">bind</span></co
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.apply_to">
-<code class="sig-name descname"><span class="pre">apply_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply_to" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.apply_to">
+<span class="sig-name descname"><span class="pre">apply_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>f (a -&gt; b) -&gt; f a -&gt; f b</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">apply</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.bind">
-<code class="sig-name descname"><span class="pre">bind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.bind" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.bind" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; (a -&gt; List b) -&gt; List b</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.drop">
-<code class="sig-name descname"><span class="pre">drop</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.drop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.drop" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.drop">
+<span class="sig-name descname"><span class="pre">drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.drop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.drop" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.elem">
-<code class="sig-name descname"><span class="pre">elem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.elem" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.elem">
+<span class="sig-name descname"><span class="pre">elem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.elem" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; a -&gt; bool</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="haskpy.types.linkedlist.LinkedList.empty">
-<code class="sig-name descname"><span class="pre">empty</span></code><em class="property"> <span class="pre">=</span> <span class="pre">Nil</span></em><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.empty" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Nil</span></em><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.empty" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.flap">
-<code class="sig-name descname"><span class="pre">flap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.flap" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.flap">
+<span class="sig-name descname"><span class="pre">flap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.flap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Functor f =&gt; f (a -&gt; b) -&gt; a - &gt; f b</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.fold">
-<code class="sig-name descname"><span class="pre">fold</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.fold">
+<span class="sig-name descname"><span class="pre">fold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.fold2">
-<code class="sig-name descname"><span class="pre">fold2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.fold2">
+<span class="sig-name descname"><span class="pre">fold2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.fold_map">
-<code class="sig-name descname"><span class="pre">fold_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold_map" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.fold_map">
+<span class="sig-name descname"><span class="pre">fold_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.fold_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Monoid m =&gt; t a -&gt; (a -&gt; m) -&gt; m (ignoring <code class="docutils literal notranslate"><span class="pre">monoid</span></code> argument)</p>
 <p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">foldl</span></code> (or, if not
 implemented, recursively on <code class="docutils literal notranslate"><span class="pre">foldr</span></code>). Thus, all possibilities for
@@ -321,16 +321,16 @@ is only used to determine the identity value.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.foldl">
-<code class="sig-name descname"><span class="pre">foldl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldl" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.foldl">
+<span class="sig-name descname"><span class="pre">foldl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Foldable t =&gt; t a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</p>
 <p>Strict left-associative fold</p>
 <p>((((a + b) + c) + d) + e)</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.foldr">
-<code class="sig-name descname"><span class="pre">foldr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.foldr">
+<span class="sig-name descname"><span class="pre">foldr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Foldable t =&gt; t a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</p>
 <p>Strict right-associative fold. Note that this doesn’t work for infinite
 lists because it’s strict. You probably want to use <code class="docutils literal notranslate"><span class="pre">foldr_lazy</span></code> or
@@ -345,15 +345,15 @@ recursion depth (or the stack overflows).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.foldr_lazy">
-<code class="sig-name descname"><span class="pre">foldr_lazy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldr_lazy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldr_lazy" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.foldr_lazy">
+<span class="sig-name descname"><span class="pre">foldr_lazy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.foldr_lazy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.foldr_lazy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Foldable t =&gt; t a -&gt; (a -&gt; (() -&gt; b) -&gt; (() -&gt; b)) -&gt; b -&gt; b</p>
 <p>Nonstrict right-associative fold with support for lazy recursion,
 short-circuiting and tail-call optimization.</p>
 <p>HOW ABOUT [a,b,c,d,e,f,g,h,…] -&gt; (a(b(c(d(e))))) UNTIL TOTAL STRING
 LENGTH IS X?</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>combine</strong><span class="classifier">curried function</span></dt><dd></dd>
 </dl>
@@ -368,14 +368,14 @@ LENGTH IS X?</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.head">
-<code class="sig-name descname"><span class="pre">head</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.head" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.head">
+<span class="sig-name descname"><span class="pre">head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.head" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return head (or default if no head): <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code></p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.join">
-<code class="sig-name descname"><span class="pre">join</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.join" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.join">
+<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.join" title="Permalink to this definition">¶</a></dt>
 <dd><p>m (m a) -&gt; m a</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">bind</span></code>:</p>
 <p>self :: m (m a)</p>
@@ -384,34 +384,34 @@ LENGTH IS X?</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.length">
-<code class="sig-name descname"><span class="pre">length</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.length" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; int</p>
 <p>The default implementation isn’t very efficient as it traverses through
 the iterator.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.map">
-<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.map" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.map">
+<span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; (a -&gt; b) -&gt; List b</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.null">
-<code class="sig-name descname"><span class="pre">null</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.null" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.null">
+<span class="sig-name descname"><span class="pre">null</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.null" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; bool</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.pure">
-<code class="sig-name descname"><span class="pre">pure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.pure" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.pure">
+<span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.pure" title="Permalink to this definition">¶</a></dt>
 <dd><p>a -&gt; LinkedList a</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.recurse_tco">
-<code class="sig-name descname"><span class="pre">recurse_tco</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.recurse_tco"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.recurse_tco" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.recurse_tco">
+<span class="sig-name descname"><span class="pre">recurse_tco</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.recurse_tco"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.recurse_tco" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursion with tail-call optimization</p>
 <p>Type signature:</p>
 <p><code class="docutils literal notranslate"><span class="pre">LinkedList</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">(b</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">Either</span> <span class="pre">c</span> <span class="pre">b)</span> <span class="pre">-&gt;</span> <span class="pre">(b</span> <span class="pre">-&gt;</span> <span class="pre">c)</span> <span class="pre">-&gt;</span> <span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">c</span></code></p>
@@ -472,30 +472,30 @@ loop internally:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.replace">
-<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.replace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Haskell ($&gt;) operator</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.scanl">
-<code class="sig-name descname"><span class="pre">scanl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.scanl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.scanl" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.scanl">
+<span class="sig-name descname"><span class="pre">scanl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.scanl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.scanl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.sum">
-<code class="sig-name descname"><span class="pre">sum</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.sum" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.sum">
+<span class="sig-name descname"><span class="pre">sum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.sum" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; number</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.take">
-<code class="sig-name descname"><span class="pre">take</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.take"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.take" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.take">
+<span class="sig-name descname"><span class="pre">take</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.take"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.take" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.linkedlist.LinkedList.to_iter">
-<code class="sig-name descname"><span class="pre">to_iter</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.to_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.to_iter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.linkedlist.LinkedList.to_iter">
+<span class="sig-name descname"><span class="pre">to_iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/linkedlist.html#LinkedList.to_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.linkedlist.LinkedList.to_iter" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; Iter a</p>
 <p>Instead of to_list (as in Haskell), let’s provide to_iter. With
 iterables, we can write efficient implementations for many other
@@ -507,7 +507,7 @@ construct the iterator.</p>
 
 </dd></dl>
 
-</div>
+</section>
 
 
           </div>
@@ -526,7 +526,7 @@ construct the iterator.</p>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
@@ -560,12 +560,12 @@ construct the iterator.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -582,8 +582,8 @@ construct the iterator.</p>
       &copy;2019-2020, Jaakko Luttinen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
       <a href="../_sources/_autosummary/haskpy.types.linkedlist.LinkedList.rst.txt"

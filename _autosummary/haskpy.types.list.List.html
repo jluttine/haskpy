@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>List &#8212; HaskPy 0.1.dev1+g79fca70 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>List &#8212; HaskPy 0.1.dev1+geded28e documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="haskpy.types.linkedlist" href="haskpy.types.linkedlist.html" />
@@ -33,19 +33,19 @@
           <div class="body" role="main">
             
   <dl class="py data">
-<dt>
-<code class="sig-prename descclassname"><span class="pre">haskpy.types.list.</span></code><code class="sig-name descname"><span class="pre">List</span></code></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">haskpy.types.list.</span></span><span class="sig-name descname"><span class="pre">List</span></span></dt>
 <dd></dd></dl>
 
-<div class="section" id="list">
-<h1>List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h1>
+<section id="list">
+<h1>List<a class="headerlink" href="#list" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
-<dt id="haskpy.types.list.List">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">List</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">xs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad" title="haskpy.typeclasses.monad.Monad"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monad.Monad</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.monoid.Monoid</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.traversable.Traversable.html#haskpy.typeclasses.traversable.Traversable" title="haskpy.typeclasses.traversable.Traversable"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.traversable.Traversable</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">haskpy.typeclasses.equality.Eq</span></code></a></p>
+<dt class="sig sig-object py" id="haskpy.types.list.List">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">List</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">xs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="haskpy.typeclasses.monad.Monad.html#haskpy.typeclasses.monad.Monad" title="haskpy.typeclasses.monad.Monad"><code class="xref py py-class docutils literal notranslate"><span class="pre">Monad</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.monoid.Monoid.html#haskpy.typeclasses.monoid.Monoid" title="haskpy.typeclasses.monoid.Monoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Monoid</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.traversable.Traversable.html#haskpy.typeclasses.traversable.Traversable" title="haskpy.typeclasses.traversable.Traversable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Traversable</span></code></a>, <a class="reference internal" href="haskpy.typeclasses.equality.Eq.html#haskpy.typeclasses.equality.Eq" title="haskpy.typeclasses.equality.Eq"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eq</span></code></a></p>
 <dl class="py method">
-<dt id="haskpy.types.list.List.__add__">
-<code class="sig-name descname"><span class="pre">__add__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__add__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__add__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append two monoids</p>
 <p>Using <code class="docutils literal notranslate"><span class="pre">+</span></code> operator to append two monoid values seems natural because
 that’s what Python is doing by default because lists are concatenated
@@ -53,53 +53,59 @@ with <code class="docutils literal notranslate"><span class="pre">+</span></code
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="haskpy.types.list.List.__annotations__">
-<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#haskpy.types.list.List.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__annotations__">
+<span class="sig-name descname"><span class="pre">__annotations__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#haskpy.types.list.List.__annotations__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__contains__">
-<code class="sig-name descname"><span class="pre">__contains__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__contains__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__attrs_init__">
+<span class="sig-name descname"><span class="pre">__attrs_init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">List__xs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#haskpy.types.list.List.__attrs_init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method generated by attrs for class List.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="haskpy.types.list.List.__contains__">
+<span class="sig-name descname"><span class="pre">__contains__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__contains__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override elem if you want to change the default implementation</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__eq__">
-<code class="sig-name descname"><span class="pre">__eq__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.__eq__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.__eq__" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; List a -&gt; bool</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__eq_test__">
-<code class="sig-name descname"><span class="pre">__eq_test__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.__eq_test__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.__eq_test__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__eq_test__">
+<span class="sig-name descname"><span class="pre">__eq_test__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.__eq_test__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.__eq_test__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="haskpy.types.list.List.__hash__">
-<code class="sig-name descname"><span class="pre">__hash__</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#haskpy.types.list.List.__hash__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#haskpy.types.list.List.__hash__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__iter__">
-<code class="sig-name descname"><span class="pre">__iter__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__iter__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__iter__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override to_iter if you want to change the default implementation</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__len__">
-<code class="sig-name descname"><span class="pre">__len__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__len__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__len__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override length if you want to change the default implementation</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__lshift__">
-<code class="sig-name descname"><span class="pre">__lshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__lshift__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__lshift__">
+<span class="sig-name descname"><span class="pre">__lshift__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__lshift__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">&lt;*</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> in Haskell</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__matmul__">
-<code class="sig-name descname"><span class="pre">__matmul__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__matmul__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__matmul__">
+<span class="sig-name descname"><span class="pre">__matmul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__matmul__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Application operand <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> applies similarly as <code class="docutils literal notranslate"><span class="pre">&lt;*&gt;</span></code> in Haskell</p>
 <p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">&#64;</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">f.apply_to(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">x.apply(f)</span></code> and
 <code class="docutils literal notranslate"><span class="pre">apply(f,</span> <span class="pre">x)</span></code>.</p>
@@ -118,8 +124,8 @@ value(s). Thus, <code class="docutils literal notranslate"><span class="pre">f</
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__mod__">
-<code class="sig-name descname"><span class="pre">__mod__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__mod__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__mod__">
+<span class="sig-name descname"><span class="pre">__mod__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__mod__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use <code class="docutils literal notranslate"><span class="pre">%</span></code> as bind operator similarly as <code class="docutils literal notranslate"><span class="pre">&gt;&gt;=</span></code> in Haskell</p>
 <p>That is, <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">f</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">bind(x,</span> <span class="pre">f)</span></code> and <code class="docutils literal notranslate"><span class="pre">x.bind(f)</span></code>.</p>
 <p>Why <code class="docutils literal notranslate"><span class="pre">%</span></code> operator?</p>
@@ -135,16 +141,16 @@ sides but those structures are just on different “level”.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__ne__">
-<code class="sig-name descname"><span class="pre">__ne__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__ne__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__ne__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inequality comparison: <code class="docutils literal notranslate"><span class="pre">Eq</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code></p>
 <p>Can be used as <code class="docutils literal notranslate"><span class="pre">!=</span></code> operator.</p>
 <p>The default implementation uses <code class="docutils literal notranslate"><span class="pre">__eq__</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__rpow__">
-<code class="sig-name descname"><span class="pre">__rpow__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__rpow__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__rpow__">
+<span class="sig-name descname"><span class="pre">__rpow__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__rpow__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lifting operator <code class="docutils literal notranslate"><span class="pre">**</span></code> lifts similarly as <code class="docutils literal notranslate"><span class="pre">&lt;$&gt;</span></code> in Haskell</p>
 <p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">**</span> <span class="pre">x</span></code> translates to <code class="docutils literal notranslate"><span class="pre">x.map(f)</span></code> and <code class="docutils literal notranslate"><span class="pre">map(f,</span> <span class="pre">x)</span></code>.</p>
 <p>Why <code class="docutils literal notranslate"><span class="pre">**</span></code> operator?</p>
@@ -165,26 +171,26 @@ two functions.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.__rshift__">
-<code class="sig-name descname"><span class="pre">__rshift__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__rshift__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.__rshift__">
+<span class="sig-name descname"><span class="pre">__rshift__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.__rshift__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sequence with <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> similarly as with <code class="docutils literal notranslate"><span class="pre">*&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> in Haskell</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.append">
-<code class="sig-name descname"><span class="pre">append</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.append" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; List a -&gt; List a</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.apply">
-<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.apply" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; List (a -&gt; b) -&gt; List b</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.apply_first">
-<code class="sig-name descname"><span class="pre">apply_first</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.apply_first" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.apply_first">
+<span class="sig-name descname"><span class="pre">apply_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.apply_first" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine two actions, keeping only the result of the first</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">a</span>
 </pre></div>
@@ -192,8 +198,8 @@ two functions.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.apply_second">
-<code class="sig-name descname"><span class="pre">apply_second</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.apply_second" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.apply_second">
+<span class="sig-name descname"><span class="pre">apply_second</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.apply_second" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine two actions, keeping only the result of the second</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apply</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
 </pre></div>
@@ -201,48 +207,48 @@ two functions.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.apply_to">
-<code class="sig-name descname"><span class="pre">apply_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.apply_to" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.apply_to">
+<span class="sig-name descname"><span class="pre">apply_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.apply_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>f (a -&gt; b) -&gt; f a -&gt; f b</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">apply</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.bind">
-<code class="sig-name descname"><span class="pre">bind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.bind" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.bind" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; (a -&gt; List b) -&gt; List b</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.elem">
-<code class="sig-name descname"><span class="pre">elem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.elem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.elem" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.elem">
+<span class="sig-name descname"><span class="pre">elem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.elem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.elem" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; a -&gt; bool</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="haskpy.types.list.List.empty">
-<code class="sig-name descname"><span class="pre">empty</span></code><em class="property"> <span class="pre">=</span> <span class="pre">List()</span></em><a class="reference internal" href="../_modules/haskpy/types/list.html#List.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.empty" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">List()</span></em><a class="reference internal" href="../_modules/haskpy/types/list.html#List.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.empty" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.flap">
-<code class="sig-name descname"><span class="pre">flap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.flap" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.flap">
+<span class="sig-name descname"><span class="pre">flap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.flap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Functor f =&gt; f (a -&gt; b) -&gt; a - &gt; f b</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.fold">
-<code class="sig-name descname"><span class="pre">fold</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.fold" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.fold">
+<span class="sig-name descname"><span class="pre">fold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.fold" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.fold2">
-<code class="sig-name descname"><span class="pre">fold2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.fold2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.fold2">
+<span class="sig-name descname"><span class="pre">fold2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.fold2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.fold_map">
-<code class="sig-name descname"><span class="pre">fold_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.fold_map" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.fold_map">
+<span class="sig-name descname"><span class="pre">fold_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monoid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.fold_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Monoid m =&gt; t a -&gt; (a -&gt; m) -&gt; m (ignoring <code class="docutils literal notranslate"><span class="pre">monoid</span></code> argument)</p>
 <p>The default implementation is based on <code class="docutils literal notranslate"><span class="pre">foldl</span></code> (or, if not
 implemented, recursively on <code class="docutils literal notranslate"><span class="pre">foldr</span></code>). Thus, all possibilities for
@@ -252,34 +258,34 @@ is only used to determine the identity value.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.foldl">
-<code class="sig-name descname"><span class="pre">foldl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.foldl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.foldl" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.foldl">
+<span class="sig-name descname"><span class="pre">foldl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.foldl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.foldl" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; b</p>
 <p><code class="docutils literal notranslate"><span class="pre">combine</span></code> function is assumed to be curried</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.foldr">
-<code class="sig-name descname"><span class="pre">foldr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.foldr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.foldr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.foldr">
+<span class="sig-name descname"><span class="pre">foldr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.foldr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.foldr" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; b</p>
 <p><code class="docutils literal notranslate"><span class="pre">combine</span></code> function is assumed to be curried</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.from_iter">
-<code class="sig-name descname"><span class="pre">from_iter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.from_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.from_iter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.from_iter">
+<span class="sig-name descname"><span class="pre">from_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.from_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.from_iter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterable f =&gt; f a -&gt; List a</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.head">
-<code class="sig-name descname"><span class="pre">head</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.head" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.head">
+<span class="sig-name descname"><span class="pre">head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.head" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return head (or default if no head): <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">a</span></code></p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.join">
-<code class="sig-name descname"><span class="pre">join</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.join" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.join">
+<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.join" title="Permalink to this definition">¶</a></dt>
 <dd><p>m (m a) -&gt; m a</p>
 <p>Default implementation is based on <code class="docutils literal notranslate"><span class="pre">bind</span></code>:</p>
 <p>self :: m (m a)</p>
@@ -288,57 +294,57 @@ is only used to determine the identity value.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.last">
-<code class="sig-name descname"><span class="pre">last</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.last" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.last">
+<span class="sig-name descname"><span class="pre">last</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.last" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.length">
-<code class="sig-name descname"><span class="pre">length</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.length" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; int</p>
 <p>The default implementation isn’t very efficient as it traverses through
 the iterator.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.map">
-<code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.map" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.map">
+<span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>List a -&gt; (a -&gt; b) -&gt; List b</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.null">
-<code class="sig-name descname"><span class="pre">null</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.null" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.null">
+<span class="sig-name descname"><span class="pre">null</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.null" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; bool</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.pure">
-<code class="sig-name descname"><span class="pre">pure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.pure" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.pure">
+<span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.pure" title="Permalink to this definition">¶</a></dt>
 <dd><p>a -&gt; List a</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.replace">
-<code class="sig-name descname"><span class="pre">replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.replace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Haskell ($&gt;) operator</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.sequence">
-<code class="sig-name descname"><span class="pre">sequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applicative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.sequence" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.sequence">
+<span class="sig-name descname"><span class="pre">sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applicative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applicative f =&gt; List (f a) -&gt; f (List a)</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.sum">
-<code class="sig-name descname"><span class="pre">sum</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.sum" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.sum">
+<span class="sig-name descname"><span class="pre">sum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.sum" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; number</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.to_iter">
-<code class="sig-name descname"><span class="pre">to_iter</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.to_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.to_iter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.to_iter">
+<span class="sig-name descname"><span class="pre">to_iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/haskpy/types/list.html#List.to_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#haskpy.types.list.List.to_iter" title="Permalink to this definition">¶</a></dt>
 <dd><p>t a -&gt; Iter a</p>
 <p>Instead of to_list (as in Haskell), let’s provide to_iter. With
 iterables, we can write efficient implementations for many other
@@ -349,8 +355,8 @@ construct the iterator.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="haskpy.types.list.List.traverse">
-<code class="sig-name descname"><span class="pre">traverse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applicative</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.traverse" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="haskpy.types.list.List.traverse">
+<span class="sig-name descname"><span class="pre">traverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applicative</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#haskpy.types.list.List.traverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map each element to an action and collect the results</p>
 <p>For <code class="docutils literal notranslate"><span class="pre">Traversable</span> <span class="pre">t</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Applicative</span> <span class="n">f</span> <span class="o">=&gt;</span> <span class="n">t</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="p">(</span><span class="n">t</span> <span class="n">b</span><span class="p">)</span>
@@ -361,7 +367,7 @@ construct the iterator.</p>
 
 </dd></dl>
 
-</div>
+</section>
 
 
           </div>
@@ -380,7 +386,7 @@ construct the iterator.</p>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Table of contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../motivation.html">Motivation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
@@ -414,12 +420,12 @@ construct the iterator.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -436,8 +442,8 @@ construct the iterator.</p>
       &copy;2019-2020, Jaakko Luttinen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
       <a href="../_sources/_autosummary/haskpy.types.list.List.rst.txt"
